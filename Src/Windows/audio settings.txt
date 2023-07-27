@@ -1,0 +1,3 @@
+
+- With Logi (Logitech) Z207 Stereo, and 2 PC, one connecting with bluetooth, the other with jack wire, it's possible to listen music while playing games
+- For better sound quality listening music, choose to tweak audio settings in integrated equalizer like with audio control on HP computers, and also to use wired jack for looseless audio packets and no arsen in your hears (bluetooth is annoying for that), disable microphone and stereo mixer under sound properties, and shut down system sound from mixer
