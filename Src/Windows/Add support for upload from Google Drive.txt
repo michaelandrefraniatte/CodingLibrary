@@ -1,0 +1,35 @@
+https://support.google.com/youtube/thread/5937118/add-support-for-upload-from-google-drive?hl=en
+
+Yes, You can.  
+Go to https://photos.google.com/settings and set  to "Sync photos & videos from Google Drive" to "ON";
+Then,
+Go to https://www.youtube.com/upload and on the right-hand side, you should see an option to import videos from Google Drive;
+Click the "import" button, click on your video and choose select. 
+
+https://photos.app.goo.gl/3vZ3ZSB1SqZ6AgXYA
+
+https://photos.app.goo.gl/WzkSPpkWtbzzRWUS8
+
+https://www.publicalbum.org/blog/embedding-google-photos-albums
+
+<script src="https://cdn.jsdelivr.net/npm/publicalbum@latest/embed-ui.min.js" async></script>
+
+<div class="pa-gallery-player-widget" style="width:100%; height:auto; display:none;" data-link="https://photos.app.goo.gl/3vZ3ZSB1SqZ6AgXYA"></div>
+
+https://www.publicalbum.org/blog/embed-google-photos-video
+
+https://photos.app.goo.gl/3vZ3ZSB1SqZ6AgXYA
+
+<div style="width:100%;height:auto;background-color:black;text-align:center;">
+  <video style="height:100%;" controls>
+    <source src="https://lh3.googleusercontent.com/F8VeblWM9QZUJo7DGpoDUVePgsvC3vDfv0n2u10w4itqFk0fdjk5OSOTiTJXU99oLoQb3PVX4qQc5o4F9EROcLQBloItF0Ou0h1uz9Jl2PYkWc_UIawIPPGHLR8bIOyzmyMql5IUvQ=m37" type="video/mp4">
+  </video>
+</div>
+
+https://photos.app.goo.gl/WzkSPpkWtbzzRWUS8
+
+<div style="width:100%;height:auto;background-color:black;text-align:center;">
+  <video style="height:100%;" controls>
+    <source src="https://lh3.googleusercontent.com/WHVsGR_Kx5iMjsEVzPaOc2SSDzpAJQGIS4ytqDYXbd6yGaAMAIra67RtpD_gGgJ-OIvx8ZnMF9zU7coN6wLiYsp5YGY-cOBceUP7zAe4DEW6sCjCj-rAxN80XJdkTvO-TAsJYbo1hg=m37" type="video/mp4">
+  </video>
+</div>

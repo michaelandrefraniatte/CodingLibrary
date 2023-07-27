@@ -1,0 +1,7 @@
+string author = "spop"
+byte[] bytes = Encoding.ASCII.GetBytes(author);
+
+string str = Encoding.ASCII.GetString(bytes);  
+Console.WriteLine(str);
+
+

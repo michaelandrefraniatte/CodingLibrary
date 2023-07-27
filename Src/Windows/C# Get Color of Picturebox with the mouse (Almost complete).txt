@@ -1,0 +1,26 @@
+     https://stackoverflow.com/
+
+     MouseEventArgs rato = e as MouseEventArgs;
+     Bitmap b = ((Bitmap)originalmaster.Image);
+     int x = rato.X * b.Width / originalmaster.ClientSize.Width;
+     int y = rato.Y * b.Height / originalmaster.ClientSize.Height;
+     Color c = b.GetPixel(x, y);
+
+    private void originalmaster_Click(object sender, EventArgs e)
+    {
+
+        var rato = e as MouseEventArgs;
+        Bitmap b = new Bitmap(originalmaster.Image);
+        Color c = b.GetPixel(rato.X, rato.Y);
+        h = Math.Round(c.GetHue(), 0);
+        h = (h * 255) / 360;
+        s = Math.Round(c.GetSaturation() * 255, 0);
+        v = Math.Round(c.GetBrightness() * 255, 0);
+
+
+        lb_valores_hsv.Text = "H: " + h + " S: " + s + " V: " + v;
+        lb_valores_rgb.Text = "R: " + c.R + " G: " + c.G + " B: " + c.B;
+
+    }
+
+    Color redColor = Color.FromArgb(255, 0, 0);

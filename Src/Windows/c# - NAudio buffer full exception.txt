@@ -1,0 +1,68 @@
+https://stackoverflow.com/
+
+
+I try to make a softphone. It passes sound, but after 5 seconds i get "Buffer Full" exception.
+
+Here's my sending code:
+
+public class Media
+{
+    static WaveInEvent s_WaveIn = new WaveInEvent();
+    Action<byte[]> waveHandler;
+    public void Capture(Action<byte[]> toRtp)
+    {
+        s_WaveIn = new WaveInEvent();
+        s_WaveIn.WaveFormat = new WaveFormat(8000, 1);//44100, 2);
+        waveHandler = toRtp;
+
+        s_WaveIn.DataAvailable += new EventHandler<WaveInEventArgs>(SendCaptureSamples);
+        s_WaveIn.StartRecording();
+    }
+
+    void SendCaptureSamples(object sender, WaveInEventArgs e)
+    {
+        waveHandler(e.Buffer);
+    }
+
+    public void Stop()
+    {
+        s_WaveIn.StopRecording();
+    }
+}
+ToRtp is
+
+    private void ToRtp(byte[] buffer)
+    {
+        myRTP.SequenceNumber++;
+        Sender.SendResponse(myRTP.MakePacket(alaw.Encode(buffer,0,buffer.Length)), RTPClient, rtpPort);//ToRTPData(buffer, 8000, 1), myUdpClient);
+    }
+Receiving:
+
+class Client
+{
+        WaveFormat pcmFormat = new WaveFormat(8000, 16, 1);
+        WaveFormat alawFormat = WaveFormat.CreateALawFormat(8000, 1);
+
+        WaveOut waveOut;
+        BufferedWaveProvider waveProvider;
+        ALawChatCodec alaw = new ALawChatCodec();
+
+    public Client(IHandlerFactory handlerFactory, IPAddress hostAddress, int portNumber)
+    {
+        waveOut = new WaveOut();
+        waveProvider = new BufferedWaveProvider(pcmFormat);
+        waveOut.Init(waveProvider);
+        waveOut.Play();
+    }
+
+    private void HandleIncomingRTPRequest(IAsyncResult ar)
+    {
+        IPEndPoint temp = new IPEndPoint(IPAddress.Parse(asteriskip), rtpPort);
+        byte[] received = RTPClient.EndReceive(ar, ref temp);
+        byte[] decoded = alaw.Decode(received, 12, received.Length - 12);
+        waveProvider.AddSamples(decoded, 0, decoded.Length);//Exception occures here
+    }
+}
+
+
+To mitigate occasional buffer full exceptions you can always clear the BufferedWaveProvider if it gets full. But if it's happening regularly it means you are getting incoming audio faster than you can play it.

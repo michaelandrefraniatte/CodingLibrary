@@ -1,0 +1,29 @@
+//Finds the laser dot blob
+        private Rectangle laserBlobFind(Bitmap image, int xPos, int yPos)
+        {
+            //System.Console.WriteLine("Looking for blob.");
+            Rectangle laserBlob = new Rectangle(0, 0, 0, 0);
+
+            Grayscale filter = new Grayscale(0.2125, 0.7154, 0.0721);
+            Bitmap grayImage = filter.Apply(image);
+
+            BlobCounter bc = new BlobCounter();
+            bc.ProcessImage(grayImage);
+            Rectangle[] rects = bc.GetObjectRectangles();
+
+            //System.Console.WriteLine("{0} rectangles", rects.GetLength(0));
+
+            foreach (Rectangle rect in rects)
+            {
+                if (rect.Contains(xPos, yPos))
+                {
+                    //System.Console.WriteLine("Found laser blob");
+                    laserBlob = rect;
+                }
+            }
+
+            //System.Console.WriteLine("Returning from find blob");
+            return laserBlob;
+        }
+
+//////////////////////////////////////////

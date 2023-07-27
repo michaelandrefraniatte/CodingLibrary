@@ -1,0 +1,66 @@
+https://seydahatipoglu.wordpress.com/2012/10/21/how-to-display-cursor-coordinates-in-google-map-javascript/
+
+google.maps.event.addListener(map, 'mousemove', function (event) {
+              displayCoordinates(event.latLng);               
+          });
+ 
+function displayCoordinates(pnt) {
+          var coordsLabel = document.getElementById("tdCursor");
+          var lat = pnt.lat();
+          lat = lat.toFixed(4);
+          var lng = pnt.lng();
+          lng = lng.toFixed(4);
+          coordsLabel.innerHTML = "Latitude: " + lat + "  Longitude: " + lng;
+      }
+
+
+https://stackoverflow.com/
+
+marker.setPosition(myLatlng);
+var position = new google.maps.LatLng(lat, lng);
+marker.setPosition(position);
+infowindow.setPosition(marker.getPosition());
+map.setCenter({lat: -34, lng: 151});
+
+<script src="//maps.googleapis.com/maps/api/js?v=3.31&key=
+
+
+
+https://gist.github.com/eivanphils/426d4b4d65fddf27c5a4e00532f0c0a2
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt1dtSkxqSIbtWoF-DfeUTZb906mihfh4"
+            type="text/javascript"></script> 
+
+<input id="lat" type="hidden" name="latitude" value="{{ profile.latitude }}"><br>
+<input id="lng" type="hidden" name="longitude" value="{{ profile.longitude }}">
+
+<div id="map-canvas"></div>
+
+function initialize() {
+        var myLatLng = new google.maps.LatLng( {{ profile.latitude }}, {{ profile.longitude }} ),
+                myOptions = {
+                    zoom: 4,
+                    center: myLatLng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                },
+                map = new google.maps.Map( document.getElementById( 'map-canvas' ), myOptions ),
+                marker = new google.maps.Marker( {position: myLatLng, map: map, draggable: true } );
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            document.getElementById("lat").value = this.getPosition().lat();
+            document.getElementById("lng").value = this.getPosition().lng();
+            console.log(this.getPosition().lat());
+            console.log(this.getPosition().lng());
+        });
+        marker.setMap( map );
+        moveMarker( map, marker );
+
+    }
+
+    function moveMarker( map, marker ) {
+        //delayed so you can see it move
+        setTimeout( function(){
+            marker.setPosition( new google.maps.LatLng( 0, 0 ) );
+            map.panTo( new google.maps.LatLng( 0, 0 ) );
+        }, 1500 );
+    };
+    initialize();

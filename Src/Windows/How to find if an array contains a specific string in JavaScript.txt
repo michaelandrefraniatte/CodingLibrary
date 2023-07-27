@@ -1,0 +1,4 @@
+https://stackoverflow.com/
+
+var myarr = ["I", "like", "turtles"];
+var arraycontainsturtles = (myarr.indexOf("turtles") > -1);

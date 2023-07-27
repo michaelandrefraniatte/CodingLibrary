@@ -1,0 +1,32 @@
+https://www.codeproject.com/Questions/119620/Crash-Event-C
+
+/// <summary>
+/// Main thread exception handler
+/// </summary>
+/// <param name="sender">sender</param>
+/// <param name="e">event</param>
+public static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e) 
+{
+}
+
+/// <summary>
+/// Application domain exception handler
+/// </summary>
+/// <param name="sender">sender</param>
+/// <param name="e">event</param>
+public static void AppDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+{
+}
+
+[STAThread]
+public static void Main()
+{
+    // Unhandled exceptions for our Application Domain
+    AppDomain.CurrentDomain.UnhandledException += new System.UnhandledExceptionEventHandler(AppDomain_UnhandledException);
+
+    // Unhandled exceptions for the executing UI thread
+    Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+
+    // Whatever else your application does on startup
+
+}

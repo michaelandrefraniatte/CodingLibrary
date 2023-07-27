@@ -1,0 +1,38 @@
+https://stackoverflow.com/
+
+onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+
+$("body").mousemove(function(e) {
+    document.Form1.posx.value = e.pageX;
+    document.Form1.posy.value = e.pageY;
+})
+
+document.body.addEventListener("click", function (evt) {
+    console.dir(this);
+    //note evt.target can be a nested element, not the body element, resulting in misfires
+    console.log(evt.target);
+    alert("body clicked");
+});
+
+// event = keyup or keydown
+document.addEventListener('keyup', event => {
+  if (event.code === 'Space') {
+    console.log('Space pressed'); //whatever you want to do when space is pressed
+  }
+})
+//don't forget to upvote answers that help you !
+
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+        //your code
+    }
+}
+
+document.body.onkeyup = function(e) {
+  if (e.key == " " ||
+      e.code == "Space" ||      
+      e.keyCode == 32      
+  ) {
+    //your code
+  }
+}

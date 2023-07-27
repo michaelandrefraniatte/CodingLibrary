@@ -1,0 +1,49 @@
+https://community.monogame.net/t/setting-up-touch-controls-for-android-project/11522
+
+Setting up touch controls for Android project
+Android
+
+takki
+Apr '19
+hey, I’m currently working on a port for a windows game to Android, I have been managing okej so far and most of the things have been dealt whit but I’m having trouble understanding if I check for inputs on a touch device.
+the game only needs to know if the user has taped anywhere on the screen.
+I have been reading for hours but I can’t seem to find a good answer.
+
+
+
+Oven_Owl
+Apr '19
+was working on this just the other day. below api should be just about all you need. returns a TouchCollection which is iterable and has a position for each finger touching the screen, you can use this point to check for swipes, collision test against a point on screen for touching buttons etc.
+
+touchState = TouchPanel.GetState();
+
+
+
+
+takki
+Apr '19
+once i have the current state, how do i check if its a press or not? do i use the .Contains and if so how?
+
+
+
+
+Oven_Owl
+Apr '19
+yes exactly, use Rectangle.Contains(point)
+
+here’s a function I think I found on these forums originally. The more complex part for me was calculating the bounding rectangle, but depending on your project this is probably quite easy (I had to navigate a scene graph to calculate bounds, but in a simpler case just give it whatever box your sprite uses for drawing)
+
+    private bool CheckTouch(Rectangle target, TouchCollection touchCollection)
+    {
+        if (touchCollection.Count > 0)
+        {
+            foreach (var touch in touchCollection)
+            {
+                if (target.Contains(touch.Position))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }

@@ -1,0 +1,60 @@
+https://www.w3schools.com/php/php_filter.asp
+https://www.w3schools.com/php/php_filter_advanced.asp
+
+Sanitize and Validate an Email Address
+
+<?php
+$email = "john.doe@example.com";
+
+// Remove all illegal characters from email
+$email = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+// Validate e-mail
+if (!filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+  echo("$email is a valid email address");
+} else {
+  echo("$email is not a valid email address");
+}
+?>
+
+Sanitize and Validate a URL
+
+<?php
+$url = "https://www.w3schools.com";
+
+// Remove all illegal characters from a url
+$url = filter_var($url, FILTER_SANITIZE_URL);
+
+// Validate url
+if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
+  echo("$url is a valid URL");
+} else {
+  echo("$url is not a valid URL");
+}
+?>
+
+Validate an Integer Within a Range
+
+<?php
+$int = 122;
+$min = 1;
+$max = 200;
+
+if (filter_var($int, FILTER_VALIDATE_INT, array("options" => array("min_range"=>$min, "max_range"=>$max))) === false) {
+  echo("Variable value is not within the legal range");
+} else {
+  echo("Variable value is within the legal range");
+}
+?>
+
+Validate URL - Must Contain QueryString
+
+<?php
+$url = "https://www.w3schools.com";
+
+if (!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED) === false) {
+  echo("$url is a valid URL with a query string");
+} else {
+  echo("$url is not a valid URL with a query string");
+}
+?>

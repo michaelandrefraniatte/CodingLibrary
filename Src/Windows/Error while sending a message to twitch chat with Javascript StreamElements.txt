@@ -1,0 +1,37 @@
+https://stackoverflow.com/
+
+var data = {"message": "test"};
+var token = "secret"
+var xhr = new XMLHttpRequest();
+
+xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === this.DONE) {
+        console.log(this.responseText);
+    }
+});
+
+xhr.open("POST", "https://api.streamelements.com/kappa/v2/bot/5eab1a7fc644de5b0169703c/say");
+xhr.setRequestHeader("accept", "application/json");
+xhr.setRequestHeader("content-type", "application/json");
+xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+
+xhr.send(data);
+
+var data = { message: "test"};
+var token = "secret";
+
+await fetch('https://api.streamelements.com/kappa/v2/bot/5eab1a7fc644de5b0169703c/say', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json;charset=utf-8',
+    'Authorization': `Bearer ${token}`
+  },
+  body: JSON.stringify(data)
+})
+.then(response => response.json()) 
+.then(result => { 
+   console.log(result)
+})
+.catch(err => {
+   console.log(err)
+})

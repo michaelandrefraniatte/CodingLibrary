@@ -1,0 +1,44 @@
+https://www.w3schools.com/html/html5_webstorage.asp
+
+// Store
+localStorage.setItem("lastname", "Smith");
+
+// Retrieve
+document.getElementById("result").innerHTML = localStorage.getItem("lastname");
+
+window.localStorage
+
+//Syntax for SAVING data to localStorage
+localStorage.setItem("key", "value");
+
+//Syntax for READING data from localStorage
+var lastname = localStorage.getItem("key");
+
+//Syntax for REMOVING data from localStorage
+localStorage.removeItem("key");
+
+
+https://stackoverflow.com/
+
+localStorage.setItem("users", JSON.stringify(users));
+users = JSON.parse(localStorage.getItem("users") || "[]");
+users.push({id: 1, foo: "bar"});
+
+(function() { // Scoping function to avoid creating globals
+    // Loading
+    var users = JSON.parse(localStorage.getItem("users") || "[]");
+    console.log("# of users: " + users.length);
+    users.forEach(function(user, index) {
+        console.log("[" + index + "]: " + user.id);
+    });
+
+    // Modifying
+    var user = {
+        id: Math.floor(Math.random() * 1000000)
+    };
+    users.push(user);
+    console.log("Added user #" + user.id);
+
+    // Saving
+    localStorage.setItem("users", JSON.stringify(users));
+})();

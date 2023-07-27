@@ -1,0 +1,4 @@
+https://answers.microsoft.com/en-us/xbox/forum/all/game-pass-pc-games-wont-install-to-external-d/1ce966ea-b307-4a32-bf00-8b35f5a9a44d
+
+I figured out the problem on my end, my hdd was formatted to exfat instead of ntfs and once formatted properly i never had the issue again
+

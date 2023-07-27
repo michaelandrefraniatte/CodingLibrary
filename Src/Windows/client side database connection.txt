@@ -1,0 +1,4 @@
+When using database with client side, hackers can easy use developper console or use injection in your page to spam or fish your database
+Firestore or custom API used with client side are visible and can be used with javascript codes wrote by hackers very easy
+
+

@@ -1,0 +1,21 @@
+https://support.wix.com/en/article/setting-permissions-for-google-drive-files-and-folders
+
+To set permissions for a file:
+Select the file you want to share.
+Click Share on the top right.
+Click the drop-down arrowDownunder Get Link. 
+Choose to share the file with Anyone with the link.
+To decide what people can do with your file when you share it, select either, Viewer, Commenter, or Editor.
+Click Copy link.
+
+To set permissions for a folder:
+Select the folder you want to share.
+Click Share on the top right.
+Click the drop-down arrowDownunder Get Link.
+Choose to share the folder with Anyone with the link.
+Click the drop-down and choose what viewers can do:
+Viewer: Anyone with the link can view the files in the folder. 
+Commenter: Anyone with the link can view and comment on the files in the folder.
+Editor: Anyone with the link can view, comment, organize files, add new files, and edit existing files in the folder. 
+Click Copy link.
+

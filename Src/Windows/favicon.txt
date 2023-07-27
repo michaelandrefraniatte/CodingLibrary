@@ -1,0 +1,2 @@
+
+- In order favicon for your site be display in Youtube banner if put the link, you must indexing your site under Google search console and bing webmaster tool using your Google account and following instructions

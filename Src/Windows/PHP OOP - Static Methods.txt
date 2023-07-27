@@ -1,0 +1,21 @@
+https://www.w3schools.com/php/php_oop_static_methods.asp
+
+Static methods can be called directly - without creating an instance of the class first
+
+<?php
+class domain {
+  protected static function getWebsiteName() {
+    return "W3Schools.com";
+  }
+}
+
+class domainW3 extends domain {
+  public $websiteName;
+  public function __construct() {
+    $this->websiteName = parent::getWebsiteName();
+  }
+}
+
+$domainW3 = new domainW3;
+echo $domainW3 -> websiteName;
+?>

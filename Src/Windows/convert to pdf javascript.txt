@@ -1,0 +1,8 @@
+convert to pdf javascript :
+
+https://www.codexworld.com/convert-html-to-pdf-using-javascript-jspdf/
+https://stackoverflow.com/questions/18191893/generate-pdf-from-html-in-div-using-javascript
+
+https://github.com/PDFTron/web-to-pdf
+https://github.com/MrRio/jsPDF
+

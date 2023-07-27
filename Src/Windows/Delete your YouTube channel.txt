@@ -1,0 +1,7 @@
+Sign in to YouTube Studio.
+From the left sidebar, select Settings .
+Select Channel Advanced Settings.
+​At the bottom, select Remove YouTube Content. 
+Select I want to permanently delete my content.
+Select the boxes to confirm you want to delete your channel.
+Select Delete my content.

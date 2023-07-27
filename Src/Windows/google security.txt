@@ -1,0 +1,3 @@
+
+- Disable access for less secure app here : https://myaccount.google.com/lesssecureapps
+- Enable secure access here : https://myaccount.google.com/account-enhanced-safe-browsing

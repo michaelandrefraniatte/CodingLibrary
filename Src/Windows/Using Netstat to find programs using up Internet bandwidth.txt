@@ -1,0 +1,1 @@
+Right-click Command Prompt and choose Run as administrator, in the Command Prompt, enter netstat -o -n and then press Enter, see PID of programs using ports

@@ -1,0 +1,17 @@
+https://stackoverflow.com/
+
+string[] IN ={"Against","Like","Upon","Through","Of","With","Upon","On","Into","From","by","that","In","About","For"
+    ,"Along","Before","Beneath","At","Across","beside","After","Though","Among","Toward","If"};
+
+Dictionary<string, string[]> wordDictionary = new Dictionary<string, string[]>();
+
+wordDictionary.Add("IN", IN);
+
+wordDictionary.Add("IN", new string[] {"Against","Like","Upon","Through","Of","With","Upon","On","Into","From","by","that","In","About","For","Along","Before","Beneath","At","Across","beside","After","Though","Among","Toward","If"});
+
+
+
+
+
+
+

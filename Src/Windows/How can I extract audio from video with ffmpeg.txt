@@ -1,0 +1,42 @@
+https://stackoverflow.com/
+
+To encode a high quality MP3 or MP4 audio from a movie file (eg AVI, MP4, MOV, etc) or audio file (eg WAV), I find it's best to use -q:a 0 for variable bit rate and it's good practice to specify -map a to exclude video/subtitles and only grab audio:
+
+ffmpeg -i sample.avi -q:a 0 -map a sample.mp3
+
+If you want to extract a portion of audio from a video use the -ss option to specify the starting timestamp, and the -t option to specify the encoding duration, eg from 3 minutes and 5 seconds in for 45 seconds:
+
+ffmpeg -i sample.avi -ss 00:03:05 -t 00:00:45.0 -q:a 0 -map a sample.mp3
+
+Extract all audio tracks / streams
+
+This puts all audio into one file:
+
+ffmpeg -i input.mov -map 0:a -c copy output.mov
+
+-map 0:a selects all audio streams only. Video and subtitles will be excluded.
+-c copy enables stream copy mode. This copies the audio and does not re-encode it. Remove -c copy if you want the audio to be re-encoded.
+Choose an output format that supports your audio format. See comparison of container formats.
+Extract a specific audio track / stream
+
+Example to extract audio stream #4:
+
+ffmpeg -i input.mkv -map 0:a:3 -c copy output.m4a
+
+-map 0:a:3 selects audio stream #4 only (ffmpeg starts counting from 0).
+-c copy enables stream copy mode. This copies the audio and does not re-encode it. Remove -c copy if you want the audio to be re-encoded.
+Choose an output format that supports your audio format. See comparison of container formats.
+Extract and re-encode audio / change format
+
+Similar to the examples above, but without -c copy. Various examples:
+
+ffmpeg -i input.mp4 -map 0:a output.mp3
+ffmpeg -i input.mkv -map 0:a output.m4a
+ffmpeg -i input.avi -map 0:a -c:a aac output.mka
+ffmpeg -i input.mp4 output.wav
+
+Extract all audio streams individually
+
+This input in this example has 4 audio streams. Each audio stream will be output as single, individual files.
+
+ffmpeg -i input.mov -map 0:a:0 output0.wav -map 0:a:1 output1.wav -map 0:a:2 output2.wav -map 0:a:3 output3.wav

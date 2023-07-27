@@ -1,0 +1,5 @@
+Run cmd with administrative privilege
+type netsh wlan show profiles
+type netsh wlan show interface
+type netsh wlan connect name="nameofnetwork" interface="nameofnetworkadapter"
+netsh wlan connect name="Livebox-34E0_5GHz" interface="Wi-Fi"

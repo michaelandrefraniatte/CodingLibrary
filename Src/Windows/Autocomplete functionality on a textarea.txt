@@ -1,0 +1,20 @@
+https://stackoverflow.com/
+
+<textarea id="text-area" name="text-area" rows="4" cols="50"></textarea>
+
+var suggests = ["hello", "world"];
+$("#text-area").asuggest(suggests);
+
+var suggests = ["head", "hello", "heart", "health"];
+$("#text-area").asuggest(suggests, {
+    'endingSymbols': ', ',
+    'minChunkSize': 3,
+    'delimiters': ':',
+    'stopSuggestionKeys': [$.asuggestKeys.RETURN]
+});
+
+var suggests = ["head", "hello", "heart", "health", "horizontal"];
+$("#text-area").asuggest(suggests, {
+    'autoComplete': false,
+    'cycleOnTab': true
+});

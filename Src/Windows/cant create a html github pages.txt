@@ -1,0 +1,1 @@
+If HTML isn't default format of your github page, it needs to create github page initialy with a simple index.html file

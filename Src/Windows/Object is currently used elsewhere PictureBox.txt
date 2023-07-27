@@ -1,0 +1,21 @@
+https://stackoverflow.com/
+
+private void ButtonClick() {
+
+    Thread thread = new Thread( this.BackgroundThread );
+    thread.Start(); // ideally, replace this with the .NET Task library
+}
+
+private void BackgroundThread() {
+
+    Bitmap bmp = new Bitmap( ... );
+    // do bitmap pixel-setting here
+
+    this.Invoke( () => {
+        Bitmap old = this.pictureBox1.Image as Bitmap;
+        this.pictureBox1.Image = bmp;
+        if( old != null ) {
+            old.Dispose();
+        }
+    } );
+}

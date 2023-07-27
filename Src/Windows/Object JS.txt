@@ -1,0 +1,29 @@
+var myObject = { a: 'c', b: 'a', c: 'b' };
+var keyNames = Object.keys(myObject);
+console.log(keyNames); // Outputs ["a","b","c"]
+
+const obj = { foo: 'bar', baz: 42 };
+console.log(Object.values(obj)); // ['bar', 42]
+
+const obj = {};
+ for (const key of yourArray) {
+      obj[key] = whatever;
+ }
+
+myobj = {"A":["Abe"], "B":["Bob"]}
+myobj[Object.keys(myobj)[0]];
+
+for(key in data) {
+    if(data.hasOwnProperty(key)) {
+        var value = data[key];
+    }
+}
+
+<a href='#' onclick='clickfunc(this)'>link</a>
+ function clickfunc(obj) {
+    var t = $(obj).text();
+    alert(t);
+ }
+$('a').click(function(){
+    alert($(this).text());
+});

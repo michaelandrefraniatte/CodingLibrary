@@ -1,0 +1,100 @@
+https://stackoverflow.com/
+
+Client:
+
+ private void btnCaptureScreen_Click(object sender, EventArgs e)
+    {
+        clientSocket = new TcpClient();
+        clientSocket.Connect(txtIP.Text, 8888);
+
+        NetworkStream serverStream = clientSocket.GetStream();
+
+        byte[] inStream = new byte[9999999];
+        serverStream.Read(inStream, 0, (int)clientSocket.ReceiveBufferSize);
+        ImageConverter ic = new ImageConverter();
+        Image img = (Image)ic.ConvertFrom(inStream);
+        Bitmap bit = new Bitmap(img);
+        bit.Save(@"C:\temp\capturas\scn" + numCapturas + ".png", ImageFormat.Png);
+        clientSocket.Close();
+    }
+
+server:
+
+    TcpListener serverSocket = new TcpListener(IPAddress.Parse(LocalIPAddress()), 8888);
+
+    TcpClient clientSocket = default(TcpClient);
+    serverSocket.Start();
+    NetworkStream networkStream = clientSocket.GetStream();
+    Bitmap bmpScreenshot = new Bitmap(Screen.PrimaryScreen.Bounds.Width,  Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppArgb);
+    Graphics gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+
+    gfxScreenshot.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, Screen.PrimaryScreen.Bounds.Size, CopyPixelOperation.SourceCopy);
+
+    ImageConverter converter = new ImageConverter();
+            Byte[] sendBytes = (byte[])converter.ConvertTo(bmpScreenshot, typeof(byte[]));
+    networkStream.Write(sendBytes, 0, sendBytes.Length);
+    networkStream.Flush();
+
+EDIT: now i tryied to improve reading logic... but now doesn't work, a ArgumentException appears when i try to save the bitmap.
+
+Client:
+
+clientSocket = new TcpClient(); clientSocket.Connect(txtIP.Text, 8888);
+
+    NetworkStream serverStream = clientSocket.GetStream();
+
+    byte[] outStream = System.Text.Encoding.ASCII.GetBytes("screenCapture()$");
+
+    serverStream.Write(outStream, 0, outStream.Length);
+    serverStream.Flush();
+
+    byte[] bytesFrom = new byte[10025];
+    serverStream.Read(bytesFrom, 0, (int)clientSocket.ReceiveBufferSize);
+
+
+    String dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
+    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
+    Int64 lengthdata = Convert.ToInt64(dataFromClient);
+    byte[] inStream = new byte[lengthdata];
+
+    int recived = 0;
+   while (recived != lengthdata)
+    {
+        recived += serverStream.Read(inStream, 0,(int)clientSocket.ReceiveBufferSize);
+    }
+
+    TypeConverter tc = TypeDescriptor.GetConverter(typeof(Bitmap));
+    Bitmap screenShot = (Bitmap)tc.ConvertFrom(inStream); //<--- Exception 
+    screenShot.Save(@"C:\temp\capturas\scn" + numCapturas + ".png", ImageFormat.Png);
+    clientSocket.Close();
+
+Server:
+
+private void sendScreenCapture(NetworkStream networkStream)
+{
+    Bitmap bmpScreenshot = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppArgb);
+    Graphics gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+
+    gfxScreenshot.CopyFromScreen(Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, 0, 0, Screen.PrimaryScreen.Bounds.Size, CopyPixelOperation.SourceCopy);
+
+    ImageConverter converter = new ImageConverter();
+    byte[] sendBytes = (byte[])converter.ConvertTo(bmpScreenshot, typeof(byte[]));
+
+    byte[] tamañoImagen = System.Text.Encoding.ASCII.GetBytes(sendBytes.Length.ToString() + "$");
+    networkStream.Write(tamañoImagen, 0, tamañoImagen.Length);
+
+
+    networkStream.Write(sendBytes, 0, sendBytes.Length);
+    networkStream.Flush();
+}
+
+EDIT 2: Haha finally i got it, i have to control the position in the byte[]:
+
+  int pos = 0;
+   while (lengthdata > 0)
+   {
+     int recived = serverStream.Read(inStream, pos, (int)lengthdata);
+     if (recived == 0) break;
+     lengthdata -= recived;
+     pos+=recived;
+   }

@@ -1,0 +1,21 @@
+https://thisinterestsme.com/change-src-image-javascript/
+
+//Change the img property and use load() to figure out when
+//the new image has been loaded
+$("#myImage").attr("src", 'img/new-image.jpg').load(function(){
+    alert('New image loaded!');
+});
+
+//Change the img property using jQuery's attr method
+$("#myImage").attr("src", 'img/new-image.jpg');
+
+//Get our img element by using document.getElementById
+var img = document.getElementById("myImage");
+//Set the src property of our element to the new image URL
+img.src = 'img/new-image.jpg';
+
+<img id="myImage" src="https://thisinterestsme.com/LOGO.png">
+<script>
+    //Modify the src attribute of the image with the ID "myImage"
+    document.getElementById("myImage").src = 'img/new-image.jpg';
+</script>

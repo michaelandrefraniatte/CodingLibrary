@@ -1,0 +1,12 @@
+https://stackoverflow.com/
+
+if(File.Exists(@"C:\test.txt"))
+{
+    File.Delete(@"C:\test.txt");
+}
+
+System.IO.File.Delete(@"C:\test.txt");
+
+System.IO.Directory.Delete(path,true);
+
+File.Copy(@"c:\test.txt", @"c:\test\foo.txt");

@@ -1,0 +1,46 @@
+<html>
+<head>
+	<title> Track Mouse </title>
+</head>
+
+<body onload="mouse_position()">
+	<form name="Form1">
+		POSX: <input type="text" name="posx"><br>
+		POSY: <input type="text" name="posy"><br>
+		KEY: <input type="text" name="key"><br>
+		CLICK: <input type="text" name="click"><br>
+	</form>
+</body>
+</html>
+
+<script type="text/javascript">
+
+var posX = '';
+var posY = '';
+var key = '';
+
+function mouse_position(e) {
+	posX = e.clientX;
+	posY = e.clientY;
+	document.Form1.posx.value = posX;
+	document.Form1.posy.value = posY;
+}
+
+onmousemove = function(e){mouse_position(e)};
+
+function key_code(e) {
+	key = e.keyCode || e.which;
+	document.Form1.key.value = key;
+}
+
+onkeyup = function(e){key_code(e)};
+
+function mouse_code(e) {
+	click = e.keyCode || e.which;
+	document.Form1.click.value = click;
+}
+
+onmousedown = function(e){mouse_code(e)};
+
+</script>
+

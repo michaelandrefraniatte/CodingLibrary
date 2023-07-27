@@ -1,0 +1,16 @@
+https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/webresourcerequested?tabs=dotnet
+
+// Add a filter to select all resource types under http://www.example.com
+webView.CoreWebView2.AddWebResourceRequestedFilter(
+      "http://www.example.com/*", CoreWebView2WebResourceContext.All);
+webView.CoreWebView2.WebResourceRequested += delegate (
+   object sender, CoreWebView2WebResourceRequestedEventArgs args) {
+   CoreWebView2WebResourceContext resourceContext = args.ResourceContext;
+   // Only intercept the document resources
+   if (resourceContext != CoreWebView2WebResourceContext.Document)
+   {
+      return;
+   }
+   CoreWebView2HttpRequestHeaders requestHeaders = args.Request.Headers;
+   requestHeaders.SetHeader("Custom", "Value");
+}

@@ -1,0 +1,55 @@
+https://community.monogame.net/t/solved-deploy-monogame-app-to-phone/12203
+
+[SOLVED] Deploy MonoGame App to phone
+
+
+Kwyrky
+
+So I managed to get a MonoGame App to run inside an emulator. I am using the latest version of MonoGame which is 3.7.1 at the moment and I am targeting Android 10. I am using VS 2019 on Windows 10 at the moment.
+
+Which are the steps I need to take from here? Do I have to sign the App first before I can run / install it on any Android phone? Also when I switch from Debug to Release I get a message with “Game1 keeps stopping” with the options “App Info” and “Close app”?
+
+Edit: I think the error came from a missing content file. I added it and now everything runs fine inside the emulator in both Debug and Release.
+
+I found out that a Keystore is needed and signing the app with it is necessary I guess. I am then able to save the signed apk file from Visual Studio 2019. But when I try to install the App on my phone it just tells me that the file or directory cannot be opened when I click install?
+
+Is there an additional step needed to install a MonoGame app on a device?
+
+
+george7378
+
+It sounds like you’ve got most of the way there already. I’ll post a list of everything I do in order to get an app running on a device. There are 2 methods which work for me in VS2017:
+
+Method 1:
+
+Plug your device in, make sure you’ve got the Android project selected as the active one using the drop down menu in VS, and just press Ctrl + F5 like you would to run any other program! It should just run on whichever device is selected in the top bar. For me, when I plug in a physical device, it automatically recognises and selects it.
+Method 2:
+
+(The above method is great for testing your app, but it doesn’t generate an APK which is ready for distribution. This one does.)
+
+Select ‘Release’ mode and rebuild your project.
+
+Right click on the Android project in the solution explorer, and select ‘Archive’. This packs it up into an APK.
+
+Once the archiving has finished, click the result and select ‘Distribute’. This will take you through the signing steps to generate a final APK which can be distributed. I normally select ‘Ad Hoc’ and generate a new keystore for each app. I also ‘save as’ into the project’s release folder so I know where to find the APK.
+
+Once the signed APK is generated, you can either transfer it to your device via Dropbox or something, and install it using a file manager once it’s downloaded, OR you can open the ADB command prompt (one of the little icons at the top of VS) and type adb install “full-path-to-signed-APK” which should magically install it to your selected device.
+
+
+Kwyrky
+
+Thanks for the reply! I already did everything like you described but when I open the apk with a file manager (allowing external apk installation for it) and select install, it just doesn’t work because it tells me “error” and “cannot open file/folder!”.
+
+Edit: I retried with a different file manager. First one with the error was the popular total commander.
+The second one worked! It is the file manager that was already installed on my phone (Huawei P30 pro).
+
+Thank you for your help! The additional information is very helpful :slight_smile:
+
+So maybe the issue is that total commander can’t handle that the installation is blocked by play protect but the other file manager named “files” can. The working file manager shows me the following dialog and lets me decide if I want to install the app or not.
+
+Nice that it works now! I will mark the topic as solved. :sunglasses:
+
+I also tried using the ADB console and it worked. But I had to do additional steps. So first I needed to activate USB debugging on my phone. After that it got listed and selected automatically in Visual Studio. And since I had an emulator running in parallel the tool refused to install the app. I solved this by listing the devices with the ADB tool and then used the serial number to specify where ADB should install the app. Also since the full path to the signed app had spaces I had to use quotes around the path.
+
+
+

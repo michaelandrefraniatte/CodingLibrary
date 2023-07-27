@@ -1,0 +1,30 @@
+https://stackoverflow.com/
+
+create buttons Dynamically on a panel
+
+Instead of adding buttons to form controls, add them to panel controls (I believe this is your form or user control):
+
+int top = 50;
+int left = 100;
+
+for (int i = 0; i < 10; i++)
+{
+    Button button = new Button();
+    button.Left = left;
+    button.Top = top;
+    panel.Controls.Add(button); // here
+    top += button.Height + 2;
+}
+
+UPDATE: for handling button click events, you should subscribe all buttons for single event handler (when you create button):
+
+    button.Click += Button_Click;
+
+And in event handler you can use sender to see which button raised event:
+
+private void Button_Click(object sender, EventArgs e)
+{
+    Button button = (Button)sender;
+    // you have instance of button
+    // ...
+}

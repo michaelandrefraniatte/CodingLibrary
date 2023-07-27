@@ -1,0 +1,111 @@
+https://stackoverflow.com/
+
+using System;
+using SharpDX;
+using SharpDX.Direct2D1;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+
+namespace MiniTri
+{
+    /// <summary>
+    ///   Screen capture of the desktop using DXGI OutputDuplication.
+    /// </summary>
+    internal static class Program
+    {
+
+        [STAThread]
+        private static void Main()
+        {
+            var Form1 = new ScreenCapture.Form1();
+
+            // # of graphics card adapter
+            const int numAdapter = 0;
+
+            // # of output device (i.e. monitor)
+            const int numOutput = 0;
+
+            // Create DXGI Factory1
+            var dxgiFactory = new SharpDX.DXGI.Factory1();
+            var dxgiAdapter = dxgiFactory.GetAdapter1(numAdapter);
+
+            // Create device from Adapter
+            var d3dDevice = new SharpDX.Direct3D11.Device(dxgiAdapter, DeviceCreationFlags.BgraSupport);
+
+            // Create Direct2D1 Factory1
+            var d2dFactory = new SharpDX.Direct2D1.Factory1();
+
+            // Create Direct2D device
+            SharpDX.Direct2D1.Device d2dDevice;
+            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
+                d2dDevice = new SharpDX.Direct2D1.Device(d2dFactory, dxgiDevice);
+
+            // Get the Direct2D1 DeviceContext
+            var d2dContext = new SharpDX.Direct2D1.DeviceContext(d2dDevice, DeviceContextOptions.None);
+
+            // Create Direct2D1 WindowRenderTarget
+            var WindowRenderTarget = new WindowRenderTarget(d2dFactory,
+                                                            new RenderTargetProperties
+                                                            {
+                                                                Type = RenderTargetType.Default
+                                                            },
+                                                            new HwndRenderTargetProperties
+                                                            {
+                                                                Hwnd = Form1.Handle,
+                                                                PixelSize = new Size2(Form1.Width, Form1.Height),
+                                                                PresentOptions = PresentOptions.Immediately
+                                                            });
+
+            // Get DXGI.Output
+            var output = dxgiAdapter.GetOutput(numOutput);
+            var output1 = output.QueryInterface<Output1>();
+
+            // Create RawRectangleF with the Form size
+            var FormRectangle = new SharpDX.Mathematics.Interop.RawRectangleF(0, 0, Form1.Width, Form1.Height);
+
+            // Duplicate the output
+            var duplicatedOutput = output1.DuplicateOutput(d3dDevice);
+
+            bool captureDone = false;
+            for (int i = 0; !captureDone; i++)
+            {
+                try
+                {
+                    SharpDX.DXGI.Resource screenResource;
+                    OutputDuplicateFrameInformation duplicateFrameInformation;
+
+                    // Try to get duplicated frame within given time
+                    duplicatedOutput.AcquireNextFrame(10000, out duplicateFrameInformation, out screenResource);
+
+                    if (i > 0)
+                    {
+                        // Create a Direct2D1 Bitmap1 from screenResource
+                        var dxgiSurface = screenResource.QueryInterface<Surface>();
+                        var d2dBitmap1 = new Bitmap1(d2dContext, dxgiSurface);
+
+                        // Should draw the bitmap on the form, but fails with "WrongResourceDomain" exception
+                        WindowRenderTarget.BeginDraw();
+                        WindowRenderTarget.DrawBitmap(d2dBitmap1, FormRectangle, 1.0f, BitmapInterpolationMode.Linear);
+                        WindowRenderTarget.EndDraw();
+
+                        // Capture done
+                        captureDone = true;
+                    }
+
+                    screenResource.Dispose();
+                    duplicatedOutput.ReleaseFrame();
+
+                }
+                catch (SharpDXException e)
+                {
+                    if (e.ResultCode.Code != SharpDX.DXGI.ResultCode.WaitTimeout.Result.Code)
+                    {
+                        throw e;
+                    }
+                }
+            }
+
+            // TODO: We should cleanp up all allocated COM objects here
+        }
+    }
+}

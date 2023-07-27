@@ -1,0 +1,3 @@
+https://softwarekeep.com/help-center/how-to-find-the-startup-folder-in-windows-10
+
+Navigate to the following location: %appdata%\Microsoft\Windows\Start Menu\Programs\Startup

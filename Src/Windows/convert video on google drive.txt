@@ -1,0 +1,7 @@
+upload video on
+https://drive.google.com/
+open video with video player for google drive
+https://youfiles.herokuapp.com/
+Disable adblock extension and set standard usage for protecting privacy under confidentiality of your browser parameters
+
+

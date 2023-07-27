@@ -1,0 +1,64 @@
+https://stackoverflow.com/
+
+
+
+using System;
+using System.Net;
+using System.Net.NetworkInformation;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        foreach ( NetworkInterface netif in NetworkInterface.GetAllNetworkInterfaces() )
+        {
+            Console.WriteLine("Network Interface: {0}", netif.Name);
+            IPInterfaceProperties properties = netif.GetIPProperties();
+            foreach ( IPAddress dns in properties.DnsAddresses )
+                Console.WriteLine("\tDNS: {0}", dns);
+            foreach ( IPAddressInformation anycast in properties.AnycastAddresses )
+                Console.WriteLine("\tAnyCast: {0}", anycast.Address);
+            foreach ( IPAddressInformation multicast in properties.MulticastAddresses )
+                Console.WriteLine("\tMultiCast: {0}", multicast.Address);
+            foreach ( IPAddressInformation unicast in properties.UnicastAddresses )
+                Console.WriteLine("\tUniCast: {0}", unicast.Address);
+        }
+    }
+}
+
+
+NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+foreach(NetworkInterface  adapter in  nics)
+{
+    foreach(var x in adapter.GetIPProperties().UnicastAddresses)
+    {
+        if (x.Address.AddressFamily == AddressFamily.InterNetwork  && x.IsDnsEligible)
+        {
+                    Console.WriteLine(" IPAddress ........ : {0:x}", x.Address.ToString());
+        }
+    }
+}
+NetworkInterface.GetAllNetworkInterfaces()
+    .SelectMany(adapter=> adapter.GetIPProperties().UnicastAddresses)
+    .Where(adr=>adr.Address.AddressFamily == AddressFamily.InterNetwork  && adr.IsDnsEligible)
+    .Select (adr => adr.Address.ToString());
+
+
+//To get the local IP address 
+string sHostName = Dns.GetHostName (); 
+IPHostEntry ipE = Dns.GetHostByName (sHostName); 
+IPAddress [] IpA = ipE.AddressList; 
+for (int i = 0; i < IpA.Length; i++) 
+{ 
+    Console.WriteLine ("IP Address {0}: {1} ", i, IpA[i].ToString ()); 
+}
+
+
+
+
+
+
+
+
+
+

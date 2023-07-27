@@ -1,0 +1,59 @@
+https://social.msdn.microsoft.com/Forums/sqlserver/en-US/da4e9b0e-8229-4b69-b98f-67967e91c6da/capture-screen-then-send-it-over-tcp?forum=csharpgeneral
+
+server:
+
+try
+            {
+                IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
+                TcpListener server = new TcpListener(ipAddress, 9500);
+                server.Start();
+                Console.WriteLine("Waiting for client to connect...");
+
+                while (true)
+                {
+                    if (server.Pending())
+                    {
+                        Bitmap tImage = new Bitmap(Image URL goes here);
+                        byte[] bStream = ImageToByte(tImage);
+
+                        while (true)
+                        {
+                            TcpClient client = server.AcceptTcpClient();
+                            Console.WriteLine("Connected");
+                            while (client.Connected)
+                            {
+                                NetworkStream nStream = client.GetStream();
+                                nStream.Write(bStream, 0, bStream.Length);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+            catch (SocketException e1)
+            {
+                Console.WriteLine("SocketException: " + e1);
+            }
+        }
+        static byte[] ImageToByte(System.Drawing.Image iImage)
+        {
+            MemoryStream mMemoryStream = new MemoryStream();
+            iImage.Save(mMemoryStream, System.Drawing.Imaging.ImageFormat.Png);
+            return mMemoryStream.ToArray();
+        }
+
+client:
+
+IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+using (TcpClient client = new TcpClient())
+{
+    client.Connect(ipAddress, 9500);
+    lblStatus.Text = "Connected...";
+
+    NetworkStream nNetStream = client.GetStream();
+    Image returnImage = Image.FromStream(nNetStream);
+    pictureBox1.Image = returnImage;
+}
+

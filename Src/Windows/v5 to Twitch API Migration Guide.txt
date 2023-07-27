@@ -1,0 +1,21 @@
+https://dev.twitch.tv/docs/api/migration
+
+https://dev.twitch.tv/docs/authentication#types-of-tokens
+
+OAuth tokens are required when requesting Twitch API endpoints. This differs from v5 where most endpoints only required the Client ID header. You will also need to use the word “Bearer” in the Authorization header instead of “OAuth.” Here is a curl example that demonstrates how to send your Client ID and OAuth token for endpoints in the Helix namespace.
+
+curl -H 'Client-Id: wbmytr93xzw8zbg0p1izqyzzc5mbiz' \
+-H 'Authorization: Bearer 2gbdx6oar67tqtcmt49t3wpcgycthx' \
+-X GET 'https://api.twitch.tv/helix/channels?broadcaster_id=12826'
+
+https://dev.twitch.tv/docs/authentication
+
+https://dev.twitch.tv/docs/authentication#registration
+
+https://dev.twitch.tv/docs/authentication#getting-tokens
+
+https://dev.twitch.tv/docs/authentication#sending-user-access-and-app-access-tokens
+
+Client ID : sgkzvz71pmvl54d1h2hv9j8a4ov00t
+Token : yr4vxobuaftfigconk3otngziyu0gg
+

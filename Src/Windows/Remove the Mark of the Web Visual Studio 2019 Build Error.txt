@@ -1,0 +1,13 @@
+https://www.ericnagel.com/how-to-tips/remove-the-mark-of-the-web-visual-studio-2019.html
+
+Error Couldn't process file frmMain.resx due to its being in the Internet or Restricted zone or having the mark of the web on the file. Remove the mark of the web if you want to process these files. FinancialCalculations
+
+There are a lot of proposed solutions out there, but this is what worked for me:
+
+Unblock the file in Windows ExplorerClose the project in Visual Studio 2019
+Find the file in Windows Explorer
+Right click and go to Properties
+On the General tab, look at the bottom where it says “This file came from another computer and might be blocked to help protect this computer.” and click the Unblock checkbox
+Click OK, then re-open the project and try building it again
+Now you should be able to build your Visual Studio 2019 project without being stopped by this “remove the mark of the web” error.
+

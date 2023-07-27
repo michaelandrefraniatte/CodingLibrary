@@ -1,0 +1,4 @@
+https://stackoverflow.com/
+
+Array.FindIndex(myArray, x => x.Contains("author"));
+

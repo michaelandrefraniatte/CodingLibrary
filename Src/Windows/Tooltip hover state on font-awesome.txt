@@ -1,0 +1,50 @@
+https://stackoverflow.com
+
+/* Styles go here */
+
+.tip {
+    position: relative;
+    float: left;
+    left: 20px;
+    
+}
+
+.help {
+    text-align: right;
+    display: block;
+}
+.tip-txt {
+    width: 145px;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    background: #333;
+    padding: 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    color: #fff;
+    transition: .5s ease-in-out;
+    box-sizing: border-box;
+    text-align: left;
+    transition: opacity .3s;
+}
+.fa {
+    font-size: 16px;
+    transition: .5s ease-in-out;
+}
+.fa-question-circle:hover + .tip-txt { 
+    visibility: visible;
+    color: red;
+    opacity: 1;
+}
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
+<div class="tip">
+  <span class="help">
+    Help
+    <i class="fa fa-question-circle"></i>
+    <span class="tip-txt">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+    </span>
+  </span>
+</div>

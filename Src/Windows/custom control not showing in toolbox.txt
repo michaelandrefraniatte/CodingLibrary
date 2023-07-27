@@ -1,0 +1,11 @@
+https://social.msdn.microsoft.com/Forums/sqlserver/en-US/e335c5a4-d320-4161-baba-30080211ea16/custom-control-not-showing-in-toolbox?forum=visualstudiogeneral#:~:text=At%20the%20bottom%20of%20the,reload%20the%20solution%20as%20well.
+
+(1) Go to Tools > Options > Windows Forms Designer > General
+
+At the bottom of the list you'll find Toolbox > AutoToolboxPopulate which on a fresh install defaults to False. Set it true and then rebuild your solution. The user controls in you solution should be automatically added to the toolbox. You might have to reload the solution as well.
+
+(2) If your User Control is in a library you can add this to you Toolbox using
+
+Toolbox -> right click -> Choose Items -> Browse
+
+Select your assembly with the User Control.

@@ -1,0 +1,118 @@
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/3f771824-56b8-4ebf-b941-7afe40a52895/record-audio?forum=vbgeneral
+
+Imports System.Runtime.InteropServices
+
+Public Class Form1
+
+    Dim recording As Boolean = False
+    Dim Filez As String = "C:\Test.wav"
+
+    <DllImport("winmm.dll")> _
+    Private Shared Function mciSendString(ByVal command As String, ByVal buffer As String, ByVal bufferSize As Integer, ByVal hwndCallback As IntPtr) As Integer
+    End Function
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+        If recording = False Then
+            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0)
+            mciSendString("record recsound", "", 0, 0)
+            recording = True
+            Button1.Text = "Stop"
+        Else
+            mciSendString("save recsound " & Filez, "", 0, 0)
+            mciSendString("close recsound ", "", 0, 0)
+            Button2.Enabled = True
+            recording = False
+            Button1.Text = "Record"
+        End If
+
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        My.Computer.Audio.Play(Filez)
+    End Sub
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Button2.Enabled = False
+    End Sub
+End Class
+
+Imports System.Runtime.InteropServices
+Imports System.Text
+
+Public Class Form1
+    Private sb As New StringBuilder
+
+    <DllImport("winmm.dll", EntryPoint:="mciSendStringW")> _
+    Private Shared Function mciSendStringW(<InAttribute(), MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrCommand As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrReturnString As StringBuilder, ByVal uReturnLength As Integer, ByVal hwndCallback As IntPtr) As Integer
+    End Function
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Button_Stop.Enabled = False
+    End Sub
+
+    Private Sub Button_Record_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Record.Click
+        Button_Stop.Enabled = True
+        Button_Record.Enabled = False
+        mciSendStringW("open new Type waveaudio Alias capture", sb, 0, IntPtr.Zero)
+        mciSendStringW("set capture time format ms bitspersample 16 channels 2 samplespersec 48000 bytespersec 192000 alignment 4", Nothing, 0, IntPtr.Zero)
+        mciSendStringW("record capture", sb, 0, IntPtr.Zero)
+    End Sub
+
+    Private Sub Button_Stop_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Stop.Click
+        mciSendStringW("stop capture", sb, 0, IntPtr.Zero)
+        Using sfd As New SaveFileDialog
+            sfd.FileName = "Untitled"
+            sfd.DefaultExt = "wav"
+            sfd.AddExtension = True
+            If sfd.ShowDialog = DialogResult.OK Then
+                Button_Stop.Enabled = False
+                Dim saveas As String = Chr(34) & sfd.FileName & Chr(34)
+                mciSendStringW("save capture " & saveas, sb, 0, IntPtr.Zero)
+            End If
+        End Using
+        mciSendStringW("close capture", sb, 0, IntPtr.Zero)
+        Button_Stop.Enabled = False
+        Button_Record.Enabled = True
+    End Sub
+End Class
+
+Imports System.Runtime.InteropServices
+Imports System.Text
+
+Public Class Form1
+    Private sb As New StringBuilder
+
+    <DllImport("winmm.dll", EntryPoint:="mciSendStringW")> _
+    Private Shared Function mciSendStringW(<InAttribute(), MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrCommand As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrReturnString As StringBuilder, ByVal uReturnLength As Integer, ByVal hwndCallback As IntPtr) As Integer
+    End Function
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Button_Stop.Enabled = False
+    End Sub
+
+    Private Sub Button_Record_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Record.Click
+        Button_Stop.Enabled = True
+        Button_Record.Enabled = False
+        mciSendStringW("open new Type waveaudio Alias capture", sb, 0, IntPtr.Zero)
+        mciSendStringW("set capture time format ms bitspersample 16 channels 2 samplespersec 48000 bytespersec 192000 alignment 4", Nothing, 0, IntPtr.Zero)
+        mciSendStringW("record capture", sb, 0, IntPtr.Zero)
+    End Sub
+
+    Private Sub Button_Stop_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Stop.Click
+        mciSendStringW("stop capture", sb, 0, IntPtr.Zero)
+        Using sfd As New SaveFileDialog
+            sfd.FileName = "Untitled"
+            sfd.DefaultExt = "wav"
+            sfd.AddExtension = True
+            If sfd.ShowDialog = DialogResult.OK Then
+                Button_Stop.Enabled = False
+                Dim saveas As String = Chr(34) & sfd.FileName & Chr(34)
+                mciSendStringW("save capture " & saveas, sb, 0, IntPtr.Zero)
+            End If
+        End Using
+        mciSendStringW("close capture", sb, 0, IntPtr.Zero)
+        Button_Stop.Enabled = False
+        Button_Record.Enabled = True
+    End Sub
+End Class

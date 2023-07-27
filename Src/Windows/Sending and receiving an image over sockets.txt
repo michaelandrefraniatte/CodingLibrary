@@ -1,0 +1,166 @@
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/7ab073b4-1861-41d9-9894-6eeeaadbfd25/sending-and-receiving-an-image-over-sockets-with-c-screen-sharing-using-c?forum=csharpgeneral
+
+Server Code.
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+ 
+namespace ServerComputer
+{
+    publicpartialclassmainForm : Form
+    {
+        public mainForm()
+        {
+            InitializeComponent();
+        }
+        Socket sendsocket;
+        privatevoid goLive_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                sendsocket = newSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //The instantiation of socket, IP for 192.168.1.106, 10001 for PortIPEndPoint ipendpiont = newIPEndPoint(IPAddress.Parse(ipAddress.Text.Trim()), 10001);
+                sendsocket.Connect(ipendpiont);
+                //Establishment of end pointThread th = newThread(newThreadStart(threadimage));
+                th.IsBackground = true;
+                th.Start();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+                return;
+            }
+            this.Hide();    //Hidden form
+        }
+        privateBitmap GetScreen()
+        {
+            Bitmap bitmap = newBitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            Graphics g = Graphics.FromImage(bitmap);
+            g.CopyFromScreen(0, 0, 0, 0, bitmap.Size);
+            return bitmap;
+        }
+        privatevoid threadimage()
+        {
+            try
+            {
+                MemoryStream ms = newMemoryStream();
+                GetScreen().Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);   //Here I use the BMP formatbyte[] b = ms.ToArray();
+ 
+                sendsocket.Send(b);
+                ms.Close();
+ 
+ 
+            }
+            catch (Exception ee)
+            {
+                // MessageBox.Show(ee.Message);//return;
+            }
+ 
+            Thread.Sleep(1000);
+            threadimage();
+        }
+    }
+}
+
+Clint Code.
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+ 
+namespace ClientComputer
+{
+    public partial class mainForm : Form
+    {
+        public mainForm()
+        {
+            InitializeComponent();
+        }
+        Socket hostSocket;
+        Thread thread;
+        string localIP = string.Empty;
+        string computrHostName = string.Empty;
+        private void mainForm_Load(object sender, EventArgs e)
+        {
+            computrHostName = Dns.GetHostName();
+            IPHostEntry hostname = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in hostname.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            this.Text = this.Text + " | " + localIP;
+ 
+        }
+        private void liveScreen_Click(object sender, EventArgs e)
+        {
+            connectSocket();
+        }
+ 
+        private void connectSocket()
+        {
+            Socket receiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint hostIpEndPoint = new IPEndPoint(IPAddress.Parse(localIP), 10001);
+            //Connection node
+            receiveSocket.Bind(hostIpEndPoint);
+            receiveSocket.Listen(10);
+            MessageBox.Show("start");
+            hostSocket = receiveSocket.Accept();
+            thread = new Thread(new ThreadStart(trreadimage));
+ 
+            thread.IsBackground = true;
+            thread.Start();
+        }
+        private void trreadimage()
+        {
+            int dataSize;
+            string imageName = "Image-" + System.DateTime.Now.Ticks + ".JPG";
+            try
+            {
+ 
+                dataSize = 0;
+                byte[] b = new byte[1024 * 10000];  //Picture of great
+                dataSize = hostSocket.Receive(b);
+                if (dataSize > 0)
+                {
+                    MemoryStream ms = new MemoryStream(b);
+                    Image img = Image.FromStream(ms);
+                    img.Save(imageName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    videoBox.Image = img;
+                    ms.Close();
+                }
+ 
+            }
+            catch (Exception ee)
+            {
+                //MessageBox.Show(ee.Message);
+                //thread.Abort();
+            }
+            System.Threading.Thread.Sleep(1500);
+            trreadimage();
+        }
+    }
+}

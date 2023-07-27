@@ -1,0 +1,11 @@
+https://stackoverflow.com/
+
+
+List<int> initializers = new List <int>();
+
+initializers.Add(1);
+initializers.Add(3);
+
+int index = initializers.IndexOf(3);
+initializers.Insert(index, 2);
+Gives you 1,2,3.

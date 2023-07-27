@@ -1,0 +1,22 @@
+https://stackoverflow.com/
+
+ DWORD GetProcessorCount() 
+ {
+      SYSTEM_INFO sysinfo;  
+      DWORD dwNumberOfProcessors; 
+      GetSystemInfo(&sysinfo); 
+      dwNumberOfProcessors = sysinfo.dwNumberOfProcessors; 
+      return dwNumberOfProcessors; 
+ } 
+ vector<PCTSTR> GetValidCounterNames() 
+ { 
+     vector<PCTSTR> validCounterNames; 
+     DWORD dwNumberOfProcessors = GetProcessorCount(); 
+     DWORD index; 
+     vector<PCTSTR> vszProcessNames; 
+     TCHAR * szCounterName; 
+     validCounterNames.push_back(TEXT("\\Processor(_Total)\\% Processor Time")); 
+     validCounterNames.push_back(TEXT("\\Processor(_Total)\\% Idle Time")); 
+     // skip some codes
+     return validCounterNames;
+ } 

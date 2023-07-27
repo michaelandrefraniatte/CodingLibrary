@@ -1,0 +1,1 @@
+Using a DNS server, like quad9 or cloudflare, instead of default DNS server corresponding to endpoint IP of your modem/router, don't allow to establish a connection between 2 PC under your network in LAN, with websocket

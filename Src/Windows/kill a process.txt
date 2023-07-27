@@ -1,0 +1,40 @@
+https://stackoverflow.com/
+
+void kill(std::string filename, int delay)
+{
+    filename += ".exe";
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 pEntry;
+    pEntry.dwSize = sizeof(pEntry);
+    BOOL hRes = Process32First(hSnapShot, &pEntry);
+    while (hRes) {
+        if (filename.c_str() == pEntry.szExeFile) {
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD)pEntry.th32ProcessID);
+            if (hProcess != NULL) {
+                TerminateProcess(hProcess, 9);
+                CloseHandle(hProcess);
+            }
+        }
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);
+}
+int main()
+{
+    kill("notepad");
+}
+
+System.Diagnostics.Process process = new System.Diagnostics.Process();
+System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+startInfo.FileName = "cmd.exe";
+startInfo.Arguments = "taskkill /IM process.exe /F";
+startInfo.Verb = "runas";
+process.StartInfo = startInfo;
+process.Start();
+
+Process[] procs = Process.GetProcessesByName(process);
+foreach(Process proc in procs)
+   proc.Kill();
+
+

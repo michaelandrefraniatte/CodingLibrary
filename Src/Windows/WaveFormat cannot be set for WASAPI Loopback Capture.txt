@@ -1,0 +1,81 @@
+https://github.com/naudio/NAudio/issues/647
+https://github.com/naudio/NAudio/issues/174
+
+public byte[] Convert16(byte[] input, int length, WaveFormat format)
+        {
+            if (length == 0)
+                return new byte[0];
+            using (var memStream = new MemoryStream(input, 0, length))
+            {  
+               using (var inputStream = new RawSourceWaveStream(memStream, format))
+               {    
+                   var sampleStream = new NAudio.Wave.SampleProviders.WaveToSampleProvider(inputStream);
+                   var resamplingProvider = new NAudio.Wave.SampleProviders.WdlResamplingSampleProvider(sampleStream, 8000);
+                   var ieeeToPCM = new NAudio.Wave.SampleProviders.SampleToWaveProvider16(resamplingProvider);
+                   var sampleStreams = new NAudio.Wave.StereoToMonoProvider16(ieeeToPCM);
+                   sampleStreams.RightVolume = 0.5f;
+                   sampleStreams.LeftVolume = 0.5f;
+                   return readStream(sampleStreams, length);
+               }
+            }
+        }
+        
+        private byte[] readStream(IWaveProvider waveStream, int length)
+        {
+            byte[] buffer = new byte[length];
+            using (var stream = new MemoryStream())
+            {
+                int read;
+                while ((read = waveStream.Read(buffer, 0, length)) > 0)
+                {
+                    stream.Write(buffer, 0, read);
+                }
+                return stream.ToArray();
+            }
+        }
+        private void sourceStream_DataRecord(object sender, NAudio.Wave.WaveInEventArgs e)
+      {
+                byte[] output = Convert16(e.Buffer, e.BytesRecorded, waveIn.WaveFormat);
+                int tmp = countBytes + output.Length;
+                if (tmp > AudioBuffer.Length)
+                {
+                    Array.Resize(ref AudioBuffer, AudioBuffer.Length * 2);
+                }
+                Buffer.BlockCopy(output, 0, AudioBuffer, countBytes, output.Length);
+                countBytes += output.Length;
+      }
+
+
+NAudio.Wave.IWaveIn waveIn;
+int countBytes=0;
+Byte[] AudioBuffer = new Byte[20000000]; 
+var resampler = new WdlResampler();
+resampler.SetMode(true, 2, false);
+ resampler.SetFilterParms();
+ resampler.SetFeedMode(true); // input driven
+resampler.SetRates(waveIn.WaveFormat.SampleRate, 8000);
+
+private void sourceStream_DataRecord(object sender, NAudio.Wave.WaveInEventArgs e) 
+        {
+                float[] buffer = new float[e.Buffer.Length];
+                Buffer.BlockCopy(e.Buffer, 0, buffer, 0, e.Buffer.Length);
+
+                int framesAvailable = e.Buffer.Length / waveIn.WaveFormat.Channels;
+                float[] inBuffer;
+                int inBufferOffset;
+                int inNeeded = resampler.ResamplePrepare(framesAvailable, waveIn.WaveFormat.Channels, out inBuffer, out inBufferOffset);
+
+                Array.Copy(buffer, 0, inBuffer, inBufferOffset, inNeeded * waveIn.WaveFormat.Channels);
+
+                int inAvailable = inNeeded;
+                float[] outBuffer = new float[buffer.Length*2]; // plenty big enough
+                int framesRequested = outBuffer.Length / waveIn.WaveFormat.Channels;
+                int outAvailable = resampler.ResampleOut(outBuffer, 0, inAvailable, framesRequested, waveIn.WaveFormat.Channels);
+
+                Buffer.BlockCopy(outBuffer, 0, AudioBuffer, countBytes, outBuffer.Length);
+                countBytes += outBuffer.Length;
+}
+
+currentAudioBytes = Convert.ToBase64String(e.Data, e.Offset, e.ByteCount);
+byte[] data = Convert.FromBase64String(newString);
+string decodedString = Encoding.UTF8.GetString(data);

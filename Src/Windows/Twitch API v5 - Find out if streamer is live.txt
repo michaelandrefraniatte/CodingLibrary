@@ -1,0 +1,272 @@
+https://stackoverflow.com/
+
+https://id.twitch.tv/oauth2/token?client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&grant_type=client_credentials
+
+$(document).ready(function () {
+  // Display results from search
+  $('#user_search').on('click', function(e){
+    e.preventDefault();
+    $('#clean').modal('show');
+  });
+  $('#submit_search').on('submit', function(e){
+    e.preventDefault();
+    $('#clean').modal('show');
+  });
+  $(function () {
+    $('[data-toggle="popover"]').popover();
+  });
+
+
+});
+// First AJAX call for searching twitch.tv channels
+$('#submit_search').on('submit', function() {
+  var usersearch = document.getElementById('user_input').value;
+  var userURL = 'https://api.twitch.tv/kraken/search/channels?query=' + usersearch;
+  $.ajax({
+    url: userURL,
+    type: 'GET',
+    dataType: 'json',
+    contentType: 'application/json',
+    headers: {
+      'Accept': 'application/vnd.twitchtv.v5+json',
+      'Client-ID': 'm6dsm7dm7pd4ltqh3nd82g5nudjbu2'
+    },
+    success: function(data) {
+      // Multiple search without refreshing page
+      // Have this before you call cloneElement() so it doesn't conflict
+      var clean = $('#clean').clone();
+      $('#clean').on('hidden.bs.modal', function() {
+        $(this).remove();
+        var clone = clean.clone();
+        $('body').append(clone);
+        $('#clean').hide();
+      });
+
+      cloneElement(data);
+      $('.list-group-item:first').hide()
+      console.log(data);
+
+      // Clone HTML search results to display without cluttering HTML
+      function cloneElement(data) {
+        for(var i = 0; i < data.channels.length; i++) {
+
+          var name = data.channels[i].display_name;
+          var game = data.channels[i].game;
+          var logo = data.channels[i].logo;
+          var follow = data.channels[i].followers;
+          var commas = new Intl.NumberFormat().format(follow);
+
+          const sourceElement = document.querySelector('.list-group-item');
+          const destination = document.querySelector('.list-group');
+
+          const copy = sourceElement.cloneNode(true);
+          copy.setAttribute('id', 'main_streamer-' + i);
+
+          destination.appendChild(copy);
+
+          $(copy).text(name);
+          $(copy).popover({
+            html: true,
+            placement: 'right',
+            trigger: 'hover',
+            title: '<p class="text-center">'+ name +'</p><b class="status">User is: </b>',
+            content: '<p class="text-center">'+ game +'</p>'+'<p class="text-center">Followers: '+ commas +'</p>'+'<img src="'+ logo +'" alt="streamers logo" class="img-thumbnail streamers_logo">'
+          });
+        }
+      }
+      
+      var twitchId = [];
+      for(var x = 0; x < data.channels.length; x++) {
+        twitchId.push(data.channels[x]._id);
+        console.log(twitchId)
+      }
+      twitchId.forEach(function(stream) {
+        // Second AJAX call for searching specific streamers
+          var streamURL = 'https://api.twitch.tv/kraken/streams/' + stream;
+          $.ajax({
+            url: streamURL,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+              'Accept': 'application/vnd.twitchtv.v5+json',
+              'Client-ID': 'm6dsm7dm7pd4ltqh3nd82g5nudjbu2'
+            },
+            success: function(data) {
+              // Check if streamer is live or not
+              $('.list-group-item').on('shown.bs.popover', function() {
+                if (data.stream == null) {
+                  $('.streamers_logo').addClass('off');
+                  $('.status').append('OFFLINE' + ".");
+                  console.log('Streamer is offline...')
+                } else {
+                  $('.popover-body').addClass('on');
+                  $('.status').append('LIVE!');
+                  console.log('Streamer is live!')
+              };
+            });
+              console.log(data);
+            }
+        });
+      })
+    }
+  });
+});
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="twitchtv">
+    <meta name="author" content="nicer00ster">
+    <link rel="icon" href="https://static.twitchcdn.net/assets/favicon-75270f9df2b07174c23ce844a03d84af.ico">
+    <title>Twitch</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="bower_components/awesomplete/awesomplete.css">
+  </head>
+  <body>
+
+    <header>
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 py-4">
+              <h4 class="text-white">About</h4>
+              <p class="text-muted">Since launching in 2011, Twitch has evolved its reputation as the world’s leading social video service and community for video game culture to now encompass an array of emerging content surfaced by its users. As a result, 15 million visitors gather daily to interact about video games, music, the creative arts, their lives, and more with over 2 million unique creators who broadcast each month.</p>
+            </div>
+            <div class="col-sm-4 py-4">
+              <h4 class="text-white">Contact</h4>
+              <ul class="list-unstyled">
+                <li><a href="https://www.twitch.tv/" class="text-white">Twitch.tv</a></li>
+                <li><a href="https://twitter.com/Twitch?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" class="text-white">Follow Twitch.tv on Twitter</a></li>
+                <li><a href="https://www.facebook.com/Twitch/" class="text-white">Like Twitch.tv on Facebook</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar navbar-dark bg-dark">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand"><img src="img/twitch-icon-22.png" alt="logo" id="logo"></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <img src="img/jTSqOU8.png" alt="twitchlogo" id="twitchHeading">
+          <p class="lead text-muted">Follow your favorite twitch streamers. Know when they're online, and know what they're streaming.</p>
+          <form id="submit_search">
+            <div class="input-group">
+              <input type="hidden" name="search_param" value="all">
+              <input type="text" class="form-control" id="user_input" placeholder="Search streamer...">
+              <span class="input-group-btn">
+                  <button class="btn btn-outline-secondary" type="button" id="user_search"><span class="fa fa-search" id="btnbtn"></span></button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <div class="album text-muted">
+        <div class="container">
+
+          <div class="row">
+            <div class="card" id='test'>
+              <img data-src="holder.js/100px280?theme=thumb" alt="Placeholder">
+              <p class="card-text"></p>
+            </div>
+            <!--
+            <div class="card">
+              <h1 class='text-center'></h1>
+              <hr>
+              <div id="twitch-embed"></div>
+              <iframe frameborder="0"
+                      scrolling="no"
+                      id="chat_embed"
+                      src="http://www.twitch.tv/embed/imaqtpie/chat"
+                      height="500"
+                      width="350">
+              </iframe>
+            -->
+            <!-- Load the Twitch embed script -->
+            <script src="https://embed.twitch.tv/embed/v1.js"></script>
+
+            <!-- Create a Twitch.Embed object that will render within the "twitch-embed" root element. -->
+            <script type="text/javascript">
+              new Twitch.Embed("twitch-embed", {
+                width: 355,
+                height: 280,
+                channel: "imaqtpie",
+                layout: "video"
+              });
+            </script>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <div class="modal fade" id="clean" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Search Results...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Div to append clones to -->
+                    <div class="list-group">
+                      <!-- Cloned per results of search -->
+                        <a href="#" id="main_streamer-0" class="list-group-item list-group-item-action flex-column align-items-start">
+                          <h5 class="text-center"></h5>
+                          <hr>
+                          <div class="d-flex w-100 justify-content-center">
+                          </div>
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+        <p>Template sourced -- &copy; <a href="http://getbootstrap.com/">Bootstrap</a></p>
+        <p>Data provided by -- &copy; <a href="https://www.twitch.tv/">Twitch.tv</a></p>
+        <p>Alex Busch</p>
+      </div>
+    </footer>
+    <!-- JS at bottom so loads quicker -->
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script type="text/javascript" src="bower_components/holderjs/holder.min.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+
+  </body>
+</html>
+
+you could use the _total if but best is to see if the "streams" array is empty or not, if it is empty they are offline.

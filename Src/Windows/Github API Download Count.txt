@@ -1,0 +1,5 @@
+https://api.github.com/repos/MichaelFraniatte/WiiJoy4FPS/releases
+https://api.github.com/repos/MichaelFraniatte/WiiJoy4FPS/releases/29052461/assets
+
+https://api.github.com/repos/JibbSmart/JoyShockMapper/releases
+https://api.github.com/repos/JibbSmart/JoyShockMapper/releases/28657782/assets

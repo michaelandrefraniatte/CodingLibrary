@@ -1,0 +1,2 @@
+<embed src="https://sumanbogati.github.io/sample.pdf" type="application/pdf" />
+<embed src="/Repo_Name/Resume_Name.pdf" width="100%" height="745px" />

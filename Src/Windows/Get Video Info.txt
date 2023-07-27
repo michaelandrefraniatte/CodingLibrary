@@ -1,0 +1,116 @@
+https://youtube.com/get_video_info?video_id=M9pqtJvVebU
+
+http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=M9pqtJvVebU&format=json
+
+"thumbnail_url":"https:\/\/i.ytimg.com\/vi\/M9pqtJvVebU\/hqdefault.jpg"
+
+"title":"Diana Moreno - Live @ Radio Intense Barcelona 11.03.2020 \/\/ Melodic Techno Mix"
+
+https://i.ytimg.com/vi/M9pqtJvVebU/hqdefault.jpg
+
+https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,player&id=M9pqtJvVebUE&key=AIzaSyAI6kNwDbqsZIlYyf_Wt85lnMPOTSVxUec
+
+https://github.com/MichaelFraniatte/PP/blob/master/img/favicon.png
+
+https://api.github.com/repos/MichaelFraniatte/PP/contents/img/favicon.png
+
+https://raw.githubusercontent.com/MichaelFraniatte/Gallery-Contents/master/img/favicon.png
+
+https://www.googleapis.com/youtube/v3/liveBroadcasts?part=UCjyiHWU_MCr5eus7_2GnZsA%2Csnippet%2Cstatus&mine=true&broadcastStatus=active&key=AIzaSyAfFT_3NOa3hLo4s3GqBvtlyXVOseB2ymQ
+
+https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCjyiHWU_MCr5eus7_2GnZsA&eventType=live&type=video&key=AIzaSyAfFT_3NOa3hLo4s3GqBvtlyXVOseB2ymQ
+
+https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCjkD-m8HTTk1AZJg7fUnJyA&eventType=live&type=video&key=AIzaSyAI6kNwDbqsZIlYyf_Wt85lnMPOTSVxUec
+
+var video_id='VA770wpLX-Q';
+$.getJSON('http://gdata.youtube.com/feeds/api/videos/'+video_id+'?v=2&alt=jsonc',function(data,status,xhr){
+    alert(data.data.title);
+    // data contains the JSON-Object below
+});
+http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=ojCkgU5XGdg&format=json
+https://www.youtube.com/embed/live_stream?channel=UCkA21M22vGK9GtAvq3DvSlA
+
+var id = 'VA770wpLX-Q';
+var url = 'https://www.youtube.com/watch?v=' + id;
+$.getJSON('https://noembed.com/embed',
+    {format: 'json', url: url}, function (data) {
+    alert(data.title);
+});
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/live_stream?channel="></iframe>
+
+
+function getYoutubeVideoTitle(id, callback) {
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: 'https://www.youtube.com/get_video_info?video_id=' + id,
+        onload: function(r) {
+            var encoded = (r.responseText.match(/(^|&)title=(.*?)(&|$)/) || [])[2] || '';
+            callback(decodeURIComponent(encoded.replace(/\+/g, ' ')));
+        }
+    });
+}
+getYoutubeVideoTitle('jE51HWPz1l8', function(title) {
+    console.log(title);
+});
+function getYoutubeVideoData(id, callback) {
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: 'https://www.youtube.com/get_video_info?video_id=' + id,
+        onload: function(response) {
+            var data = {};
+            response.responseText.split('&').forEach(function(param) {
+                param = param.split('=');
+                data[param[0]] = decodeURIComponent(param[1].replace(/\+/g, ' '));
+            });
+            callback(data);
+        }
+    }
+}
+
+function getAllFilesFromFolders() {
+    (async () => {
+        const responsed = await fetch('https://api.github.com/repos/MichaelFraniatte/Gallery-Contents/contents/vdo');
+        const folders = await responsed.json();
+        for (let folder of folders) {
+            if (folder.type == "dir") {
+                var array = [];
+                const responsef = await fetch("https://api.github.com/repos/MichaelFraniatte/Gallery-Contents/contents/vdo/" + folder.name);
+                const files = await responsef.json();
+                for (let file of files) {
+                     var id = file.name;
+                     var videoid = id.replace(".txt", "");
+    	             array.push(videoid);
+                     getYoutubeVideoData(videoid);
+                     return;
+                     for (let info of infos.items) {
+                            var videothumbnail = info.snippet.thumbnails.medium.url;
+                            thumbnails[videoid] = videothumbnail;
+                            var title = info.snippet.title;
+                            titles[videoid] = title;
+                     }
+                }
+                obj[folder.name] = array;
+            }
+        }
+        loadThumbnails();
+        createMenu();
+        createSlides();
+     })();
+}
+function getYoutubeVideoData(id) {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const url = 'https://www.youtube.com/get_video_info?video_id=' + id;
+    fetch(proxyurl + url)
+        .then(response => response.text())
+        .then(contents => getVideoInfos(contents))
+        .catch(() => console.log("Can’t access " + url + " response."));
+}
+function getVideoInfos(infos){
+    var data = {};
+    infos.split('&').forEach(function(param) {
+        param = param.split('=');
+        data[param[0]] = decodeURIComponent(param[1].replace(/\+/g, ' '));
+    });
+    console.log(data.innertube_api_key);
+}

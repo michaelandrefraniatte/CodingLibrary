@@ -1,0 +1,100 @@
+https://codelabs.developers.google.com/codelabs/cloud-text-speech-csharp#0
+
+
+https://voip-sip-sdk.com/p_7346-how-to-convert-text-to-speech-and-play-that-into-a-call-using-csharp.html
+
+﻿using System;
+using Ozeki.Media;
+using Ozeki.VoIP;
+ 
+namespace Text_To_Speech
+{
+    class Program
+    {
+        static ISoftPhone softphone;   // softphone object
+        static IPhoneLine phoneLine;   // phoneline object
+        static IPhoneCall call;
+        static MediaConnector connector;
+        static PhoneCallAudioSender mediaSender;
+ 
+        private static void Main(string[] args)
+        {
+            // Create a softphone object with RTP port range 5000-10000
+            softphone = SoftPhoneFactory.CreateSoftPhone(5000, 10000);
+ 
+            // SIP account registration data, (supplied by your VoIP service provider)
+            var registrationRequired = true;
+            var userName = "858";
+            var displayName = "858";
+            var authenticationId = "858";
+            var registerPassword = "858";
+            var domainHost = "192.168.115.100";
+            var domainPort = 5060;
+ 
+            var account = new SIPAccount(registrationRequired, displayName, userName, authenticationId, registerPassword, domainHost, domainPort);
+ 
+            // Send SIP regitration request
+            RegisterAccount(account);
+ 
+            mediaSender = new PhoneCallAudioSender();
+            connector = new MediaConnector();
+ 
+            // Prevents the termination of the application
+            Console.ReadLine();
+        }
+ 
+        static void RegisterAccount(SIPAccount account)
+        {
+            try
+            {
+                phoneLine = softphone.CreatePhoneLine(account);
+                phoneLine.RegistrationStateChanged += line_RegStateChanged;
+                softphone.RegisterPhoneLine(phoneLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error during SIP registration: " + ex);
+            }
+        }
+ 
+        static void line_RegStateChanged(object sender, RegistrationStateChangedArgs e)
+        {
+            if (e.State == RegState.NotRegistered || e.State == RegState.Error)
+                Console.WriteLine("Registration failed!");
+ 
+            if (e.State == RegState.RegistrationSucceeded)
+            {
+                Console.WriteLine("Registration succeeded - Online!");
+                CreateCall();
+            }
+        }
+ 
+        private static void CreateCall()
+        {
+            var numberToDial = "853";
+            call = softphone.CreateCallObject(phoneLine, numberToDial);
+            call.CallStateChanged += call_CallStateChanged;
+            call.Start();
+        }
+ 
+        static void SetupTextToSpeech()
+        {
+            var textToSpeech = new TextToSpeech();
+ 
+            mediaSender.AttachToCall(call);
+            connector.Connect(textToSpeech, mediaSender);   
+            textToSpeech.AddAndStartText("Hello World!");
+ 
+            Console.WriteLine("The text is converted to speech and being played into the call.");
+        }
+ 
+        static void call_CallStateChanged(object sender, CallStateChangedArgs e)
+        {
+            Console.WriteLine("Call state: {0}.", e.State);
+ 
+            if (e.State == CallState.Answered)
+                SetupTextToSpeech();
+        }
+    }
+ 
+}

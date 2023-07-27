@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
+
+byte[] imageArray = System.IO.File.ReadAllBytes(@"image file path");
+string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+
+var img = Image.FromStream(new MemoryStream(Convert.FromBase64String(base64String)));
+

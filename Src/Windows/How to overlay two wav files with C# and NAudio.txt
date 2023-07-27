@@ -1,0 +1,96 @@
+https://stackoverflow.com/
+
+
+
+public static string CreateMashup(List<string> files, string filename)
+{
+    List<AudioFileReader> mixList = new List<AudioFileReader>();
+    // because there is no mash up with less than 2 files
+    if (files.Count() < 2)
+    {
+        throw new Exception("Not enough files selected!");
+    }
+
+    try
+    {
+        var mixer = new WaveMixerStream32
+        {
+            AutoStop = true
+        };
+
+        var outputFile = Path.Combine(@"C:\Users\umutg\OneDrive\Masaüstü\Muesyco\Combined\" + filename);
+
+        foreach (var file in files)
+        {
+            var filePath = Path.Combine(@"C:\Users\umutg\OneDrive\Masaüstü\Muesyco\Download\" + file);
+
+            if (File.Exists(filePath))
+            {
+                var reader = new AudioFileReader(filePath);
+                mixList.Add(reader);
+            }
+        }
+
+        var _mixer = new MixingSampleProvider(mixList);
+        WaveFileWriter.CreateWaveFile16(outputFile, _mixer);
+
+        return outputFile;
+    }
+    catch (Exception)
+    {
+        // TODO: handle exception
+        throw;
+    }
+}
+
+
+var mixer = new WaveMixerStream32 { AutoStop = true};
+
+var wav1 = new WaveFileReader(@"c:\...\1.wav");
+var wav2 = new WaveFileReader(@"c:\...\2.wav");
+
+mixer.AddInputStream(new WaveChannel32(wav1));
+mixer.AddInputStream(new WaveChannel32(wav2));
+WaveFileWriter.CreateWaveFile("mixed.wav", new Wave32To16Stream(mixer));
+
+
+
+using System;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+
+namespace ConsoleApplication1
+{
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            ISampleProvider provider1 = new SignalGenerator
+            {
+                Frequency = 1000.0f,
+                Gain = 0.5f
+            };
+
+            ISampleProvider provider2 = new SignalGenerator
+            {
+                Frequency = 1250.0f,
+                Gain = 0.5f
+            };
+
+            var takeDuration1 = TimeSpan.FromSeconds(5); // otherwise it would emit indefinitely
+            var takeDuration2 = TimeSpan.FromSeconds(10);
+
+            var sources = new[]
+            {
+                provider1.Take(takeDuration1),
+                provider2.Take(takeDuration2)
+            };
+
+            var mixingSampleProvider = new MixingSampleProvider(sources);
+
+            var waveProvider = mixingSampleProvider.ToWaveProvider();
+
+            WaveFileWriter.CreateWaveFile("test.wav", waveProvider);
+        }
+    }
+}

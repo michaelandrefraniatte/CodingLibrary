@@ -1,0 +1,94 @@
+https://stackoverflow.com/
+
+There are two ways of creating a paralax effect without using background, is to either make use of JavaScript, I've given you a full working example. It is minimal, might make the browser work way too much for nothing, but it works. You'll certainly want to optimize it to only apply on elements that are visible if you have a lot.
+
+$(document).ready(function() {
+  var onScroll = function() {
+    var scrollTop = $(this).scrollTop();
+    $('.paralax-image').each(function(index, elem) {
+      var $elem = $(elem);
+      $elem.find('img').css('top', scrollTop - $elem.offset().top);
+    });
+  };
+  onScroll.apply(window);
+  $(window).on('scroll', onScroll);
+});
+.content {
+  height: 500px;
+}
+
+.paralax-image {
+  overflow: hidden;
+  height: 200px;
+  position: relative;
+}
+
+.paralax-image img {
+  position: absolute;
+  height: 100vh;
+  min-width:100%;
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<div class="content">
+  <h2>Lorem Ipsum</h2>
+  <div class="paralax-image">
+    <img src="http://placehold.it/400x200">
+  </div>
+
+
+</div>
+
+
+Now for the full CSS part... It is a bit complexe to implement and cannot be done for every kind of layout. The trick would be to have your image(s) using a position:fixed rule. But instead of unsuccessfully relying on overflow:hidden, you would have them at the lowest z-index, have all your elements with a background and create "holes" where you want to display the image. This will create a lot of problems when adding backgrounds, you'd have to make multiple different elements to make sure you have always a possibility to display the paralax image. I've tried to demonstrate how this could be achieved, without creating a too complexe example. This technique will only work for 1 image. If you want it to work with multiple images, you'd have to use javascript to switch visibility accordingly, and only 1 paralax effect visible at a time.
+
+/* Can't use margins no more... */
+
+h1 {
+  margin: 0;
+  padding: 0.67em 0;
+}
+
+p {
+  margin: 0;
+  padding: 1em 0 0;
+}
+
+body {
+  margin: 0;
+}
+
+.container>* {
+  background-color: white;
+}
+
+.paralaxed {
+  z-index: -2;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+}
+
+.paralax-image {
+  background: transparent;
+  height: 200px;
+}
+<div class="container">
+  <img class="paralaxed" src="http://placehold.it/400x200">
+  <h1>My Title here</h1>
+  <div class="paralax-image"></div>
+  <p>
+    lorem ipsum...
+  </p>
+  <p>
+    lorem ipsum...
+  </p>
+  <p>
+    lorem ipsum...
+  </p>
+  <p>
+    lorem ipsum...
+  </p>
+  <p>
+    lorem ipsum...
+  </p>
+</div>

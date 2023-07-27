@@ -1,0 +1,33 @@
+https://www.w3schools.com/php/php_examples.asp
+https://www.w3schools.com/php/php_looping_for.asp
+https://www.w3schools.com/php/php_looping_foreach.asp
+
+
+PHP Object
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<?php
+class Car {
+  public $color;
+  public $model;
+  public function __construct($color, $model) {
+    $this->color = $color;
+    $this->model = $model;
+  }
+  public function message() {
+    return "My car is a " . $this->color . " " . $this->model . "!";
+  }
+}
+
+$myCar = new Car("black", "Volvo");
+echo $myCar -> message();
+echo "<br>";
+$myCar = new Car("red", "Toyota");
+echo $myCar -> message();
+?>
+
+</body>
+</html>

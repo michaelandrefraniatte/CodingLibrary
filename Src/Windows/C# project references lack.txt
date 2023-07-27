@@ -1,0 +1,5 @@
+
+Under properties of project, change targeting framework
+
+Go to nugget packages, and click on repair nugget packages, from notifification, then restart the solution
+

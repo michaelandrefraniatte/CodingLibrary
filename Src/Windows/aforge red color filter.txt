@@ -1,0 +1,8 @@
+// create filter
+ColorFiltering filter = new ColorFiltering( );
+// set color ranges to keep
+filter.Red   = new IntRange( 100, 255 );
+filter.Green = new IntRange( 0, 75 );
+filter.Blue  = new IntRange( 0, 75 );
+// apply the filter
+filter.ApplyInPlace( image );

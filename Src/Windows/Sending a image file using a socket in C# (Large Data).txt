@@ -1,0 +1,17 @@
+https://stackoverflow.com/
+
+const int bufsize = 8192;
+
+var buffer = new byte[bufsize];
+NetworkStream ns = socket.GetStream();
+
+using (var s = File.OpenRead("path"))
+{
+    int actuallyRead;
+    while ((actuallyRead = s.Read(buffer, 0, bufsize)) > 0)
+    {
+        ns.Write(buffer, 0, actuallyRead);
+    }
+}
+ns.Flush();
+

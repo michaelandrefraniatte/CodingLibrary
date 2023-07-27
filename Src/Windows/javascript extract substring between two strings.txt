@@ -1,0 +1,5 @@
+https://www.codegrepper.com/code-examples/javascript/javascript+extract+substring+between+two+strings
+
+//Gets the part of the string inbetween the : and the ;
+var part = str.substring(str.lastIndexOf(":") + 1, str.lastIndexOf(";"));
+

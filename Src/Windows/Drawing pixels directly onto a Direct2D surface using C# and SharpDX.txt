@@ -1,0 +1,51 @@
+https://axefrog.wordpress.com/2014/07/30/drawing-pixels-directly-onto-a-direct2d-surface-using-c-and-sharpdx/
+
+// Here we are creating our device, swapchain, etc. A fairly basic
+// example of setting up our form for Direct2D drawing. Note the
+// pixel format – we need to remember this when drawing pixels to
+// our raw byte array.
+
+var swapChainDesc = new SwapChainDescription
+{
+	BufferCount = 2,
+	Usage = Usage.RenderTargetOutput,
+	OutputHandle = form.Handle,
+	IsWindowed = true,
+	ModeDescription = new ModeDescription(0, 0, new Rational(60, 1), Format.B8G8R8A8_UNorm),
+	SampleDescription = new SampleDescription(1, 0),
+	Flags = SwapChainFlags.AllowModeSwitch,
+	SwapEffect = SwapEffect.Discard
+};
+Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.BgraSupport, swapChainDesc, out _device, out _swapChain);
+_d2dBackBuffer = Surface.FromSwapChain(_swapChain, 0);
+
+_d2DFactory = new FactoryD2D();
+var dpi = _d2DFactory.DesktopDpi;
+_renderTarget = new RenderTarget(_d2DFactory, _d2dBackBuffer, new RenderTargetProperties
+{
+	DpiX = dpi.Width,
+	DpiY = dpi.Height,
+	MinLevel = SharpDX.Direct2D1.FeatureLevel.Level_DEFAULT,
+	PixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Ignore),
+	Type = RenderTargetType.Default,
+	Usage = RenderTargetUsage.None
+});
+
+_memory = new byte[Width * Height * 4];
+_backBufferBmp = new Bitmap(_renderTarget, new Size2(Width, Height), new BitmapProperties(_renderTarget.PixelFormat));
+
+// Here's how we draw a pixel into our memory buffer. Notice that we match the
+// the pixel format of the render target. It's up to you to implement your own
+// fast algorithms for filling the contents of the memory buffer.
+
+var i = Width * 4 * y + x * 4;
+_memory[i] = color.B;
+_memory[i+1] = color.G;
+_memory[i+2] = color.R;
+_memory[i+3] = color.A;
+
+
+// Here's how we present our byte array as pixels on the Direct2D surface
+
+_backBufferBmp.CopyFromMemory(_memory, Width * 4);
+_renderTarget.DrawBitmap(_backBufferBmp, 1f, BitmapInterpolationMode.Linear);

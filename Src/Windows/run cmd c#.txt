@@ -1,0 +1,30 @@
+https://github.com/EslaMx7/ScreenTask/blob/master/ScreenTask/frmMain.cs
+
+private string RunCMD(string cmd, bool requireAdmin = false)
+{
+            Process proc = new Process();
+            proc.StartInfo.FileName = "cmd.exe";
+            proc.StartInfo.Arguments = "/C " + cmd ;
+            proc.StartInfo.CreateNoWindow = true;
+            if (requireAdmin)
+            {
+                proc.StartInfo.UseShellExecute = true;
+                proc.StartInfo.Verb = "runas";
+                proc.Start();
+                return null;
+            }
+            else
+            {
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.RedirectStandardError = true;
+                proc.Start();
+
+                string res = proc.StandardOutput.ReadToEnd();
+                proc.StandardOutput.Close();
+                proc.Close();
+                return res;
+            }
+
+}
+

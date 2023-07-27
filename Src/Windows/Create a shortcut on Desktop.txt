@@ -1,0 +1,60 @@
+https://stackoverflow.com/
+
+At first, Project > Add Reference > COM > Windows Script Host Object Model.
+
+using IWshRuntimeLibrary;
+
+private void CreateShortcut()
+{
+  object shDesktop = (object)"Desktop";
+  WshShell shell = new WshShell();
+  string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\Notepad.lnk";
+  IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+  shortcut.Description = "New shortcut for a Notepad";
+  shortcut.Hotkey = "Ctrl+Shift+N";
+  shortcut.TargetPath = Environment.GetFolderPath(Environment.SpecialFolder.System) + @"\notepad.exe";
+  shortcut.Save();
+}
+
+
+https://docs.microsoft.com/
+
+<package>
+   <job id="vbs">
+      <script language="VBScript">
+         set WshShell = WScript.CreateObject("WScript.Shell")
+         strDesktop = WshShell.SpecialFolders("Desktop")
+         set oShellLink = WshShell.CreateShortcut(strDesktop & "\Shortcut Script.lnk")
+         oShellLink.TargetPath = WScript.ScriptFullName
+         oShellLink.WindowStyle = 1
+         oShellLink.Hotkey = "CTRL+SHIFT+F"
+         oShellLink.IconLocation = "notepad.exe, 0"
+         oShellLink.Description = "Shortcut Script"
+         oShellLink.WorkingDirectory = strDesktop
+         oShellLink.Save
+         set oUrlLink = WshShell.CreateShortcut(strDesktop & "\Microsoft Web Site.url")
+         oUrlLink.TargetPath = "http://www.microsoft.com"
+         oUrlLink.Save
+      </script>
+   </job>
+
+   <job id="js">
+      <script language="JScript">
+         var WshShell = WScript.CreateObject("WScript.Shell");
+         strDesktop = WshShell.SpecialFolders("Desktop");
+         var oShellLink = WshShell.CreateShortcut(strDesktop + "\\Shortcut Script.lnk");
+         oShellLink.TargetPath = WScript.ScriptFullName;
+         oShellLink.WindowStyle = 1;
+         oShellLink.Hotkey = "CTRL+SHIFT+F";
+         oShellLink.IconLocation = "notepad.exe, 0";
+         oShellLink.Description = "Shortcut Script";
+         oShellLink.WorkingDirectory = strDesktop;
+         oShellLink.Save();
+         var oUrlLink = WshShell.CreateShortcut(strDesktop + "\\Microsoft Web Site.url");
+         oUrlLink.TargetPath = "http://www.microsoft.com";
+         oUrlLink.Save();
+      </script>
+   </job>
+</package>
+
+

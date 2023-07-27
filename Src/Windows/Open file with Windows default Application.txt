@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+
+ProcessStartInfo psi = new ProcessStartInfo();
+psi.FileName = @"C:\path\to\pdf\file.pdf";
+psi.UseShellExecute = true;
+Process.Start(psi);
+
+Process.Start(@"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe", @"C:\path\to\pdf\file.pdf");

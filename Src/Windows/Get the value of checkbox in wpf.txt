@@ -1,0 +1,8 @@
+https://stackoverflow.com/
+
+<CheckBox x:Name="chkPuma" Content="Puma" IsChecked="{Binding IsChecked}"/>
+
+if (chkPuma.IsChecked ?? false)
+{
+
+}

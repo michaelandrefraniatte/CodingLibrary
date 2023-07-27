@@ -1,0 +1,52 @@
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/598a596d-80f2-4156-a33f-99fce20cc019/how-to-record-video-of-screen-in-c?forum=csharpgeneral
+
+using Microsoft.Expression.Encoder.ScreenCapture;
+using Microsoft.Expression.Encoder.Devices;
+using Microsoft.Expression.Encoder;
+
+private void ScreenCap()
+        {
+            string pcName = System.Environment.MachineName;
+            jobsc = new ScreenCaptureJob();
+            jobsc.ScreenCaptureVideoProfile.FrameRate = 5;
+            Collection<EncoderDevice> audioDevices = EncoderDevices.FindDevices(EncoderDeviceType.Audio);
+            EncoderDevice audioDevice;
+            if (string.Equals(pcName, "BILLLT"))
+            {
+                audioDevice = audioDevices.First(delegate(EncoderDevice item) { return item.Name.StartsWith(@"Speakers and Headphones (IDT High Definition Audio CODEC)"); });
+            }
+            else
+            {
+                audioDevice = audioDevices.First(delegate(EncoderDevice item) { return item.Name.StartsWith(@"Speakers (Realtek High Definition Audio)"); });
+            }
+            jobsc.AddAudioDeviceSource(audioDevice);
+            jobsc.ScreenCaptureAudioProfile.Channels = 1;
+            jobsc.ScreenCaptureAudioProfile.SamplesPerSecond = 32000;
+            jobsc.ScreenCaptureAudioProfile.BitsPerSample = 16;
+            jobsc.ScreenCaptureAudioProfile.Bitrate = new Microsoft.Expression.Encoder.Profiles.ConstantBitrate(20);
+            Rectangle capRect = new Rectangle(388, 222, 1056, 608);  //iMacros billpc slides only
+            jobsc.CaptureRectangle = capRect;
+            File.Delete(workDir + "CurrentScreenCapture.xesc");
+            jobsc.OutputScreenCaptureFileName = workDir + "CurrentScreenCapture.xesc";
+            jobsc.Start();
+        }
+
+https://social.msdn.microsoft.com/forums/windowsapps/en-US/98f5f1e2-c857-4d0e-a203-afe22ccc989c/error-video-profile-contains-invalid-encoding-options-try-a-different-profile-or-change-encoding?forum=encoder
+
+capturerec.Stop()
+        Dim converter As New Job
+        converter.CreateSubfolder = False
+        Dim videotoconvert As New MediaItem(videopath)
+        videotoconvert.OutputFormat.AudioProfile = videotoconvert.SourceAudioProfile
+        videotoconvert.OutputFormat.VideoProfile.FrameRate = videotoconvert.SourceVideoProfile.FrameRate
+        videotoconvert.OutputFormat.VideoProfile.Bitrate = videotoconvert.SourceVideoProfile.Bitrate
+        videotoconvert.OutputFormat.VideoProfile.Size = videotoconvert.SourceVideoProfile.Size
+        videotoconvert.ResizeQuality = ResizeQuality.Bilinear
+        videotoconvert.OverlayFileName = "C:\Users\Mads Haupt\AppData\Local\strandboscrrec - Kopi.wmv" ' Webcam video
+        videotoconvert.OverlayLayoutMode = OverlayLayoutMode.Custom
+        videotoconvert.OverlayRect = New Rectangle(videotoconvert.SourceVideoProfile.Size.Width - 50 - 40, videotoconvert.SourceVideoProfile.Size.Height - 50 - 30, 40, 30)
+        converter.MediaItems.Add(videotoconvert)
+        converter.OutputDirectory = Path.GetDirectoryName(videopath)
+        'AddHandler converter.EncodeProgress
+        converter.Encode()
+        Process.Start(Path.ChangeExtension(videopath, ".wmv"))

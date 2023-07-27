@@ -1,0 +1,13 @@
+https://stackoverflow.com/
+
+
+function ToKey(){
+    var key = document.tokey.key.value.toLowerCase();
+    if (key == "smk") {
+        window.open('http://www.smkproduction.eu5.org', '_blank');
+    } else {
+        alert("Kodi nuk është valid!");
+    }
+}
+
+if (key=="smk") { window.open('http://www.smkproduction.eu5.org','_blank'); }

@@ -1,0 +1,19 @@
+https://stackoverflow.com/
+
+$("#idContentEditable").keypress(function(e){ return e.which != 13; });
+
+document.getElementById('idContentEditable').addEventListener('keypress', (evt) => {
+    if (evt.which === 13) {
+        evt.preventDefault();
+    }
+});
+
+document.getElementById('idContentEditable').addEventListener('keydown', (evt) => {
+    if (evt.keyCode === 13) {
+        evt.preventDefault();
+    }
+});
+
+
+
+

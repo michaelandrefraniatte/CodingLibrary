@@ -1,0 +1,76 @@
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/687116d3-1848-402e-a58d-5eef47cb89db/web-browser-control-will-not-displaying-image?forum=csharpgeneral
+
+
+
+
+I have a web browser control that have to display some images int that but the problem is the image is not showing in the web browser.
+
+I used to give the source of the image is base64 string. i used the code like the following
+
+//Inserting image to web browser
+public void InsertFile(string path)
+        {
+            Bitmap bmp = new Bitmap(getfileWithIcon(path));
+            string filetype = path.Substring(path.LastIndexOf(@"\") + 1);           
+            string base64Str = ImageToBase64(bmp, System.Drawing.Imaging.ImageFormat.Jpeg);
+            string htm = "<a><img Height=\"" + bmp.Height.ToString() + "\" src=\"data:image/jpg;base64," + base64Str + "\" alt=\"" + path + "\" title=\"$" + filetype + "$\" id=\"ChatFile\" Width=\"" + bmp.Width.ToString() + "\"/></a>";           
+            webBrowser1.Document.Body.InnerHtml += htm;
+        }
+
+//Converting image to base64 format
+        public string ImageToBase64(Image image, System.Drawing.Imaging.ImageFormat format)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Convert Image to byte[]
+                image.Save(ms, format);
+                byte[] imageBytes = ms.ToArray();
+                // Convert byte[] to Base64 String
+                string base64String = Convert.ToBase64String(imageBytes);
+                return base64String;
+            }
+        }
+
+
+
+
+
+
+
+public Form1()
+  {
+   InitializeComponent();
+   webBrowser1.DocumentText = "<body><h1>Hi!</h1></body>";
+  }
+ 
+  //Inserting image to web browser
+  public void InsertFile(string path)
+  {
+   Image img = Image.FromFile(path); // new Bitmap(getfileWithIcon(path));
+   string filetype = path.Substring(path.LastIndexOf(@"\") + 1);
+   string base64Str = ImageToBase64(img, System.Drawing.Imaging.ImageFormat.Jpeg);
+   string htm = "<a><img Height=\"" + img.Height.ToString()
+    + "\" src=\"data:image/jpg;base64," + base64Str + "\" alt=\"" + path + "\" title=\"$"
+    + filetype + "$\" id=\"ChatFile\" Width=\"" + img.Width.ToString() + "\"/></a>";
+   webBrowser1.Document.Body.InnerHtml += htm;
+  }
+ 
+  //Converting image to base64 format
+  public string ImageToBase64(Image image, System.Drawing.Imaging.ImageFormat format)
+  {
+   using (MemoryStream ms = new MemoryStream())
+   {
+    // Convert Image to byte[]
+    image.Save(ms, format);
+    byte[] imageBytes = ms.ToArray();
+    // Convert byte[] to Base64 String
+    string base64String = Convert.ToBase64String(imageBytes);
+    return base64String;
+   }
+  }
+ 
+  private void button1_Click(object sender, EventArgs e)
+  {
+   InsertFile(@"c:\test\test.gif");
+  }
+ }

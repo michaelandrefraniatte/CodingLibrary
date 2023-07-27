@@ -1,0 +1,52 @@
+https://stackoverflow.com/
+
+
+// Wait a sec so we can see the old order...
+setTimeout(function() {
+  // Now sort them
+
+  var board = $("#social-board");
+  var boards = board.children('.socialBox').detach().get();
+
+  boards.sort(function(a, b) {
+    return new Date($(a).data("date")) - new Date($(b).data("date"));
+  });
+
+  board.append(boards);
+}, 600);
+
+<div id="social-board">
+  <div class="socialBox" data-date="2016-08-10T11:30:21.000Z" data-type="twitter">2016-08-10T11:30:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-03T17:27:21.000Z" data-type="instagram">2016-08-03T17:27:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-14T11:10:21.000Z" data-type="facebook">2016-08-14T11:10:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-13T14:27:21.000Z" data-type="youtube">2016-08-13T14:27:21.000Z</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+var reverse = false; // ascending/descending flag
+var board = $("#social-board");
+var boards = board.children('.socialBox');
+var orderedBoards = boards.slice().sort(function (elem1, elem2) {
+  var value1 = new Date($(elem1).data("date")).getTime(),
+      value2 = new Date($(elem2).data("date")).getTime();
+  if (reverse) {
+    // descending
+    return -(value1 > value2) || +(value1 < value2) || (isNaN(value1)) - (isNaN(value2));
+  }
+  // ascending
+  return +(value1 > value2) || -(value1 < value2) || (isNaN(value1)) - (isNaN(value2));
+});
+board.empty().append(orderedBoards);
+
+<div id="social-board">
+  <div class="socialBox" data-date="2016-08-10T11:30:21.000Z" data-type="twitter">2016-08-10T11:30:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-03T17:27:21.000Z" data-type="instagram">2016-08-03T17:27:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-14T11:10:21.000Z" data-type="facebook">2016-08-14T11:10:21.000Z</div>
+  <div class="socialBox" data-date="2016-08-13T14:27:21.000Z" data-type="youtube">2016-08-13T14:27:21.000Z</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+

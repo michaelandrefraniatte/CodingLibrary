@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+var a = ['hello', 'world'];
+a.join(" ");
+hello world
+
+var str = 'hello world';
+var arr = str.split(' ');
+// ['hello', 'world']

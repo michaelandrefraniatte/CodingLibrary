@@ -1,0 +1,5 @@
+https://stackoverflow.com/
+
+console.log(window.btoa(unescape(encodeURIComponent('忍'))));
+console.log(decodeURIComponent(escape(window.atob('5b+N'))));
+

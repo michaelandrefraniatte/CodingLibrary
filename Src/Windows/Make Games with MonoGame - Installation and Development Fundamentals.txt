@@ -1,0 +1,6 @@
+Install-Package MonoGame.Framework.WindowsDX -Version 3.8.0.1641
+
+Open VS without code, then in extension upper strip tool menu, click manage extension
+
+https://www.youtube.com/watch?v=sPH-sNTSrhw
+

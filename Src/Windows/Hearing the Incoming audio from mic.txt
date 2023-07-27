@@ -1,0 +1,92 @@
+https://stackoverflow.com/
+
+
+Code is for a form with two buttons (named StartBtn and StopBtn).
+
+Note especially the waveIn.BufferMilliseconds and waveOut.DesiredLatency settings to reduce the lag times.
+
+For compressing the data for network transmission I suggest using a different library to process the data blocks. You might need to tune the BufferMilliseconds value to reduce the overheads and get better compression ratios.
+
+The Opus Codec looks like a reasonable option, with Opus.NET for C#.
+
+
+public partial class Form1 : Form
+{
+    private WaveIn waveIn = null;
+    private BufferedWaveProvider waveProvider = null;
+    private WaveOut waveOut = null;
+
+    public Form1()
+    {
+        InitializeComponent();
+    }
+
+    private void StartBtn_Click(object sender, EventArgs e)
+    {
+        if (waveIn != null)
+            return;
+
+        // create wave input from mic
+        waveIn = new WaveIn(this.Handle);
+        waveIn.BufferMilliseconds = 25;
+        waveIn.RecordingStopped += waveIn_RecordingStopped;
+        waveIn.DataAvailable += waveIn_DataAvailable;
+
+        // create wave provider
+        waveProvider = new BufferedWaveProvider(waveIn.WaveFormat);
+
+        // create wave output to speakers
+        waveOut = new WaveOut();
+        waveOut.DesiredLatency = 100;
+        waveOut.Init(waveProvider);
+        waveOut.PlaybackStopped += wavePlayer_PlaybackStopped;
+
+        // start recording and playback
+        waveIn.StartRecording();
+        waveOut.Play();
+    }
+
+    void waveIn_DataAvailable(object sender, WaveInEventArgs e)
+    {
+        // add received data to waveProvider buffer
+        if (waveProvider != null)
+            waveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
+    }
+
+    private void StopBtn_Click(object sender, EventArgs e)
+    {
+        if (waveIn != null)
+            waveIn.StopRecording();
+    }
+
+    void waveIn_RecordingStopped(object sender, StoppedEventArgs e)
+    {
+        // stop playback
+        if (waveOut != null)
+            waveOut.Stop();
+
+        // dispose of wave input
+        if (waveIn != null)
+        {
+            waveIn.Dispose();
+            waveIn = null;
+        }
+
+        // drop wave provider
+        waveProvider = null;
+    }
+
+    void wavePlayer_PlaybackStopped(object sender, StoppedEventArgs e)
+    {
+        // stop recording
+        if (waveIn != null)
+            waveIn.StopRecording();
+
+        // dispose of wave output
+        if (waveOut != null)
+        {
+            waveOut.Dispose();
+            waveOut = null;
+        }
+    }
+}

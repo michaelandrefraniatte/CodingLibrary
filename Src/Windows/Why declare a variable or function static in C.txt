@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+There are a few reasons to use static in C.
+
+When used with functions, yes the intention is for creating abstraction. The original term for the scope of a C source code file was "translation unit." The static functions may only be reached from within the same translation unit. These static functions are similar to private methods in C++, liberally interpreted (in that analogy, a translation unit defines a class).
+
+Static data at a global level is also not accessible from outside the translation unit, and this is also used for creating an abstraction. Additionally, all static data is initialized to zero, so static may be used to control initialization.
+
+Static at the local ("automatic") variable level is used to abstract the implementation of the function which maintains state across calls, but avoids using a variable at translation unit scope. Again, the variables are initialized to zero due to static qualification.

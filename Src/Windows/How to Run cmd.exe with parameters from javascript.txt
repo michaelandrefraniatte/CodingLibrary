@@ -1,0 +1,42 @@
+https://stackoverflow.com/
+
+Maybe you don't have this ActiveX-control installed (or registered) in your computer.
+
+WScript.Shell should be found in every Windows:
+
+var run=new ActiveXObject('WSCRIPT.Shell').Run("commands to run");
+If there are spaces in commands to run, you need to use double quotes.
+
+Edit I
+
+The content below is mainly from MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/gg537745(v=vs.85).aspx
+
+iRetVal = Shell.ShellExecute(
+  sFile,
+  [ vArguments ],
+  [ vDirectory ],
+  [ vOperation ],
+  [ vShow ]
+)
+Let's take [vDirectory]. The documentation says: "The fully qualified path of the directory that contains the file specified by sFile. If this parameter is not specified, the current working directory is used."
+
+This means that you have an invalid path for this argument (having .cmd.exe at the end of it). Also all examples for creating the ActiveX are like this:
+
+var objShell = new ActiveXObject("shell.application");
+Notice the lowercase in "shell.application".
+
+And May12, thank's for asking this. I didn't know about this ActiveX control before, it seems to be very useful to me.
+
+EDIT II
+
+But have you understood it? Your example works perfect in my app:
+
+objShell.ShellExecute("cmd.exe", "cd C: C:\\cd c:\\ext_file main.exe test.txt", "C:\\WINDOWS\\system32", "open", 1);
+With three exceptions:
+
+1) The one I mentioned early in this answer about the path
+
+2) Escaped \ used also in arguments.
+
+3) The last argument is type of number, not a string.
+

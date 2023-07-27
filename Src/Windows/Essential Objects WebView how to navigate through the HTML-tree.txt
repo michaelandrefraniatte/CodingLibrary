@@ -1,0 +1,83 @@
+https://stackoverflow.com/
+https://www.essentialobjects.com/doc/webbrowser/advanced/jsdom.aspx
+https://www.essentialobjects.com/doc/webbrowser/advanced/js.aspx#evalscript
+https://www.essentialobjects.com/Products/WebBrowser/JavaScript.aspx
+
+You can access the document JavaScript object in a couple of ways:
+
+JSObject document = (JSObject)_webView.EvalScript("document");
+
+//or: Document document = _webView.GetDOMWindow().document; 
+
+You can use JSObject like this:
+
+// access a property on the JavaScript object:
+jsObj["children"]    
+
+// access an element of an array-like JavaScript object:
+var children = (JSObject)jsObj["children"];
+var first = (JSObject)children[0];
+
+// (note that you have to cast; all these have the `object` return type)
+
+// access an attribute on the associated DOM element
+jsObj.InvokeFunction("getAttribute", "class")
+
+// etc.
+
+It's all a bit fiddly, but you can write some extension methods to make your life easier (however, see the note on performance below):
+
+public static class JSObjectExtensions
+{
+    public static string GetTagName(this JSObject jsObj)
+    {
+        return (jsObj["tagName"] as string ?? string.Empty).ToUpper();
+    }
+
+    public static string GetID(this JSObject jsObj)
+    {
+        return jsObj["id"] as string ?? string.Empty;
+    }
+
+    public static string GetAttribute(this JSObject jsObj, string attribute)
+    {
+        return jsObj.InvokeFunction("getAttribute", attribute) as string ?? string.Empty;
+    }
+
+    public static JSObject GetParent(this JSObject jsObj)
+    {
+        return jsObj["parentElement"] as JSObject;
+    }
+
+    public static IEnumerable<JSObject> GetChildren(this JSObject jsObj)
+    {
+        var childrenCollection = (JSObject)jsObj["children"];
+        int childObjectCount = (int)childrenCollection["length"];
+        for (int i = 0; i < childObjectCount; i++)
+        {
+            yield return (JSObject)childrenCollection[i];
+        }
+    }
+
+    // Add a few more if necessary
+}
+Then you can do something like this:
+
+private void TraverseElementTree(JSObject root, Action<JSObject> action)
+{
+    action(root);
+    foreach(var child in root.GetChildren())
+        TraverseElementTree(child, action);
+}
+Here's an example of how you could use this method:
+
+TraverseElementTree(document, (currentElement) =>
+{
+    string tagName = currentElement.GetTagName();
+    string id = currentElement.GetID();
+    if (tagName == "TD" && id.StartsWith("codetab"))
+    {
+        string elementClass = currentElement.GetAttribute("class");
+        // do something...
+    } 
+});

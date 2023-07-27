@@ -1,0 +1,8 @@
+https://stackoverflow.com/
+
+List<int> termsList = new List<int>();
+for (int runs = 0; runs < 400; runs++)
+{
+    termsList.Add(value);
+}
+int[] terms = termsList.ToArray();

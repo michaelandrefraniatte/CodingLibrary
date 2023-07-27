@@ -1,0 +1,117 @@
+https://stackoverflow.com/
+
+Windows:
+
+Some of the above values are easily available from the appropriate Win32 API, I just list them here for completeness. Others, however, need to be obtained from the Performance Data Helper library (PDH), which is a bit "unintuitive" and takes a lot of painful trial and error to get to work. (At least it took me quite a while, perhaps I've been only a bit stupid...)
+
+Note: for clarity all error checking has been omitted from the following code. Do check the return codes...!
+
+Total Virtual Memory:
+
+#include "windows.h"
+
+MEMORYSTATUSEX memInfo;
+memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+GlobalMemoryStatusEx(&memInfo);
+DWORDLONG totalVirtualMem = memInfo.ullTotalPageFile;
+
+Note: The name "TotalPageFile" is a bit misleading here. In reality this parameter gives the "Virtual Memory Size", which is size of swap file plus installed RAM.
+
+Virtual Memory currently used:
+
+Same code as in "Total Virtual Memory" and then
+
+DWORDLONG virtualMemUsed = memInfo.ullTotalPageFile - memInfo.ullAvailPageFile;
+
+Virtual Memory currently used by current process:
+
+#include "windows.h"
+#include "psapi.h"
+
+PROCESS_MEMORY_COUNTERS_EX pmc;
+GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+Total Physical Memory (RAM):
+
+Same code as in "Total Virtual Memory" and then
+
+DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
+Physical Memory currently used:
+
+Same code as in "Total Virtual Memory" and then
+
+DWORDLONG physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
+
+Physical Memory currently used by current process:
+
+Same code as in "Virtual Memory currently used by current process" and then
+
+SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+CPU currently used:
+
+#include "TCHAR.h"
+#include "pdh.h"
+
+static PDH_HQUERY cpuQuery;
+static PDH_HCOUNTER cpuTotal;
+
+void init(){
+    PdhOpenQuery(NULL, NULL, &cpuQuery);
+    // You can also use L"\\Processor(*)\\% Processor Time" and get individual CPU values with PdhGetFormattedCounterArray()
+    PdhAddEnglishCounter(cpuQuery, L"\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
+    PdhCollectQueryData(cpuQuery);
+}
+
+double getCurrentValue(){
+    PDH_FMT_COUNTERVALUE counterVal;
+
+    PdhCollectQueryData(cpuQuery);
+    PdhGetFormattedCounterValue(cpuTotal, PDH_FMT_DOUBLE, NULL, &counterVal);
+    return counterVal.doubleValue;
+}
+
+CPU currently used by current process:
+
+#include "windows.h"
+
+static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
+static int numProcessors;
+static HANDLE self;
+
+void init(){
+    SYSTEM_INFO sysInfo;
+    FILETIME ftime, fsys, fuser;
+
+    GetSystemInfo(&sysInfo);
+    numProcessors = sysInfo.dwNumberOfProcessors;
+
+    GetSystemTimeAsFileTime(&ftime);
+    memcpy(&lastCPU, &ftime, sizeof(FILETIME));
+
+    self = GetCurrentProcess();
+    GetProcessTimes(self, &ftime, &ftime, &fsys, &fuser);
+    memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
+    memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
+}
+
+double getCurrentValue(){
+    FILETIME ftime, fsys, fuser;
+    ULARGE_INTEGER now, sys, user;
+    double percent;
+
+    GetSystemTimeAsFileTime(&ftime);
+    memcpy(&now, &ftime, sizeof(FILETIME));
+
+    GetProcessTimes(self, &ftime, &ftime, &fsys, &fuser);
+    memcpy(&sys, &fsys, sizeof(FILETIME));
+    memcpy(&user, &fuser, sizeof(FILETIME));
+    percent = (sys.QuadPart - lastSysCPU.QuadPart) +
+        (user.QuadPart - lastUserCPU.QuadPart);
+    percent /= (now.QuadPart - lastCPU.QuadPart);
+    percent /= numProcessors;
+    lastCPU = now;
+    lastUserCPU = user;
+    lastSysCPU = sys;
+
+    return percent * 100;
+}

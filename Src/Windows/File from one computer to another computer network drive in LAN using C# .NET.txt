@@ -1,0 +1,23 @@
+https://www.codeproject.com/Questions/1102764/File-from-one-computer-to-another-computer-network
+
+System.IO.File.Copy("sourcePath", "\\machinename\share folder path");
+//but if you want to paste it on specific drive then you can use following code
+System.IO.File.Copy("sourcePath", "\\machinename\DriveLetter$\folder name");
+//e.g. System.IO.File.Copy("D:\\test.txt", "\\machinename\E$\test\test.txt");
+
+public static void UploadShareFile(string strfilename)
+{
+try
+{
+string fileName = Path.GetFileName(strfilename);
+System.IO.File.Copy(strfilename, "\\\\Admin-PC\\Upload\\" + fileName);
+
+}
+catch (Exception ex)
+{
+WriteToErrorFile("UploadShareFile Method Error on: {0} " + ex.Message);
+}
+}
+
+// Copy one file to a location where there is a file already exist
+File.Copy("file-a.txt", "file-b.txt", true); // overwrite = true

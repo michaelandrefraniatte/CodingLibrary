@@ -1,0 +1,1 @@
+It needs to update Nuggets from Nuggets manager to decrease size of library references after removing big files.

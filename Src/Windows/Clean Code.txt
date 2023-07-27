@@ -1,0 +1,4 @@
+https://www.butterfly.com.au/blog/website-development/clean-high-quality-code-a-guide-on-how-to-become-a-better-programmer
+https://www.baeldung.com/java-clean-code
+https://medium.com/better-programming/clean-code-5-essential-takeaways-2a0b17ccd05c
+https://qntm.org/clean

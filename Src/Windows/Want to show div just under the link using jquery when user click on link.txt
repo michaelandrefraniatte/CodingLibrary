@@ -1,0 +1,19 @@
+https://stackoverflow.com/
+
+<a id="link">About</a>
+
+<div id="submenu">
+     <a href="#">About the company</a><br />
+     <a href="#">Careers</a>
+</div>
+
+$('#link').click(function() {
+    $('#submenu').css({
+        left: $(this).offset().left + 'px',
+        top: ($(this).offset().top + $(this).height()) + 'px'
+    }).show();
+});
+
+#submenu {
+    position: absolute;
+}

@@ -1,0 +1,107 @@
+https://social.msdn.microsoft.com/Forums/en-US/b217416f-c1bc-4df8-aec7-754cc41391f5/streaming-directly-from-mic-to-speakers-using-directsound?forum=gametechnologiesdirectx101
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using System.Threading;
+using System.IO;
+using Microsoft.DirectX.DirectSound;
+
+namespace Echo
+{
+    public partial class Echo : Form
+    {
+        private Thread _echoThread;
+        private Capture _captureDevice;
+        private CaptureBuffer _captureBuffer;
+        private Device _playbackDevice;
+        private SecondaryBuffer _playbackBuffer;
+        private int _bufferSize;
+        private const int _bufferPositions = 4;
+        private AutoResetEvent _notificationEvent = null;
+        private BufferPositionNotify[] _positionNotify = new BufferPositionNotify[_bufferPositions + 1];
+        private Notify _echoNotify = null;
+ 
+        private void EchoThread()
+        {
+            int offset = 0;
+
+            _captureBuffer.Start(true);
+            _playbackBuffer.Play(0,  BufferPlayFlags.Looping);
+
+            for (; ; ) {
+                _notificationEvent.WaitOne(Timeout.Infinite, true);
+
+                byte[] buffer = (byte[]) _captureBuffer.Read(offset, typeof(byte), LockFlag.None, _bufferSize);
+                _playbackBuffer.Write(offset, buffer, LockFlag.None);
+                offset = (offset + _bufferSize) % (_bufferPositions * _bufferSize);
+            }
+        }
+
+        public Echo()
+        {
+            CheckForIllegalCrossThreadCalls = false;
+            InitializeComponent();
+
+            console.AppendText("Echo\r\n");
+            console.AppendText("Written by Frank W. Miller\r\n");
+            console.AppendText("\r\n");
+
+            _captureDevice = new Capture();
+
+            short channels = 2;
+            console.AppendText("Channels: " + channels.ToString() + "\r\n");
+
+            short bitsPerSample = 16;
+            console.AppendText("Bits per sample: " + bitsPerSample.ToString() + "\r\n");
+
+            int samplesPerSecond = 22050;
+            console.AppendText("Samples per second: " + samplesPerSecond.ToString() + "\r\n");
+
+            //Set up the wave format to be captured
+            WaveFormat waveFormat = new WaveFormat();
+            waveFormat.Channels = channels;
+            waveFormat.FormatTag = WaveFormatTag.Pcm;
+            waveFormat.SamplesPerSecond = samplesPerSecond;
+            waveFormat.BitsPerSample = bitsPerSample;
+            waveFormat.BlockAlign = (short) (channels * (bitsPerSample / 8));
+            waveFormat.AverageBytesPerSecond = waveFormat.BlockAlign * samplesPerSecond;
+
+            _bufferSize = waveFormat.AverageBytesPerSecond / 20;
+            console.AppendText("Buffer size: " + _bufferSize.ToString() + "\r\n");
+
+            CaptureBufferDescription captureBufferDescription = new CaptureBufferDescription();
+            captureBufferDescription.BufferBytes = _bufferPositions * _bufferSize;
+            captureBufferDescription.Format = waveFormat;
+            _captureBuffer = new CaptureBuffer(captureBufferDescription, _captureDevice);
+
+            _playbackDevice = new Device();
+            _playbackDevice.SetCooperativeLevel(this, CooperativeLevel.Normal);
+
+            BufferDescription playbackBufferDescription = new BufferDescription();
+            playbackBufferDescription.BufferBytes = _bufferPositions * _bufferSize;
+            playbackBufferDescription.Format = waveFormat;
+            _playbackBuffer = new SecondaryBuffer(playbackBufferDescription, _playbackDevice);
+
+            _echoThread = new Thread(new ThreadStart(EchoThread));
+            _echoThread.Start();
+
+            _notificationEvent = new AutoResetEvent(false);
+            for (int i = 0; i < _bufferPositions; i++) {
+                _positionNotifyIdea.Offset = (_bufferSize * i) + _bufferSize - 1;
+                _positionNotifyIdea.EventNotifyHandle = _notificationEvent.SafeWaitHandle.DangerousGetHandle();
+            }
+            _echoNotify = new Notify(_captureBuffer);
+            _echoNotify.SetNotificationPositions(_positionNotify, _bufferPositions);
+        }
+
+        private void EchoClose(object sender, FormClosingEventArgs e)
+        {
+            _echoThread.Abort();
+        }
+    }
+}

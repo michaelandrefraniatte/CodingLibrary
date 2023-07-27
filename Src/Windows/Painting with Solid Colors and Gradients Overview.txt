@@ -1,0 +1,22 @@
+https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/painting-with-solid-colors-and-gradients-overview?view=netframeworkdesktop-4.8
+
+Rectangle horizontalFillRectangle = new Rectangle();
+horizontalFillRectangle.Width = 200;
+horizontalFillRectangle.Height = 100;
+
+// Create a horizontal linear gradient with four stops.
+LinearGradientBrush myHorizontalGradient =
+    new LinearGradientBrush();
+myHorizontalGradient.StartPoint = new Point(0,0.5);
+myHorizontalGradient.EndPoint = new Point(1,0.5);
+myHorizontalGradient.GradientStops.Add(
+    new GradientStop(Colors.Yellow, 0.0));
+myHorizontalGradient.GradientStops.Add(
+    new GradientStop(Colors.Red, 0.25));
+myHorizontalGradient.GradientStops.Add(
+    new GradientStop(Colors.Blue, 0.75));
+myHorizontalGradient.GradientStops.Add(
+    new GradientStop(Colors.LimeGreen, 1.0));
+
+// Use the brush to paint the rectangle.
+horizontalFillRectangle.Fill = myHorizontalGradient;

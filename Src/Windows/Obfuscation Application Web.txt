@@ -1,0 +1,6 @@
+To do in a form with web browser nugget and loading encrypted page decrypted in memory.
+All web services and libraries enable in a form, renew and sale your proprietary web applications.
+Add features for sale services using account authentication with firebase, replacing firestore by firebase loggin for less sensitive application.
+
+
+

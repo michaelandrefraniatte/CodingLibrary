@@ -1,0 +1,27 @@
+// Mouse Directinput FPS (by Mic Frametaux and jeromote)
+   var.xin=(-wiimote.dot1x-wiimote.dot2x+1000)
+   If abs(var.xin)>=700 then var.x=(var.xin+var.xout)-sign(var.xin)*700
+   var.xout=var.x
+   FakeMouse.directinputx=var.xout*20%+var.xin*50%
+
+   var.yin=(wiimote.dot1y+wiimote.dot2y-750)
+   If abs(var.yin)>=600 then var.y=(var.yin+var.yout)-sign(var.yin)*600
+   var.yout=var.y
+   FakeMouse.directinputy=var.yout*20%+var.yin*50%
+
+
+Hi AM1st, thanks for your comment. If you have vista, download the good version of bluesoleil on the editor site, for the bluetooth key device driver, after if you have a vista PC, make a search in the bluetooth desk, while the wiimote synchronize pressing 1 and 2, and rapidely click right on the icon and say connect when the device icon is appeared, normaly after the search. For split/Second you don't have to use sensor bar. If you have a sensor bar connect to the wii, the wiimote is desactivate of it when the wiimote is connect to the PC. So you shall to light on the wii after the wiimote is connected, othewise i don't now what happening next.
+You can find my script of split/second here, http://www.megaupload.com/?d=N5YKGIF3 downloading it, for one player you copy the wiimote1 script, the script is compatible with GlovePie 0.43. If you use the mouse for all FPS, if you reduce the sensitivity of the mouse in the option games, it's very fun, like on the Wii : Copy this script for the mouse :
+// Mouse Directinput FPS (by Mic Frametaux and jeromote)
+   var.xin=(-wiimote.dot1x-wiimote.dot2x+1000)
+   If abs(var.xin)>=700 then var.x=(var.xin+var.xout)-sign(var.xin)*700
+   var.xout=var.x
+   FakeMouse.directinputx=var.xout*20%+var.xin*50%
+
+   var.yin=(wiimote.dot1y+wiimote.dot2y-750)
+   If abs(var.yin)>=600 then var.y=(var.yin+var.yout)-sign(var.yin)*600
+   var.yout=var.y
+   FakeMouse.directinputy=var.yout*20%+var.yin*50%
+Happy you enjoy it.
+Good game.
+Bye and maybe soon...

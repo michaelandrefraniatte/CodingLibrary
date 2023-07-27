@@ -1,0 +1,236 @@
+https://codepen.io/fullstackmafia/pen/NgOZWN
+
+<div class="stream-results">
+      <div class="all-streamers">
+      <p class="streamers-heading" id="all-streamers-heading">ALL STREAMERS</p>
+      <span class="all-streamers-display">SHOW</span>
+    </div>
+    <div class="animated" id="all">
+
+    </div>
+
+    
+    <div class="online-streamers">
+      <p class="streamers-heading" id="online-streamers-heading">ONLINE STREAMERS</p>
+      <span class="online-streamers-display">SHOW</span>
+    </div>
+    <div class="animated" id="online">
+    </div>
+
+  
+    <div class="offline-streamers">
+      <p class="streamers-heading" id="offline-streamers-heading">OFFLINE STREAMERS</p>
+      <span class="offline-streamers-display">SHOW</span>
+    </div>
+    <div class="animated" id="offline">
+    </div>
+    </div>
+
+
+body {
+	background: url(https://wallpaperscraft.com/image/dota_2_galaxy_style_logo_94038_1920x1080.jpg);
+	color: hsla(0, 0%, 100%, 0.8);
+}
+
+.stream-results {
+	display: flex;
+	justify-content: space-around;
+	width: 80%;
+	margin: auto;
+	margin-top: 50px;
+	font-family: 'Ubuntu', sans-serif;
+	padding: 20px;
+	background-color: hsla(0, 0%, 65%, 0.7);
+	border-radius: 30px;
+	line-height: 30px;
+}
+
+img {
+	width: 40px;
+	border-radius: 20px;
+}
+
+.animated {
+	margin-top: 10%;
+	width: 200px;
+	padding: 15px;
+	border-radius: 20px;
+	background-color: hsla(0, 0%, 30%, 0.7);
+}
+
+.streamer {
+	padding: 10px;
+	border: 3px solid hsla(0, 0%, 75%, 0.8);
+	border-radius: 10px;
+	margin-top: 10px;
+}
+
+.streamer-name {
+	text-decoration: none;
+	color: hsl(0, 0%, 100%);
+}
+
+.streamer-name:hover {
+	color: hsla(216, 100%, 55%, 0.8);
+	transition: all .2s;
+}
+
+.streamers-heading {
+	cursor: default;
+}
+
+#all-streamers-heading:hover {
+	color: hsla(0, 0%, 25%, 0.8);
+	transition: all .2s;
+}
+
+#online-streamers-heading:hover {
+	color: hsla(120, 100%, 50%, 0.8);
+	transition: all .2s;
+}
+
+#offline-streamers-heading:hover {
+	color: hsla(0, 100%, 55%, 0.8);
+	transition: all .2s;
+}
+
+.all-streamers-display,
+.online-streamers-display,
+.offline-streamers-display {
+	cursor: pointer;
+}
+
+span:hover {
+	color: hsla(0, 0%, 65%, 0.8);
+	transition: all .2s;
+}
+
+
+
+$(document).ready(function() {
+  var streamers = ['OgamingSC2',
+    'freecodecamp',              
+    'fullstackmafia',
+    'cretetion',
+    'storbeck',
+    'habathcx',
+    'RobotCaleb',
+    'noobs2ninjas',
+    'ESL_SC2'];
+  
+  var id = 'valrxz78goyut3v5wnb8oewri9zn3l';
+  
+  var getTwitchData = function(streamer) {
+    var streamApi =
+        'https://api.twitch.tv/kraken/streams/' + streamers[i] + '?client_id=' + id +  '&callback=?',
+      channelApi =
+        'https://api.twitch.tv/kraken/channels/' +
+        streamers[i] +
+        '?client_id=' + id + '&callback=?';
+    $.getJSON(streamApi, function(data) {
+      var onlineStatus = '';
+      if (data.status === 404 || data.status === 422) {
+        onlineStatus = data.message;
+        var defaultLogo = 'http://www.gamescast.tv/press/media/tv.png';
+
+        $('#all').append(
+          "<div class='streamer'>" +
+            '<img src=' +
+            defaultLogo +
+            '>' +
+            "<p class='streamer-name'>" +
+            streamer +
+            '</p>' +
+            "<p class='account-closed'>" +
+            onlineStatus +
+            '</p>' +
+            '</div>'
+        );
+      } else if (data.stream !== null) {
+        onlineStatus = 'online';
+
+        $('#all,#online').append(
+          "<div class='streamer '>" +
+            '<img src=' +
+            data.stream.channel.logo +
+            '>' +
+            "<p ><a class='streamer-name' href=" +
+            data.stream.channel.url +
+            " target='_blank'>" +
+            data.stream.channel.display_name +
+            '</a></p>' +
+            "<p class='online'>" +
+            onlineStatus +
+            '</p>' +
+            '<p>Streaming: ' +
+            data.stream.game +
+            ' - ' +
+            data.stream.channel.status +
+            '</p>' +
+            '</div>'
+        );
+      } else {
+        $.getJSON(channelApi, function(channelData) {
+          if (channelData.logo === null) {
+            channelData.logo = 'http://www.gamescast.tv/press/media/tv.png';
+          } else {
+            channelData.logo;
+          }
+
+          onlineStatus = 'offline';
+
+          $('#all,#offline').append(
+            "<div class='streamer'>" +
+              '<img src=' +
+              channelData.logo +
+              '>' +
+              "<p><a class='streamer-name' href=" +
+              channelData.url +
+              " target='_blank'>" +
+              channelData.display_name +
+              '</a></p>' +
+              "<p class='offline'>" +
+              onlineStatus +
+              '</p>' +
+              '</div>'
+          );
+        });
+      }
+    });
+  };
+
+  for (var i = 0; i < streamers.length; i++) {
+    getTwitchData(streamers[i]);
+  }
+
+  $('#all, #online, #offline').hide();
+  $('.all-streamers-display').on('click', function() {
+    $('#all').slideToggle('slow');
+
+    if ($('.all-streamers-display').text() === 'SHOW') {
+      $('.all-streamers-display').html('HIDE');
+    } else {
+      $('.all-streamers-display').html('SHOW');
+    }
+  });
+
+  $('.online-streamers-display').on('click', function() {
+    $('#online').slideToggle('slow');
+
+    if ($('.online-streamers-display').text() === 'SHOW') {
+      $('.online-streamers-display').html('HIDE');
+    } else {
+      $('.online-streamers-display').html('SHOW');
+    }
+  });
+
+  $('.offline-streamers-display').on('click', function() {
+    $('#offline').slideToggle('slow');
+
+    if ($('.offline-streamers-display').text() === 'SHOW') {
+      $('.offline-streamers-display').html('HIDE');
+    } else {
+      $('.offline-streamers-display').html('SHOW');
+    }
+  });
+});

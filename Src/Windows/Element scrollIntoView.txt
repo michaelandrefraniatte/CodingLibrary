@@ -1,0 +1,25 @@
+https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+
+
+element.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+behavior Optional
+Defines the transition animation. One of auto or smooth. Defaults to auto.
+
+block Optional
+Defines vertical alignment. One of start, center, end, or nearest. Defaults to start.
+
+inline Optional
+Defines horizontal alignment. One of start, center, end, or nearest. Defaults to nearest.
+
+body{ scroll-behavior: smooth; }
+
+
+transition: top 0.3s;
+
+
+transition: 0.6s ease;
+
+
+document.getElementById("overlay").style.top = "65vh";
+

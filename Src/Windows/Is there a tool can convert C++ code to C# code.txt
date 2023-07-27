@@ -1,0 +1,3 @@
+https://www.codeproject.com/Questions/437230/Is-there-a-tool-can-convert-Cplusplus-code-to-Csha
+
+You can use C++ code in C# with some easy steps by build an dll around the C++ code. But it depends on the code, for instance UI code isnt transferable.

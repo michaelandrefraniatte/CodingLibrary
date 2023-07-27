@@ -1,0 +1,85 @@
+https://codepen.io/MetAteM/pen/WrdWYJ
+
+body{
+	margin: 0px;
+	background-image : url(	"http://thedigitalyardsale.com/freebies/7-17/old_paper6.jpg");
+	background-size: 100% 100%;
+	margin: 0px;
+	text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+}
+select{
+	font-size: 30px;
+}
+#page{
+	height: 100vh;
+	width: 100vw;
+	position: absolute;
+	display: -webkit-flex;
+  display: flex;
+	text-align: center;
+}
+#container{
+	width: 100vw;
+	-webkit-align-self: center;
+  align-self: center;
+}
+
+<link href='https://fonts.googleapis.com/css?family=Montez|Lobster|Josefin+Sans|Shadows+Into+Light|Pacifico|Amatic+SC:700|Orbitron:400,900|Rokkitt|Righteous|Dancing+Script:700|Bangers|Chewy|Sigmar+One|Architects+Daughter|Abril+Fatface|Covered+By+Your+Grace|Kaushan+Script|Gloria+Hallelujah|Satisfy|Lobster+Two:700|Comfortaa:700|Cinzel|Courgette' rel='stylesheet' type='text/css'>
+<div id = "page">
+	<div id = "container">
+		<h1 style = "font-size: 50px;">Font selector</h1>
+	<div id = "text">
+		<h1 id = "h1">Grumpy wizards make toxic brew for the evil Queen and Jack.</h1>
+		<h2 id = "h2">Grumpy wizards make toxic brew for the evil Queen and Jack.</h2>
+		<h3 id = "h3">Grumpy wizards make toxic brew for the evil Queen and Jack.</h3>
+		<h4 id = "h4">Grumpy wizards make toxic brew for the evil Queen and Jack.</h4>
+		<div id = "standard">Grumpy wizards make toxic brew for the evil Queen and Jack.</div><br>
+	</div>
+	<select id = 'select' onChange = "return fontChange();">
+	</select>
+	</div>
+</div>
+
+var fonts = ["Montez","Lobster","Josefin Sans","Shadows Into Light","Pacifico","Amatic SC", "Orbitron", "Rokkitt","Righteous","Dancing Script","Bangers","Chewy","Sigmar One","Architects Daughter","Abril Fatface","Covered By Your Grace","Kaushan Script","Gloria Hallelujah","Satisfy","Lobster Two","Comfortaa","Cinzel","Courgette"];
+var string = "";
+var select = document.getElementById("select")
+for(var a = 0; a < fonts.length ; a++){
+	var opt = document.createElement('option');
+	opt.value = opt.innerHTML = fonts[a];
+	opt.style.fontFamily = fonts[a];
+	select.add(opt);
+}
+function fontChange(){
+	var x = document.getElementById("select").selectedIndex;
+  var y = document.getElementById("select").options;
+	document.body.insertAdjacentHTML("beforeend", "<style> #text{ font-family:'"+y[x].text+"';}"+
+																	 "#select{font-family:'"+y[x].text+"';</style>");
+	var tl = new TimelineLite, 
+	mySplitText = new SplitText("#h1", {type:"words,chars"}), 
+	chars = mySplitText.chars; //an array of all the divs that wrap each character
+	TweenLite.set("#h1", {perspective:400});
+	tl.staggerFrom(chars, 0.2, {opacity:0, scale:0, y:80, rotationX:180, transformOrigin:"0% 50% -50",  ease:Back.easeOut}, 0.01, "+=0");
+	var t2 = new TimelineLite, 
+	mySplitText2 = new SplitText("#h2", {type:"words,chars"}), 
+	chars = mySplitText2.chars; //an array of all the divs that wrap each character
+	TweenLite.set("#h2", {perspective:400});
+	t2.staggerFrom(chars, 0.2, {opacity:0, scale:0, y:80, rotationX:180, transformOrigin:"0% 100% -50",  ease:Back.easeOut}, 0.01, "+=0");
+	var t3 = new TimelineLite, 
+	mySplitText3 = new SplitText("#h3", {type:"words,chars"}), 
+	chars = mySplitText3.chars; //an array of all the divs that wrap each character
+	TweenLite.set("#h3", {perspective:400});
+	t3.staggerFrom(chars, 0.2, {opacity:0, scale:0, y:80, rotationX:180, transformOrigin:"0% 150% -50",  ease:Back.easeOut}, 0.01, "+=0");
+	var t4 = new TimelineLite, 
+	mySplitText4 = new SplitText("#h4", {type:"words,chars"}), 
+	chars = mySplitText4.chars; //an array of all the divs that wrap each character
+	TweenLite.set("#h4", {perspective:400});
+	t4.staggerFrom(chars, 0.2, {opacity:0, scale:0, y:80, rotationX:180, transformOrigin:"0% 200% -50",  ease:Back.easeOut}, 0.01, "+=0");
+	var t5 = new TimelineLite, 
+	mySplitText5 = new SplitText("#standard", {type:"words,chars"}), 
+	chars = mySplitText5.chars; //an array of all the divs that wrap each character
+	TweenLite.set("#standard", {perspective:400});
+	t5.staggerFrom(chars, 0.2, {opacity:0, scale:0, y:80, rotationX:180, transformOrigin:"0% 250% -50",  ease:Back.easeOut}, 0.01, "+=0");
+}
+TweenLite.to(page, 0, {top:"-100vh", ease:Bounce.easeOut, delay:0});
+TweenLite.to(page, 1, {top:"0vh", ease:Elastic.easeOut, delay:1});
+fontChange();

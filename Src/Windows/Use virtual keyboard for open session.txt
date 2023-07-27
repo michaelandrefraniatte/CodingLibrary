@@ -1,0 +1,3 @@
+Under Ease and Access, click on Keyboard to open the virtual Keyboard. 
+Click on options of the virtual Keyboard to enable numpad by checking the box to allow it.
+Type your pin code with virtual numpad.

@@ -1,0 +1,55 @@
+https://stackoverflow.com/
+
+// Place all of this inside of a <script> element that is just before the 
+// closing of the body (</body>)
+
+// Get references to all elements that you'll be working with
+var btnAddRow = document.getElementById("btn_add_row");
+var tbl = document.getElementById("sample_table");
+
+// Now, set up the event handling functions
+btnAddRow.addEventListener("click", addRow);
+
+// Code to add a row to the table and assign properties to new row
+function addRow() {
+    var counter = 1; // id attributes must be unique. This will keep it that way.
+    var numberOfCols = tbl.rows[0].cells.length;
+    var row = tbl.insertRow();
+    for (var i = 0; i < numberOfCols; i++) {
+        var cell = row.insertCell(i);
+        cell.id = "row" + (tbl.rows.length - 1) + "cell" + counter;  
+        
+        // Now, we'll create a new button, place that button in the new cell and
+        // set up a click event handler for it.
+        var btn = document.createElement("button");
+        btn.textContent = cell.id;
+        btn.id = "btn" + tbl.rows.length + counter;
+        
+        // Add a click event handler 
+        btn.addEventListener("click", function(){
+            alert("You clicked cell: " + this.id);
+        });
+        
+        // And now include the button in the cell
+        cell.appendChild(btn);
+        
+        counter++;  // Increment the counter after using it
+    }
+}
+td { border:1px solid black; }
+
+td:nth-child(2) { cursor:pointer; }
+<button type="button" id="btn_add_row">Add Row</button>
+<table class="table table-hover" id="sample_table">
+    <thead>
+        <th>Column A</th>
+        <th id='calculate'>Column B</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Item 1</td>
+            <!-- sample of the td I'd like the function to generate -->
+            <td id='calculate'>Item 2</td>
+        </tr>
+    </tbody>
+</table>

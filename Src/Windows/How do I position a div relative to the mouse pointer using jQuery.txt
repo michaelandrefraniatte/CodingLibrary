@@ -1,0 +1,24 @@
+https://stackoverflow.com/
+
+var mouseX;
+var mouseY;
+$(document).mousemove( function(e) {
+   mouseX = e.pageX; 
+   mouseY = e.pageY;
+});  
+$(".classForHoverEffect").mouseover(function(){
+  $('#DivToShow').css({'top':mouseY,'left':mouseX}).fadeIn('slow');
+});
+
+the function above will make the DIV appear over the link wherever that may be on the page. It will fade in slowly when the link is hovered. You could also use .hover() instead. From there the DIV will stay, so if you would like the DIV to disappear when the mouse moves away, then,
+
+$(".classForHoverEffect").mouseout(function(){
+  $('#DivToShow').fadeOut('slow');
+});
+If you DIV is already positioned, you can simply use
+
+$('.classForHoverEffect').hover(function(){
+  $('#DivToShow').fadeIn('slow');
+});
+
+Also, keep in mind, your DIV style needs to be set to display:none; in order for it to fadeIn or show.

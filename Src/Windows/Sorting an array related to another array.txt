@@ -1,0 +1,27 @@
+https://stackoverflow.com/
+
+int[] keys = { 1, 4, 3, 2, 5 };
+string[] items = { "abc", "def", "ghi", "jkl", "mno" };
+Array.Sort(keys, items);
+foreach (int key in keys) {
+    Console.WriteLine(key); // 1, 2, 3, 4, 5
+}
+foreach (string item in items) {
+    Console.WriteLine(item); // abc, jkl, ghi, def, mno
+}
+
+var requiredOrder = new String[] { "PH", "HH", "PR", "SR", "UN", "UD", "WD", "WE", "OT" };
+var listToBeSorted = new List<KeyValuePair<string, string>>()
+{
+    new KeyValuePair<string, string>("A","PR"),
+    new KeyValuePair<string, string>("B","PH"),
+    new KeyValuePair<string, string>("C","HH"),
+    new KeyValuePair<string, string>("D","WD"),
+    new KeyValuePair<string, string>("E","OT"),
+    new KeyValuePair<string, string>("F","UN"),
+};
+var lookup = listToBeSorted.ToLookup(x => x.Value);
+var sorted =
+    from x in requiredOrder
+    from y in lookup[x]
+    select y;

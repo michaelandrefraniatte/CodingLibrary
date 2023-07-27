@@ -1,0 +1,23 @@
+https://stackoverflow.com/questions/5563299/how-to-call-any-method-asynchronously-in-c-sharp
+
+using System.Threading.Tasks;
+void Foo(){}
+new Task(Foo).Start();
+
+
+void Foo2(int x, string y)
+{
+    return;
+}
+new Task(() => { Foo2(42, "life, the universe, and everything");}).Start();
+
+
+void Foo(string args){}
+Task.Run(() => Foo("bar"));
+
+
+// The method to call
+void Foo()
+{}
+Action action = Foo;
+action.BeginInvoke(ar => action.EndInvoke(ar), null);

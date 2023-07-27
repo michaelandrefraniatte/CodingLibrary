@@ -1,0 +1,72 @@
+https://stackoverflow.com/
+
+I found a solution to change the background image of an html element using js but I would like to use the css transition only. I do not wish to edit my html just the css.
+
+$(document).ready(function() {
+    var timeToDisplay = 2000;
+
+    var slideshow = $('#slideshow');
+    var urls = [
+       'http://sipi.usc.edu/database/preview/aerials/2.1.07.png',
+       'http://sipi.usc.edu/database/preview/aerials/2.1.06.png',
+       'http://sipi.usc.edu/database/preview/aerials/2.1.12.png'
+    ];
+
+    var index = 0;
+    var transition = function() {
+        var url = urls[index];
+
+        slideshow.css('background-image', 'url(' + url + ')');
+
+        index = index + 1;
+        if (index > urls.length - 1) {
+            index = 0;
+        }
+    };
+    
+    var run = function() {
+        transition();
+        slideshow.fadeIn('slow', function() {
+            setTimeout(function() {
+                slideshow.fadeOut('slow', run);
+            }, timeToDisplay);
+        });
+    }
+        
+    run();
+});
+#slideshow {
+    border: 1px solid gray;
+    height: 330px;
+    width: 592px;
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<div id="slideshow"></div>
+
+Look into CSS animation property.
+
+This snippet will give you an idea...
+
+#slideshow {
+  border: 1px solid gray;
+  height: 330px;
+  width: 592px;
+  -webkit-animation-name: background;
+  -webkit-animation-duration: 5s;
+  -webkit-animation-direction: alternate;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes background {
+  0% {
+    background-image: url('http://sipi.usc.edu/database/preview/aerials/2.1.07.png');
+  }
+  33% {
+    background-image: url('http://sipi.usc.edu/database/preview/aerials/2.1.06.png');
+  }
+  100% {
+    background-image: url('http://sipi.usc.edu/database/preview/aerials/2.1.12.png');
+  }
+}
+<div id="slideshow"></div>

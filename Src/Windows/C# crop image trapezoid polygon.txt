@@ -1,0 +1,12 @@
+https://stackoverflow.com/
+
+public Bitmap FillPolygon(Bitmap sourceBitmap, PointF[] polygonPoints)
+    {
+        var targetBitmap = new Bitmap(256, 256);
+        using var g = Graphics.FromImage(targetBitmap);
+        using var brush = new TextureBrush(sourceBitmap);
+        g.FillPolygon(brush, polygonPoints);
+        return targetBitmap;
+    }
+
+

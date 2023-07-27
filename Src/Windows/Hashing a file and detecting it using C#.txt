@@ -1,0 +1,20 @@
+https://stackoverflow.com/
+
+For hashing use System.Security.Cryptography.MD5 or System.Security.Cryptography.SHA1.
+
+SHA1 sha1 = SHA1.Create();
+FileStream fs = new FileStream("myFile", FileMode.Open, FileAccess.Read);
+byte[] hash = sha1.ComputeHash(fs);
+fs.Close();
+If you want to analyse all running processes, you can do the following (note that if your process is 32 Bits, you won't be able to access 64 Bits processes):
+
+foreach (Process proc in Process.GetProcesses())
+{
+    try
+    {
+        string exePath = proc.MainModule.FileName;
+        // calculate hash
+    }
+    catch
+    { }
+}

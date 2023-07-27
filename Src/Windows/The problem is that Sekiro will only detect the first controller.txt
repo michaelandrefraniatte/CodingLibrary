@@ -1,0 +1,40 @@
+https://www.reddit.com/r/Sekiro/comments/b3ysrw/for_anyone_using_a_wii_u_pro_controller_with/
+
+For anyone using a Wii U Pro controller with WiinUSoft - read this for a fix
+Tips / Hints
+As you might know by now, WiinUSoft uses a dummy controller in the form of 'Nintendo RVL-CNT-01-TR' to spoof an XBOX 360 controller, which you will see listed under 'joy.cpl' in Windows.
+
+The problem is that Sekiro will only detect the first controller in the list (which is the dummy controller) and ignore the second controller, so to remedy this you can use a program called devreorder (https://github.com/briankendall/devreorder/releases) which essentially allows you to reorder your controllers (or hide them) in Windows, and then Sekiro should detect your controller.
+
+You can copy and paste this code into devreorder.ini if you're having trouble:
+
+; devreorder settings
+; Any line starting with ; is a comment and will be ignored
+
+[order]
+; In this section write the names or GUIDs of your controllers
+; in the order you want them to be detected, one per line.
+; Make sure any names exactly match the name printed in the
+; Game Controllers control panel or in DeviceLister.exe,
+; including any capital letters and punctuation. If you use
+; a device's GUID instead of its name, make sure the GUID is
+; enclosed in curly braces, just like in DeviceLister.exe.
+; Example:
+; vJoy Device
+; Controller (XBOX 360 For Windows)
+; {01234567-89ab-cdef-0123-456789abcdef}
+Nintendo RVL-CNT-01-TR
+Controller (XBOX 360 For Windows)
+
+
+[hidden]
+; In this section, write the names or GUIDs of controllers
+; that you want to be hidden. Again their name must exactly
+; match the name printed in the Game Controllers control
+; panel or in DeviceLister.exe, and GUIDs must be in the
+; same format as above.
+; Example:
+; Wireless Controller
+; {01234567-89ab-cdef-0123-456789abcdef}
+Nintendo RVL-CNT-01-TR    
+You can read the program notes here: https://github.com/briankendall/devreorder/blob/master/README.md

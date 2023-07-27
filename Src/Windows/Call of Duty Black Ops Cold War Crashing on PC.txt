@@ -1,0 +1,3 @@
+https://www.drivereasy.com/knowledge/call-of-duty-black-ops-cold-war-crashing-on-pc/
+
+In the Black Ops Cold War section, check the box next to Additional command line arguments. Then type -d3d11 to force the game to run in DirectX 11 mode.

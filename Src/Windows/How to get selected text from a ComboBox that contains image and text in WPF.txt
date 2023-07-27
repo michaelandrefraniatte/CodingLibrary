@@ -1,0 +1,92 @@
+https://learn.microsoft.com/en-us/answers/questions/680899/how-to-get-selected-text-from-a-combobox-that-cont.html
+
+
+MainWindow.xaml
+	<StackPanel>
+         <TextBlock x:Name="tb"  Width="200" Height="50" Background="AliceBlue"/>
+         <ComboBox  x:Name="PrinterSelection_ComboBox" 
+                    Height="80" SelectedIndex="0" Margin="5 3 5 3" Width="200" 
+                    SelectionChanged="PrinterSelection_ComboBox_SelectionChanged"
+                    ItemsSource="{Binding PrinterList}">
+             <ComboBox.ItemTemplate>
+                 <DataTemplate>
+                     <WrapPanel Margin="0,5,0,5" Height="45">
+                         <Image x:Name="PrinterImage" Source="{Binding ComboBoxItemImage}"
+                                Height="20" Stretch="Fill"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                         <Label x:Name="PrinterName"  Content="{Binding ComboBoxItemName}"
+                               TextBlock.TextAlignment="Center" 
+                                VerticalAlignment="Center"/>
+                     </WrapPanel>
+                 </DataTemplate>
+             </ComboBox.ItemTemplate>
+         </ComboBox>
+     </StackPanel>
+
+MainWindow.xaml.cs
+   public partial class MainWindow : Window
+   {
+     public List<MyPrinter> PrinterList { get;private set;}
+     public MainWindow()
+     {
+       InitializeComponent();
+       PrinterList = new List<MyPrinter>();
+       PrinterList.Add(new MyPrinter("Software602 Print2PDF", "Resources/8.jpg"));
+       PrinterList.Add(new MyPrinter("Microsoft XPS Document Writer", "Resources/e1.jpg"));
+       PrinterList.Add(new MyPrinter("Microsoft Print to PDF", "Resources/hd.jpg"));
+       DataContext=this;
+    
+     }
+     string PrinterName;
+     private void PrinterSelection_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+     {
+       var selectedItem = PrinterSelection_ComboBox.SelectedItem as MyPrinter;
+       switch (selectedItem != null)
+       {
+         case true:
+           PrinterName = selectedItem.ComboBoxItemName;
+           tb.Text=PrinterName;
+           break;
+       }
+     }
+   }
+   public class MyPrinter : INotifyPropertyChanged
+   {
+     private string name;
+     private string path;
+        
+     public string ComboBoxItemName
+     {
+       get { return name; }
+       set
+       {
+         if (name == value) return;
+         name = value;
+         OnPropertyChanged("ComboBoxItemName");
+       }
+     }
+     public string ComboBoxItemImage
+     {
+       get { return path; }
+       set
+       {
+         if (path == value) return;
+         path = value;
+         OnPropertyChanged("ComboBoxItemImage");
+       }
+     }
+     public MyPrinter(string name, string path)
+     {
+       this.ComboBoxItemName = name;
+       this.ComboBoxItemImage = path;
+     }
+     public event PropertyChangedEventHandler PropertyChanged;
+     protected void OnPropertyChanged(string name)
+     {
+       PropertyChangedEventHandler handler = PropertyChanged;
+       if (handler != null)
+       {
+         handler(this, new PropertyChangedEventArgs(name));
+       }
+     }
+   }

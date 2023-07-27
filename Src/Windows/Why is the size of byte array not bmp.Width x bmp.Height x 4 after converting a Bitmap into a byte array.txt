@@ -1,0 +1,31 @@
+https://stackoverflow.com/
+
+public static byte[] BitmapToByteArray(Bitmap bitmap)
+{
+    BitmapData bmpdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+    int numbytes = bmpdata.Stride * bitmap.Height;
+    byte[] bytedata = new byte[numbytes];
+    IntPtr ptr = bmpdata.Scan0;
+    Marshal.Copy(ptr, bytedata, 0, numbytes);
+    bitmap.UnlockBits(bmpdata);
+    return bytedata;
+}
+
+public static byte[] ImageToByte2(Image img)
+{
+    byte[] byteArray = new byte[0];
+    using(MemoryStream stream = new MemoryStream())
+    {
+        img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+        stream.Close();
+
+        byteArray = stream.ToArray();
+    }
+    return byteArray;
+}
+
+public byte[] ImageToByte(Image img)
+{
+    ImageConverter converter = new ImageConverter();
+    return (byte[])converter.ConvertTo(img, typeof(byte[]));
+}

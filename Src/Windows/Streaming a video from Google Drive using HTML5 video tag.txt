@@ -1,0 +1,26 @@
+https://stackoverflow.com/
+
+The Google Drive API allows you to upload and download to your Google Drive from the server-side of your web applications and even through command line and desktop applications. There is Python and .NET support and extensive documentation on how to setup your projects.
+
+Enable Google Drive API. Make sure you are signed into the Google account you wish to stream files from. You can visit this link to enable the Google Drive API.
+Get an API key. By visiting this link, you can generate an API key to access Google Drive. You may be prompted to create a new project.
+Get the file ID. Access Google Drive and find the file you wish to stream. Ensure it is available to the public. Open it in a new tab and copy the file ID. It should like something like this: https://drive.google.com/file/d/<YOUR_FILE_ID>/view
+Call the download link. Your download link should be in this format:
+https://www.googleapis.com/drive/v3/files/<YOUR_FILE_ID>?key=<YOUR_API_KEY>&alt=media
+
+This was tested using a 200MB file. The download worked perfectly without any virus scanning interrupting it. Use the above link and add it to the embed code of your site.
+
+Create API Key with credential allowing restricted URL to call the service
+
+https://console.developers.google.com/apis/library/drive.googleapis.com
+
+https://console.developers.google.com/apis/credentials
+
+https://console.cloud.google.com/apis/credentials/key/
+
+https://cloud.google.com/docs/authentication/api-keys?&_ga=2.240134019.-1282921850.1626713424#adding_http_restrictions
+
+michaelfraniatte.github.io/MyOwnGamingGlories
+michaelfraniatte.github.io
+
+The API is necessary for video file size up to 100 Mo.

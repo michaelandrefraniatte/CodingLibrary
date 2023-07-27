@@ -1,0 +1,45 @@
+https://stackoverflow.com/
+
+I need select waveout device, to play sound. But I cant do that.
+
+void Initialize()
+{
+_WaveOut = new WaveOut();
+var reader = new WaveFileReader(FileName);
+_WaveOut.Init(new WaveChannel32(reader));
+}
+
+This function starts, then the form start. After this on my form, I select waveout device with combobox. Combobox is filles with this code:
+
+for (int i = 0; i < WaveOut.DeviceCount; i++)
+{
+     WaveOutCapabilities WOC = WaveOut.GetCapabilities(i);
+     comboBox2.Items.Add(WOC.ProductName);
+
+}
+After this, I select my device.
+
+int WaveOutDeviceId = comboBox2.SelectedIndex;
+
+And start Play function:
+
+void Play()
+{
+_WaveOut.DeviceNumber = WaveOutDeviceId;
+_WaveOut.Play();
+}
+
+But my sound always play on default device (With number = 0). If I do this for microphone, this code works correctly.
+
+Once you've called Init it's too late to change DeviceId. I suggest creating a new instance of WaveOut when you want to change device.
+
+public void playSound(int deviceNumber)
+{
+    disposeWave();// stop previous sounds before starting
+    waveReader = new NAudio.Wave.WaveFileReader(fileName);
+    var waveOut = new NAudio.Wave.WaveOut();
+    waveOut.DeviceNumber = deviceNumber;
+    waveOut.Init(waveReader);
+    waveOut.Play();
+}
+

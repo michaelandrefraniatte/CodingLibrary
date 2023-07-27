@@ -1,0 +1,41 @@
+https://stackoverflow.com/
+
+
+var options = new CoreWebView2EnvironmentOptions("--autoplay-policy=no-user-gesture-required");
+var path = @"C:\Program Files (x86)\Microsoft\EdgeWebView\Application\92.0.902.67";
+var environment = await CoreWebView2Environment.CreateAsync(path, null, options);
+var webView = new WebView2();
+await webView.EnsureCoreWebView2Async(environment);
+
+
+public MainWindow()
+    {
+        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--autoplay-policy=no-user-gesture-required");
+        InitializeComponent();
+    }
+
+
+https://weblogs.asp.net/rweigelt/using-a-video-device-with-getusermedia-in-webview2-in-a-kiosk-scenario
+
+
+public partial class MainWindow : Window
+{
+	public MainWindow()
+	{
+		InitializeComponent();
+		Loaded += HandleLoaded;
+	}
+	private async void HandleLoaded(object sender, RoutedEventArgs e)
+	{
+		await webView.EnsureCoreWebView2Async(); // important
+		webView.CoreWebView2.PermissionRequested += HandlePermissionRequested;
+		webView.Source = new Uri("...URI of your page...");
+	}
+	private void HandlePermissionRequested(object? sender, CoreWebView2PermissionRequestedEventArgs e)
+	{
+		if (e.PermissionKind == CoreWebView2PermissionKind.Camera)
+		{
+			e.State = CoreWebView2PermissionState.Allow;
+		}
+	}
+}

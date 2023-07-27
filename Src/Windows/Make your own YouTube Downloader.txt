@@ -1,0 +1,79 @@
+https://javascript.plainenglish.io/make-your-own-youtube-downloader-626133572429
+
+import axios from 'axios';
+import { URLSearchParams } from 'url';
+
+async function getVideoInfo() {
+	const response = await axios.get(`https://www.youtube.com/get_video_info?video_id=${videoId}&el=embedded&eurl=${eurl}&sts=18333`);
+	const parsedResponse = Object.fromEntries(new URLSearchParams(response.data));
+}
+
+getVideoInfo();
+
+import axios from 'axios';
+import { URLSearchParams } from 'url';
+
+import VideoInfo from './models/VideoInfo';
+
+public static async getVideoInfo(videoId: string): Promise<VideoInfo> {
+	const videoIdRegex = /^[\w_-]+$/;
+	const eurl = `https://youtube.googleapis.com/v/${videoId}`;
+	if (!videoIdRegex.test(videoId)) {
+		throw new Error('Invalid videoId.');
+	}
+
+	const response = await axios.get(`https://www.youtube.com/get_video_info?video_id=${videoId}&el=embedded&eurl=${eurl}&sts=18333`);
+
+	const parsedResponse = Object.fromEntries(new URLSearchParams(response.data));
+
+	const jsonResponse = JSON.parse(parsedResponse.player_response);
+	const { playabilityStatus, videoDetails, streamingData } = jsonResponse;
+	const videoInfo = <VideoInfo> { playabilityStatus, videoDetails, streamingData };
+
+	return videoInfo;
+}
+
+import axios from 'axios';
+
+import Headers from './models/Headers';
+
+async function download(url: string, filename: string, headers: Headers) {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'get',
+            url,
+            responseType: 'stream',
+            headers,
+        })
+            .then((response) => {
+                response.data
+                    .pipe(fs.createWriteStream(filename))
+                    .on('finish', (err: Error) => {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+            });
+    });
+}
+
+import ffmpeg from 'fluent-ffmpeg';
+
+export default async function mergeStreams(
+    videoFile: string,
+    audioFile: string,
+    outputFile: string,
+) {
+    return new Promise((resolve, reject) => {
+        ffmpeg(videoFile)
+            .input(audioFile)
+            .saveToFile(outputFile)
+            .on('error', (err) => {
+                reject(err);
+            })
+            .on('end', () => {
+                logger.info('Finished merging!');
+                resolve();
+            });
+    });
+}
+

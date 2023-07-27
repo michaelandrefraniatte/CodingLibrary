@@ -1,0 +1,1 @@
+Place the zip under root of C:/ for unzip a compressed folder in order to avoid unzip failed for too large file path

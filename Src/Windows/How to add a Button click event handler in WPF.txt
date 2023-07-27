@@ -1,0 +1,20 @@
+https://www.c-sharpcorner.com/Resources/705/how-to-add-a-button-click-event-handler-in-wpf.aspx
+
+<Button x:Name="DrawCircleButton" Height="40" Width="120"
+
+        Canvas.Left="10" Canvas.Top="10"
+
+        Content="Draw Circle"
+
+        VerticalAlignment="Top"
+
+        HorizontalAlignment="Left">
+
+Click="DrawCircleButton_Click"
+
+</Button>
+
+private void DrawCircleButton_Click(object sender, RoutedEventArgs e)
+{
+
+}

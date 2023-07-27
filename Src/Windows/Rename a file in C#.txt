@@ -1,0 +1,6 @@
+https://stackoverflow.com/
+
+Take a look at System.IO.File.Move, "move" the file to a new name.
+
+System.IO.File.Move("oldfilename", "newfilename");
+

@@ -1,0 +1,3 @@
+https://stackoverflow.com/
+
+In Solution Explorer, under your project, expand References, select the MySql.Data assembly, view the Properties for the assembly, and change Copy Local to True. Now when you compile the project, MySql.Data.dll will be output to the bin directory.

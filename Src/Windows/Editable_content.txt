@@ -1,0 +1,5 @@
+https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content
+
+<div contenteditable="true">
+  This text can be edited by the user.
+</div>

@@ -1,0 +1,5 @@
+https://stackoverflow.com/
+
+Environment.Exit and Application.Exit
+
+Environment.Exit(0) is cleaner.

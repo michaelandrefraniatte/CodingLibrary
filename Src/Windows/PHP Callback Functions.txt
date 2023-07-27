@@ -1,0 +1,30 @@
+https://www.w3schools.com/php/php_callback_functions.asp
+
+Callbacks in User Defined Functions
+
+<?php
+function exclaim($str) {
+  return $str . "! ";
+}
+
+function ask($str) {
+  return $str . "? ";
+}
+
+function printFormatted($str, $format) {
+  // Calling the $format callback function
+  echo $format($str);
+}
+
+// Pass "exclaim" and "ask" as callback functions to printFormatted()
+printFormatted("Hello world", "exclaim");
+printFormatted("Hello world", "ask");
+?>
+
+Callback Functions
+
+<?php
+$strings = ["apple", "orange", "banana", "coconut"];
+$lengths = array_map( function($item) { return strlen($item); } , $strings);
+print_r($lengths);
+?>

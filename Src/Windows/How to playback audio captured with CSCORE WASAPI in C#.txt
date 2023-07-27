@@ -1,0 +1,82 @@
+https://stackoverflow.com/
+
+//original program snippet
+            WasapiCapture capture = null;
+            SoundInSource _soundInSource;
+            IWaveSource _source;
+            SingleBlockNotificationStream _stream;
+            AudioEndpointVolume _audioEndpointVolume;
+            MMDevice captureDevice = MMDeviceEnumerator.DefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            WaveFormat deviceFormat = captureDevice.DeviceFormat;
+            _audioEndpointVolume = AudioEndpointVolume.FromDevice(captureDevice);
+
+            //DarthAffe 07.02.2018: This is a really stupid workaround to (hopefully) finally fix the surround driver issues
+            for (int i = 1; i < 13; i++)
+                try { capture = new WasapiLoopbackCapture(100, new WaveFormat(deviceFormat.SampleRate, deviceFormat.BitsPerSample, i)); } catch { /* We're just trying ... */ }
+
+            if (capture == null)
+                throw new NullReferenceException("Failed to initialize WasapiLoopbackCapture");
+
+            capture.Initialize();
+
+            _soundInSource = new SoundInSource(capture) { FillWithZeros = true };
+            _source = _soundInSource.WaveFormat.SampleRate == 44100
+                          ? _soundInSource.ToStereo()
+                          : _soundInSource.ChangeSampleRate(44100).ToStereo();
+            byte[] buffer = new byte[_source.WaveFormat.BytesPerSecond / 2];
+            //not my code until this point (It works in the original program)
+            List<byte> lbuffer = new List<byte>();
+            _soundInSource.DataAvailable += (s, aEvent) =>
+            {
+                _source.Read(buffer, 0, buffer.Length);
+                lbuffer.AddRange(buffer);
+            };
+
+            capture.Start();
+
+//Then, I write the bytes in the lbuffer to a wave file to test if it recorded correctly:
+System.Threading.Thread.Sleep(2000);
+
+            capture.Stop();
+
+            Debug.WriteLine(lbuffer.Count);
+
+            System.IO.File.WriteAllBytes("help.wav", lbuffer.ToArray());
+
+            Debug.WriteLine(lbuffer.Count);
+
+To find the the Endpoint I wanted, I wrote this short program to find all the info I wanted:
+
+static void Main(string[] args)
+    {
+        MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+        MMDeviceCollection collection = enumerator.EnumAudioEndpoints(DataFlow.Render,DeviceState.Active);
+        Console.WriteLine($"\nNumber of active Devices: {collection.GetCount()}");
+
+        int i = 0;
+        foreach (MMDevice device in collection){
+
+            Console.WriteLine($"\n{i} Friendly name: {device.FriendlyName}");
+            Console.WriteLine($"Endpoint ID: {device.DeviceID}");
+            i++;
+        }
+        Console.ReadKey();
+    }
+
+This showed me that the Endpoint I wanted was item number 3 (2 in an array) on my list, and instead of using GetDevice(String id) I used ItemAt(int deviceIndex).
+
+MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+MMDeviceCollection collection = enumerator.EnumAudioEndpoints(DataFlow.Render,DeviceState.Active);
+MMDevice captureDevice = collection.ItemAt(2);
+However in this case, the program was not using captureDevice to bring in the audio data. These were the magic lines:
+
+_capture = new WasapiLoopbackCapture(100, new WaveFormat(deviceFormat.SampleRate, deviceFormat.BitsPerSample, i));
+_capture.Initialize();
+
+I found that WasapiLoopbackCapture uses Windows' default device unless changed, and the code was using DefaultAudioEndpoint to get the properties of the default device. So I added
+
+_capture.Device = captureDevice;
+//before
+_capture.Initialize();
+
+And now the program properly pulls the audio data off of my non-default audio endpoint.

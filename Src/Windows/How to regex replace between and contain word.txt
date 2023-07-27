@@ -1,0 +1,24 @@
+https://stackoverflow.com
+
+
+Get plain text from HTML in .NET
+
+Regex.Replace(HtmlString, "<(.|\n)*?>", "")
+
+
+Use RegEx to Find and Replace Specific HTML Tags
+
+public static string ReplaceTag(string input, string soughtTag, string replacementTag)
+{
+    return Regex.Replace(input, "(</?)" + soughtTag + @"((?:\s+.*?)?>)", "$1" + replacementTag + "$2");
+}
+
+
+how-do-you-convert-html-to-plain-text
+
+https://www.nuget.org/packages/HtmlAgilityPack
+
+var plainText = HtmlUtilities.ConvertToPlainText(string html);
+
+
+

@@ -1,0 +1,21 @@
+https://www.c-sharpcorner.com/UploadFile/1e050f/getting-ip-address-and-host-name-using-dns-class/
+
+
+using System;  
+using System.Collections.Generic;  
+using System.Linq;  
+using System.Text;  
+using System.Net;  
+  
+namespace GetHostNameUsingIP  
+{  
+    class Program  
+    {  
+        static void Main(string[] args)  
+        {  
+            string IPAdd = "204.79.197.200";  
+            IPHostEntry hostEntry = Dns.GetHostEntry(IPAdd);  
+            Console.WriteLine(hostEntry.HostName);  
+        }  
+    }  
+} 

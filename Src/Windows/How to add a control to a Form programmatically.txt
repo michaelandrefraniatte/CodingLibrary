@@ -1,0 +1,37 @@
+https://stackoverflow.com/
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace AddControlProgramatically
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for (int x = 0; x <= 3; x++)
+            {
+            	Label lbl = new Label();
+                //create new label location after each loop
+                //by multiplying the new value of variable x by 5, so the new label 
+                //control will not overlap each other.
+                lbl.Location = new System.Drawing.Point(52 + (x * 30), 58 + (x * 30));
+                //create new id and text of the label
+                lbl.Name = "label_" + x.ToString();
+                lbl.Text = "Label " + x.ToString();
+
+                this.panel1.Controls.Add(lbl);
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+https://stackoverflow.com/
+
+var getUrl = window.location;
+var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+
+var base_url = window.location.origin;
+var host = window.location.host;
+var pathArray = window.location.pathname.split( '/' );
+
+var baseurl = window.location.origin + window.location.pathname;
+
+var loc = window.location;
+var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/" + phpBaseUrl;
+
+var getUrl = window.location;
+var baseurl = getUrl.origin; //or
+var baseurl =  getUrl.origin + '/' +getUrl.pathname.split('/')[1];
+

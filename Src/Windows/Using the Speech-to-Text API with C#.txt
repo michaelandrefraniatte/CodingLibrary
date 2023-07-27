@@ -1,0 +1,266 @@
+https://codelabs.developers.google.com/codelabs/cloud-speech-text-csharp#0
+
+
+https://voip-sip-sdk.com/p_7604-shows-how-to-use-speechtotext-google-api.html
+
+Program.cs
+
+using Ozeki.Media;
+using System;
+ 
+namespace Google_Speech_To_Text_V1
+{
+    class Program
+    {
+        static MediaConnector connector;
+ 
+        static Microphone microphone;
+ 
+        static GoogleSTT googleSTT;
+ 
+        public static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+ 
+            connector = new MediaConnector();
+            microphone = Microphone.GetDefaultDevice();
+          
+            var format = new WaveFormat(48000, 16, 1);
+ 
+            microphone.ChangeFormat(format);
+ 
+            googleSTT =
+            new GoogleSTT(GoogleLanguage.English_United_Kingdom,
+                                        format.AsVoIPMediaFormat());
+ 
+            connector.Connect(microphone, googleSTT);
+ 
+            microphone.Start();
+ 
+            googleSTT.Start();
+ 
+            Console.WriteLine("Speak !!");
+ 
+            Console.ReadLine();
+ 
+            Console.WriteLine("Disconnect");
+ 
+            connector.Disconnect(microphone, googleSTT);
+            
+            Console.WriteLine("Google dispose");
+ 
+            googleSTT.Dispose();
+            googleSTT = null;
+ 
+            Console.WriteLine("microphone dispose");
+ 
+            microphone.Dispose();
+            microphone = null;
+ 
+            Console.WriteLine("connector dispose");
+ 
+            connector.Dispose();
+            connector = null;
+        }
+    }
+}
+
+GoogleSTT.cs
+
+using Ozeki.Media;
+using Google.Cloud.Speech.V1Beta1;
+ 
+using System;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Linq;
+ 
+namespace Google_Speech_To_Text_V1
+{
+    class GoogleSTT : AudioReceiver
+    {
+        SpeechClient speech;
+        SpeechClient.StreamingRecognizeStream streamingCall;
+ 
+        Task printResponses;
+ 
+        AudioFormat _format;
+ 
+        private string _languageCode;
+ 
+        private GoogleLanguage _language;
+        public GoogleLanguage Language
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                _languageCode = _language.GetCode();
+            }
+        }
+ 
+        public GoogleSTT(string languageCode)
+            : this(GoogleLanguageExt.GetGoogleLanguageFromCode(languageCode),
+                    new AudioFormat())
+        { }
+ 
+        public GoogleSTT(GoogleLanguage languageCode, AudioFormat format)
+        {
+            Language = languageCode;
+ 
+            SetReceiveFormats(format);
+ 
+            _format = format;
+ 
+            Init();
+        }
+ 
+        private void Init()
+        {
+            speech = SpeechClient.Create();
+ 
+            streamingCall = speech.StreamingRecognize();
+ 
+            streamingCall.WriteAsync(
+               new StreamingRecognizeRequest()
+               {
+                   StreamingConfig = new StreamingRecognitionConfig()
+                   {
+                       Config = new RecognitionConfig()
+                       {
+                           Encoding =
+                           RecognitionConfig.Types.AudioEncoding.Linear16,
+                           SampleRate = _format.SampleRate,
+                           LanguageCode = _languageCode,
+                           MaxAlternatives = 5
+                       },
+                       InterimResults = true,
+                   }
+               });
+ 
+            printResponses = Task.Run(async () =>
+            {
+                while (await streamingCall.ResponseStream.MoveNext(
+                    default(CancellationToken)))
+                {
+                    foreach (var result in streamingCall.ResponseStream
+                        .Current.Results)
+                    {
+                        if (result.IsFinal)
+                        {
+                            var top =
+                            result.Alternatives.OrderBy(x => x.Confidence).First();
+ 
+                            Console.WriteLine(top.Transcript);
+                        }
+                    }
+                }
+            });
+        }
+ 
+        object writeLock = new object();
+ 
+        public bool IsRunning { get; private set; }
+ 
+        public void Stop()
+        {
+            IsRunning = false;
+        }
+ 
+        public void Start()
+        {
+            IsRunning = true;
+        }
+ 
+        protected override void OnDataReceived(object sender, AudioData data)
+        {
+            if (!IsRunning) return;
+ 
+            lock (writeLock)
+            {
+                var request = new StreamingRecognizeRequest();
+                request.AudioContent = Google.Protobuf.ByteString
+                            .CopyFrom(data.Data, 0, data.Data.Length);
+ 
+                try
+                {
+                    streamingCall.WriteAsync(request).Wait();
+                }
+                catch (Exception e)
+                {
+                    streamingCall.WriteCompleteAsync();
+                    Init();
+                }
+            }
+        }
+ 
+        protected override void Dispose(bool disposing)
+        {
+            Stop();
+ 
+            if (printResponses != null)
+            {
+                printResponses = null;
+            }
+ 
+            if (streamingCall != null)
+            {
+                streamingCall = null;
+            }
+ 
+            if (speech != null)
+            {
+                speech = null;
+            }
+ 
+            base.Dispose(disposing);
+        }
+    }
+}
+
+
+https://voip-sip-sdk.com/p_7348-how-to-recognize-incoming-voice-using-speech-to-text-conversion.html
+
+using System;
+using Ozeki.Media;
+ 
+namespace Voice_Recognition
+{
+    class Program
+    {
+        static Microphone microphone;
+        static MediaConnector connector;
+        static SpeechToText speechToText;   // creates a SpeechToText object
+ 
+        private static void Main(string[] args)
+        {
+            microphone = Microphone.GetDefaultDevice();
+            connector = new MediaConnector();
+ 
+            SetupSpeechToText();    // calls the proper method to convert speech to text
+ 
+            Console.ReadLine();
+        }
+ 
+        static void SetupSpeechToText()
+        {
+            string[] words = {"Hello", "Welcome"};  // defines the words to be recognized
+ 
+            speechToText = SpeechToText.CreateInstance(words);  // sets the speechToText object
+            speechToText.WordRecognized += (SpeechToText_WordsRecognized);  // subscribes to get notified if a word is being recognized
+ 
+            connector.Connect(microphone, speechToText);    // connects the microphone to the speech-to-text converter
+            microphone.Start(); // starts the microphone
+        }
+ 
+        // this will be called, when a word is being recognized
+        static void SpeechToText_WordsRecognized(object sender, SpeechDetectionEventArgs e)
+        {
+            Console.WriteLine(e.Word);  // displays the recognized word
+        }
+    }
+}
+
+
+
+

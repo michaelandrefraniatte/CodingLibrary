@@ -1,0 +1,45 @@
+https://stackoverflow.com/
+
+const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+const ctx = new AudioContext();
+const src = ctx.createMediaStreamSource(stream);
+const dst = ctx.createMediaStreamDestination();
+const biquad = ctx.createBiquadFilter();
+[src, biquad, dst].reduce((a, b) => a && a.connect(b));
+audio.srcObject = dst.stream;
+
+biquad.type = "highpass";
+biquad.gain = 25;
+biquad.frequency.value = 1000;
+rangeButton.oninput = () => biquad.frequency.value = rangeButton.value;
+
+
+https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode/frequency
+
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+//set up the different audio nodes we will use for the app
+var analyser = audioCtx.createAnalyser();
+var distortion = audioCtx.createWaveShaper();
+var gainNode = audioCtx.createGain();
+var biquadFilter = audioCtx.createBiquadFilter();
+var convolver = audioCtx.createConvolver();
+
+// connect the nodes together
+
+source = audioCtx.createMediaStreamSource(stream);
+source.connect(analyser);
+analyser.connect(distortion);
+distortion.connect(biquadFilter);
+biquadFilter.connect(convolver);
+convolver.connect(gainNode);
+gainNode.connect(audioCtx.destination);
+
+// Manipulate the Biquad filter
+
+biquadFilter.type = "lowshelf";
+biquadFilter.frequency.value = 1000;
+biquadFilter.gain.value = 25;
+
+
+

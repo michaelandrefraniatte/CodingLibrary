@@ -1,0 +1,5 @@
+https://cloud.google.com/firestore/docs/quickstart-servers#c
+https://www.youtube.com/watch?v=ptEtTNQ0dXg
+https://stackoverflow.com/questions/51422145/how-to-connect-to-cloud-firestore-db-with-net-core
+https://cloud.google.com/dotnet/docs/reference/Google.Cloud.Firestore/latest/index
+https://github.com/googleapis/google-cloud-dotnet/issues/2349

@@ -1,0 +1,74 @@
+https://stackoverflow.com/
+
+waveIn = new WasapiLoopbackCapture();
+waveIn.DataAvailable += InputBufferToFileCallback;    
+waveIn.StartRecording();
+
+public void InputBufferToFileCallback(object sender, WaveInEventArgs e)
+{
+  // The recorder bytes can be found in e.Buffer
+  // The number of bytes recorded can be found in e.BytesRecorded
+  // Process the audio data any way you wish...
+}
+
+waveInStream = new WasapiLoopbackCapture(); //record sound card.
+waveInStream.DataAvailable += new EventHandler<WaveInEventArgs>(this.OnDataAvailable); // sound data event
+waveInStream.RecordingStopped += new EventHandler<StoppedEventArgs>(this.OnDataStopped); // record stopped event
+MessageBox.Show(waveInStream.WaveFormat.Encoding + " - " + waveInStream.WaveFormat.SampleRate +" - " + waveInStream.WaveFormat.BitsPerSample + " - " + waveInStream.WaveFormat.Channels);
+//IEEEFLOAT - 48000 - 32 - 2
+//Explanation: IEEEFLOAT = Encoding | 48000 Hz | 32 bit | 2 = STEREO and 1 = mono
+writer = new WaveFileWriter("out.wav", new WaveFormat(48000, 24, 2));
+waveInStream.StartRecording(); // record start
+
+WaveFormat myOutFormat = new WaveFormat(48000, 24, 2); // --> Encoding PCM standard.
+private void OnDataAvailable(object sender, WaveInEventArgs e)
+{
+    //standard e.Buffer encoding = IEEEFLOAT
+    //MessageBox.Show(e.Buffer + " - " + e.BytesRecorded);
+    //if you needed change for encoding. FOLLOW WaveFormatConvert ->
+    byte[] output = WaveFormatConvert(e.Buffer, e.BytesRecorded, waveInStream.WaveFormat, myOutFormat);            
+
+    writer.Write(output, 0, output.Length);
+
+}
+
+private void OnDataStopped(object sender, StoppedEventArgs e)
+{
+    if (writer != null)
+    {
+        writer.Close();
+    }
+
+    if (waveInStream != null)
+    {
+        waveInStream.Dispose();                
+    }            
+
+}
+
+public byte[] WaveFormatConvert(byte[] input, int length, WaveFormat inFormat, WaveFormat outFormat)
+{
+    if (length == 0)
+        return new byte[0];
+    using (var memStream = new MemoryStream(input, 0, length))
+    {
+        using (var inputStream = new RawSourceWaveStream(memStream, inFormat))
+        {                    
+            using (var resampler = new MediaFoundationResampler(inputStream, outFormat)) {
+                resampler.ResamplerQuality = 60; // 1 low - 60 max high                        
+                //CONVERTED READ STREAM
+                byte[] buffer = new byte[length];
+                using (var stream = new MemoryStream())
+                {
+                    int read;
+                    while ((read = resampler.Read(buffer, 0, length)) > 0)
+                    {
+                        stream.Write(buffer, 0, read);
+                    }
+                    return stream.ToArray();
+                }
+            }
+
+        }
+    }
+}

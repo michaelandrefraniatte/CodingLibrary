@@ -1,0 +1,157 @@
+https://stackoverflow.com/
+
+
+Game.cs:
+
+using System;
+using System.Linq;
+using System.Drawing;
+using SharpDX.Windows;
+using SharpDX.DXGI;
+using SharpDX.Direct3D;
+using SharpDX.D3DCompiler;
+using SharpDX;
+using DXMath = SharpDX.Mathematics.Interop;
+using D3D11 = SharpDX.Direct3D11;
+
+namespace testthing
+{
+    class Game : IDisposable
+    {
+        private RenderForm renderForm;
+        private int width = 1280;
+        private int height = 720;
+
+        private D3D11.Device device;
+        private D3D11.DeviceContext context;
+        private SwapChain swapChain;
+
+        private D3D11.RenderTargetView renderTarget;
+
+        private DXMath.RawVector3[] verts;
+        private D3D11.Buffer vertexBuffer;
+
+        private D3D11.VertexShader vertShader;
+        private D3D11.PixelShader pixelShader;
+
+        private D3D11.InputElement[] inputElements = new D3D11.InputElement[]
+        {
+            new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0)
+        };
+        private ShaderSignature inputSignature;
+        private D3D11.InputLayout inputLayout;
+
+        private DXMath.RawViewportF viewport;
+
+        private double time = 0;
+        public Game()
+        {
+            renderForm = new RenderForm("DxDemo");
+            renderForm.ClientSize = new Size(width, height);
+            renderForm.AllowUserResizing = false;
+
+            InitDevice();
+
+            verts = new DXMath.RawVector3[] { new DXMath.RawVector3(-0.5f,-0.5f,0.0f), new DXMath.RawVector3(0.5f, -0.5f, 0.0f), new DXMath.RawVector3(0.0f, 0.5f, 0.0f) };
+            vertexBuffer = D3D11.Buffer.Create<DXMath.RawVector3>(device, D3D11.BindFlags.VertexBuffer, verts);
+
+            CompileShaders();
+
+            RenderLoop.Run(renderForm, Render);
+        }
+        private void InitDevice()
+        {
+            ModeDescription backBufferDesc = new ModeDescription(width, height, new Rational(60,1), Format.R8G8B8A8_UNorm);
+            SwapChainDescription swapChainDesc = new SwapChainDescription()
+            {
+                ModeDescription = backBufferDesc,
+                SampleDescription = new SampleDescription(1,0),
+                Usage = Usage.RenderTargetOutput,
+                BufferCount = 1,
+                OutputHandle = renderForm.Handle,
+                IsWindowed = true
+            };
+
+            D3D11.Device.CreateWithSwapChain(DriverType.Hardware, D3D11.DeviceCreationFlags.None, swapChainDesc, out device, out swapChain);
+            context = device.ImmediateContext;
+
+            using (D3D11.Texture2D backBuffer = swapChain.GetBackBuffer<D3D11.Texture2D>(0))
+            {
+                renderTarget = new D3D11.RenderTargetView(device, backBuffer);
+            }
+            context.OutputMerger.SetRenderTargets(renderTarget);
+
+            viewport = new DXMath.RawViewportF()
+            {
+                X = 0,
+                Y = 0,
+                Width = width,
+                Height = height
+            };
+            context.Rasterizer.SetViewport(viewport);
+        }
+        private void CompileShaders()
+        {
+            using (var vsBC = ShaderBytecode.CompileFromFile("vertex.hlsl", "main", "vs_4_0", ShaderFlags.Debug))
+            {
+                inputSignature = ShaderSignature.GetInputSignature(vsBC);
+                vertShader = new D3D11.VertexShader(device, vsBC);
+            }
+            using (var psBC = ShaderBytecode.CompileFromFile("pixel.hlsl", "main", "ps_4_0", ShaderFlags.Debug))
+            {
+                pixelShader = new D3D11.PixelShader(device, psBC);
+            }
+            context.VertexShader.Set(vertShader);
+            context.PixelShader.Set(pixelShader);
+
+            inputLayout = new D3D11.InputLayout(device, inputSignature, inputElements);
+            context.InputAssembler.InputLayout = inputLayout;
+        }
+        private void Render()
+        {
+            time = time + 0.01;
+            context.ClearRenderTargetView(renderTarget, new DXMath.RawColor4(0.5f, 0.5f, 0.5f, 0.0f));
+
+            context.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(vertexBuffer, Utilities.SizeOf<DXMath.RawVector3>(), 0));
+            context.Draw(verts.Count(), 0);
+
+            swapChain.Present(1, PresentFlags.None);
+        }
+
+
+        public void Dispose()
+        {
+            inputLayout.Dispose();
+            inputSignature.Dispose();
+
+            vertexBuffer.Dispose();
+
+            vertShader.Dispose();
+            pixelShader.Dispose();
+
+            renderTarget.Dispose();
+            swapChain.Dispose();
+
+            device.Dispose();
+            context.Dispose();
+
+            renderForm.Dispose();
+        }
+    }
+}
+
+vertex.hlsl:
+
+float4 main(float4 position : POSITION) : SV_POSITION
+{
+    return position;
+}
+
+pixel.hlsl:
+
+float4 main(float4 position : SV_POSITION) : SV_TARGET
+{
+    return float4(1.0,0.0,0.0,1.0);
+}
+
+I just did not know that viewports can't have a max depth more than 1.0 and I had to set the raster state to disable backface culling.

@@ -1,0 +1,19 @@
+https://stackoverflow.com
+
+var str = "This is a      string with           multiple spaces";
+str = str.replace(/ {2,}/g, " ");
+document.write("<pre>" + str + "</pre>");
+
+var str = "       Hello World!        ";
+alert(str.trim()); 
+
+const string = " this contains   spaces ";    
+string.replace(/\s{2,}/g, '').trim();
+
+newString = string.replace(/\s+/g,' ').trim();
+
+sentence.split(' ').filter(word => word).join(' ')
+
+
+
+

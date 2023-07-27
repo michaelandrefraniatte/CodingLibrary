@@ -1,0 +1,17 @@
+https://stackoverflow.com/
+
+
+Converter HTML to plain text like Gmail:
+
+html = html.replace(/<style([\s\S]*?)<\/style>/gi, '');
+html = html.replace(/<script([\s\S]*?)<\/script>/gi, '');
+html = html.replace(/<\/div>/ig, '\n');
+html = html.replace(/<\/li>/ig, '\n');
+html = html.replace(/<li>/ig, '  *  ');
+html = html.replace(/<\/ul>/ig, '\n');
+html = html.replace(/<\/p>/ig, '\n');
+html = html.replace(/<br\s*[\/]?>/gi, "\n");
+html = html.replace(/<[^>]+>/ig, '');
+If you can use jQuery :
+
+var html = jQuery('<div>').html(html).text();

@@ -1,0 +1,26 @@
+https://stackoverflow.com/
+
+public Bitmap RotateBitmap(Bitmap bmp, float angle)
+{
+    double radianAngle = angle / 180.0 * Math.PI;
+    double cosA = Math.Abs(Math.Cos(radianAngle));
+    double sinA = Math.Abs(Math.Sin(radianAngle));
+
+    int newWidth = (int)(cosA * bmp.Width + sinA * bmp.Height);
+    int newHeight = (int)(cosA * bmp.Height + sinA * bmp.Width);
+
+    var rotatedBitmap = new Bitmap(newWidth, newHeight);
+    rotatedBitmap.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
+    
+    using (Graphics g = Graphics.FromImage(rotatedBitmap))
+    {
+        g.TranslateTransform(rotatedBitmap.Width / 2, rotatedBitmap.Height / 2);
+        g.RotateTransform(angle);
+        g.TranslateTransform(-bmp.Width / 2, -bmp.Height / 2);
+        g.DrawImage(bmp, new Point(0, 0));
+    }
+
+    bmp.Dispose();//Remove if you want to keep oryginal bitmap
+
+    return rotatedBitmap;
+}

@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+$("#allTerms>ul").sort(function(a, b) { 
+	var contentA = parseInt($(a).attr('data-sort')); 
+	var contentB = parseInt($(b).attr('data-sort')); 
+	return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0; 
+}).appendTo($("#allTerms"));
+
+

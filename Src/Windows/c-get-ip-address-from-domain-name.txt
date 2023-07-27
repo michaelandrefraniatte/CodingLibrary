@@ -1,0 +1,4 @@
+https://stackoverflow.com/
+
+Dns.GetHostAddresses
+var address = Dns.GetHostAddresses("www.test.com")[0];

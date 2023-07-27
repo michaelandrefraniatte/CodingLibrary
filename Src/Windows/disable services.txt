@@ -1,0 +1,4 @@
+sc config "Name of Service" start= disabled
+sc stop "Name of Service"
+
+

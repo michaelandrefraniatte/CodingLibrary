@@ -1,0 +1,2 @@
+- Prefer to record or stream with GeforceExperience and show your contents on Youtube
+- If you want streaming or recording, it's better to use GeForce Experience if you have a Nvidia card, in this case, lower to minimum the audio quality from audio card settings, to not have unsynchronisation of audio and video, and disable all audio cards useless

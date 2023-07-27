@@ -1,0 +1,6 @@
+Tension = compression et traction
+Tenseur de forces = mouvement mécanique et pivot
+mg = P
+Rupture = tension interne
+Mouvement = Forces inégales
+

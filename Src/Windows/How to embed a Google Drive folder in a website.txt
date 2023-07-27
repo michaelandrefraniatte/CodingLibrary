@@ -1,0 +1,70 @@
+https://stackoverflow.com/
+
+Google Drive folders can be embedded and displayed in list and grid views:
+
+List view
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID#list" style="width:100%; height:600px; border:0;"></iframe>
+
+Grid view
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID#grid" style="width:100%; height:600px; border:0;"></iframe>
+
+
+Q: What is a folder ID (FOLDER-ID) and how can I get it?
+
+A: Go to Google Drive >> open the folder >> look at its URL in the address bar of your browser. For example:
+
+Folder URL: https://drive.google.com/drive/folders/0B1iqp0kGPjWsNDg5NWFlZjEtN2IwZC00NmZiLWE3MjktYTE2ZjZjNTZiMDY2
+
+Folder ID:
+0B1iqp0kGPjWsNDg5NWFlZjEtN2IwZC00NmZiLWE3MjktYTE2ZjZjNTZiMDY2
+
+
+Caveat with folders requiring permission
+This technique works best for folders with public access. Folders that are shared only with certain Google accounts will cause trouble when you embed them this way. At the time of this edit, a message "You need permission" appears, with some buttons to help you "Request access" or "Switch accounts" (or possibly sign-in to a Google account). The Javascript in these buttons doesn't work properly inside an IFRAME in Chrome.
+
+Embedding a Google Drive directory in an IFRAME
+Google Drive folders can be embedded and displayed in list and grid views (in which all you can do is click a file or folder to open it on a new tab). To do so, simply replace FOLDER-ID with your own in:
+
+List view
+
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID#list" style="width:100%; height:600px; border:0;"></iframe>
+or without specifying a mode, since list mode is the default:
+
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID" style="width:100%; height:600px; border:0;"></iframe>
+Grid view
+
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID#grid" style="width:100%; height:600px; border:0;"></iframe>
+Obtaining your folder id
+The id is the hash (alphanumeric gibberish) after folders/ in the URL of the folder. You can see the URL in the address bar of your browser when you open the Drive folder. For example, in:
+
+https://drive.google.com/drive/folders/0B1iqp0kGPjWsNDg5NWFlZjEtN2IwZC00NmZiLWE3MjktYTE2ZjZjNTZiMDY2 
+The Folder ID is 0B1iqp0kGPjWsNDg5NWFlZjEtN2IwZC00NmZiLWE3MjktYTE2ZjZjNTZiMDY2.
+
+Folder with G Suite/Google Apps domain
+If your folder is part of a Google Apps domain, you can add the domain to the URL to alleviate the permission problems (detailed further ahead):
+
+<iframe src="https://drive.google.com/a/MY.DOMAIN.COM/embeddedfolderview?id=FOLDER-ID#grid" style="width:100%; height:600px; border:0;"></iframe>
+Just replace MY.DOMAIN.COM and FOLDER-ID with your own.
+
+Caveat with folders requiring permission
+This technique works best for folders with public access. Folders that are shared only with certain Google accounts can cause trouble when you embed them this way, depending on which Google accounts are active on the user's browser:
+
+If the user has not logged in to any Google account, then nothing appears in the frame.
+If the user is logged onto an account without authorisation to access the folder, the frame will contain the message You need permission, with some buttons to Request access or Switch accounts, but if you click on this last, the frame blanks out.
+If the user logs into an account without proper permissions, and later adds the authorised account, on loading the embedded Drive Google will resort to the first active account, and the user will see You need permission, unless...
+If the URL contains a Google Suite domain, and the user is logged into that domain's account, the embedded view will work, even if the user logged to another account first.
+The blank frames are because Google forbids embedding its login page in an IFRAME (presumably to prevent account stealing), via the X-Frame-Options header, which if set to SAMEORIGIN will cause any well-behaved browser to refuse to load the page if it's not in the same domain (v.g. drive.google.com). You can see this in the developer console of your browser.
+
+TL;DR
+To get a list or grid view of a Drive folder (in which all you can do is click a file or folder to open it on a new tab), use:
+
+<iframe src="https://drive.google.com/embeddedfolderview?id=FOLDER-ID#grid" style="width:100%; height:600px; border:0;"></iframe>
+or alternatively, for a Google Suite/Apps Drive:
+
+<iframe src="https://drive.google.com/a/MY.DOMAIN.COM/embeddedfolderview?id=FOLDER-ID#grid" style="width:100%; height:600px; border:0;"></iframe>
+Replace MY.DOMAIN.COM and FOLDER-ID with your own; remove #grid to get a detailed file list.
+
+For private folders, have your users log to the correct account before loading the page with the embedded folder; if the folder is in a Google Apps domain, you can add the domain to the URL. Else, they must log into the authorised account before any other.
+
+(this answer is an edit of Mori's, but it was rejected as it changed his intent, somehow)
+

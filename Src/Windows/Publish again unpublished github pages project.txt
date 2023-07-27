@@ -1,0 +1,23 @@
+https://stackoverflow.com/
+
+
+
+Navigate to "Actions"
+
+https://i.stack.imgur.com/rXx1f.png
+
+Click on New Work Flow
+
+Go to bottom of page
+
+In page section choose "Static HTML"
+
+https://i.stack.imgur.com/QgUmc.png
+
+Click Configure & commit changes.
+
+Go go Actions Again, on left most choose "Deploy with Static HTML"
+
+Click "Run Workflow" on right most.
+
+https://i.stack.imgur.com/V1BmQ.png

@@ -1,0 +1,8 @@
+https://vac.muzychenko.net/en/
+
+https://stackoverflow.com/
+
+In Windows, you just have to use as input for WebRTC Stereo mix (or Wave out mix on some laptops/sound cards). If you don't have it on your list of recording devices, try to update your sound card driver. If you do have it in the list, but it is marked as Currently unavailable, then right click on it and select Set as Default Device. This would make it available.
+
+If your sound card doesn't support Stereo mix, then you can use something like Virtual Audio Cable.
+

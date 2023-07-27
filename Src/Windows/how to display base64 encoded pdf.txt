@@ -1,0 +1,115 @@
+https://stackoverflow.com/
+
+
+
+var objbuilder = '';
+objbuilder += ('<object width="100%" height="100%" 
+data="data:application/pdf;base64,');
+objbuilder += (myBase64string);
+objbuilder += ('" type="application/pdf" class="internal">');
+objbuilder += ('<embed src="data:application/pdf;base64,');
+objbuilder += (myBase64string);
+objbuilder += ('" type="application/pdf"  />');
+objbuilder += ('</object>');
+
+var win = window.open("#","_blank");
+var title = "my tab title";
+win.document.write('<html><title>'+ title +'</title><body style="margin-top: 
+0px; margin-left: 0px; margin-right: 0px; margin-bottom: 0px;">');
+win.document.write(objbuilder);
+win.document.write('</body></html>');
+layer = jQuery(win.document);
+
+
+
+function printPreview(data){
+        var type = 'application/pdf';
+        let blob = null;
+        const blobURL = URL.createObjectURL( pdfBlobConversion(data, 'application/pdf'));
+        const theWindow = window.open(blobURL);
+        const theDoc = theWindow.document;
+        const theScript = document.createElement('script');
+        function injectThis() {
+            window.print();
+        }
+        theScript.innerHTML = 'window.onload = ${injectThis.toString()};';
+        theDoc.body.appendChild(theScript);
+    }
+  //converts base64 to blob type for windows
+    function pdfBlobConversion(b64Data, contentType) {
+          contentType = contentType || '';
+          var sliceSize = 512;
+          b64Data = b64Data.replace(/^[^,]+,/, '');
+          b64Data = b64Data.replace(/\s/g, '');
+          var byteCharacters = window.atob(b64Data);
+          var byteArrays = [];
+
+          for ( var offset = 0; offset < byteCharacters.length; offset = offset + sliceSize ) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+          }
+
+          var blob = new Blob(byteArrays, { type: contentType });
+          return blob;
+        }
+
+
+
+<object>
+   <embed id="pdfID" type="text/html" width="1200" height="600" src="data:application/pdf;base64,@Model.binaryDocument" />
+</object>
+$(document).ready(function () {
+    var b64Data = "@Model.binaryDocument";
+    var contentType = "application/pdf";
+     const blob = b64toBlob(b64Data, contentType);
+    const blobUrl = URL.createObjectURL(blob);
+
+    window.location = blobUrl;
+  })
+
+const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) 
+       {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+
+
+
+var base64 = ("yourBase64StringVariable")
+const blob = base64ToBlob( base64, 'application/pdf' );
+const url = URL.createObjectURL( blob );
+const pdfWindow = window.open("");
+pdfWindow.document.write("<iframe width='100%' height='100%' src='" + url + "'></iframe>");
+
+function base64ToBlob( base64, type = "application/octet-stream" ) {
+  const binStr = atob( base64 );
+  const len = binStr.length;
+  const arr = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    arr[ i ] = binStr.charCodeAt( i );
+  }
+  return new Blob( [ arr ], { type: type } );
+}

@@ -1,0 +1,2 @@
+str.charAt(-1) != '<';
+str.charAt(stringLength) != '>';

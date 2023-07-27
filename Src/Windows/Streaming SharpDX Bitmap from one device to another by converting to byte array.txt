@@ -1,0 +1,191 @@
+https://stackoverflow.com/
+
+public class Serial
+    public static byte[] BitmapToBytes(Bitmap bitmap) {
+        using(MemoryStream ms = new MemoryStream()) {
+            using(BinaryWriter bw = new BinaryWriter(ms)) {
+                using(MemoryStream msb = new MemoryStream()) {
+                    bitmap.Save(msb, ImageFormat.Jpeg);
+                    byte[] bitmapBytes = msb.ToArray();
+                    
+                    bw.Write(bitmapBytes.Length);
+                    bw.Write(bitmapBytes);
+
+                    return ms.ToArray();
+                }
+            }
+        }
+    }
+    
+    public static Bitmap BytesToBitmap(byte[] bytes) {
+        using(MemoryStream ms = new MemoryStream(bytes)) {
+            using(BinaryReader br = new BinaryReader(ms)) {
+                int len = br.ReadInt32();
+                byte[] bitmapBytes = br.ReadBytes(len);
+
+                if(len == bitmapBytes.Length) {
+                    using(MemoryStream msb = new MemoryStream(bitmapBytes)) {
+                        return new Bitmap(msb);
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+}
+
+public class Send {
+    private ClientInfo Instance;
+    
+    public Send(ClientInfo instance) {
+        Instance = instance;
+    }
+    
+    public void Bitmap(Bitmap bitmap) {
+        if(!Instanced) { return; }
+        Instance.SendMessage((uint)Code.Bitmap, Serial.BitmapToBytes(bitmap));
+    }
+}
+
+public class Server { //Same code for Client
+    public event EventHandler<BitmapEventArgs> BitmapReceived = delegate { };
+    
+    //Socket connection setup code stripped as it's not relevant
+    
+    private void Data_Received(ClientInfo c, uint code, byte[] bytes, int len) {
+        switch((Code)code) {
+            case Code.BitmapReceived:
+                BitmapReceived(this, new BitmapEventArgs(Serial.BytesToBitmap(bytes)));
+                break;
+        }
+    }
+}
+
+public partial class Form1 : Form {
+    private Client Client;
+    private Server Server;
+    private Send Send;
+    
+    private void StartSocket() {
+        new Thread(() => {
+            StopSocket();
+            Client = new Client();
+            Client.ClientConnected += Client_Connected;
+            Client.ClientDisconnected += Client_Disconnected;
+            Client.BitmapReceived += Bitmap_Received;
+
+            if(!Client.Start(Config.Connection.IP, Config.Connection.Port)) {
+                Client = null;
+
+                Server = new Server();
+                Server.ClientConnected += Client_Connected;
+                Server.ClientDisconnected += Client_Disconnected;
+                Server.BitmapReceived += Bitmap_Received;
+                Server.Start(Config.Connection.Port);
+            }
+        }).Start();
+    }
+    
+    private void Client_Connected(object sender, EventArgs e) {
+        if(sender is Server) {
+            Send = new Send(Server.Instance);
+        } else {
+            Send = new Send(Client.Instance);
+        }
+    }
+    
+    private void SendBitmap() {
+        if(Send == null) { return; }
+
+        new Thread(() => {
+            while(Send != null) {
+                Bitmap b = CaptureBitmap();
+                if(b != null) {
+                    Send.Bitmap(b);
+                    Thread.Sleep(16); //around 60 times a second
+                }
+            }
+        }).Start();
+    }
+    
+    private void Bitmap_Received(object sender, BitmapEventArgs e) {
+        if(Send != null && e.Bitmap != null) {
+            BitmapPicBox.Image = e.Bitmap;
+        }
+    }
+    
+    private Bitmap CaptureBitmap() {
+        IntPtr deskHandle = WinApi.GetDesktopWindow();
+        IntPtr dc = WinApi.GetWindowDC(deskHandle);
+        if(dc != IntPtr.Zero) {
+            if(WinApi.GetWindowRect(deskHandle, out WinApi.RECT winRect)) {
+                IntPtr hdcDest = WinApi.CreateCompatibleDC(dc);
+                IntPtr hBitmap = WinApi.CreateCompatibleBitmap(dc, winRect.Width, winRect.Height);
+                IntPtr hOld = WinApi.SelectObject(hdcDest, hBitmap);
+                if(WinApi.BitBlt(hdcDest, 0, 0, winRect.Width, winRect.Height, dc, winRect.Left, winRect.Top, WinApi.TernaryRasterOperations.SRCCOPY)) {
+                    WinApi.SelectObject(hdcDest, hOld);
+                    WinApi.DeleteDC(hdcDest);
+                    WinApi.ReleaseDC(deskHandle, dc);
+                    Bitmap b = Image.FromHbitmap(hBitmap);
+                    WinApi.DeleteObject(hBitmap);
+                    return b;
+                } else {
+                    WinApi.DeleteDC(hdcDest);
+                    WinApi.ReleaseDC(deskHandle, dc);
+                    WinApi.DeleteObject(hBitmap);
+                }
+            }
+        }
+
+        return null;
+    }
+}
+
+I have since tried a SharpDX implementation. I used the example from this github project for getting desktop image by desktop duplication and feeding that to a panel on the form which renders it.
+
+But I'm not sure how I'd integrate this into my socket connection, I'd need to pass the frame being created as a byte array, and then back into a Bitmap1 that can be rendered.
+
+Receiving the byte array and converting to Bitmap1 would be here:
+
+private void RenderDuplicatedFrame(byte[] bitmapBytes) {
+    //Convert bitmapBytes to SharpDX.Direct2D1.Bitmap1
+    SharpDX.Direct2D1.Bitmap1 bitmap = //???
+
+    _backBufferDc.Value.BeginDraw();
+    _backBufferDc.Value.Clear(new RawColor4(0, 0, 0, 1));
+
+    using(bitmap) {
+        var renderX = (Size.Width - RenderSize.Width) / 2;
+        var renderY = (Size.Height - RenderSize.Height) / 2;
+
+        _backBufferDc.Value.DrawBitmap(bitmap, new RawRectangleF(renderX, renderY, renderX + RenderSize.Width, renderY + RenderSize.Height), 1, BitmapInterpolationMode.Linear);
+    }
+
+    _backBufferDc.Value.EndDraw();
+    _swapChain.Value.Present(1, 0);
+}
+Sending the Bitmap1 would be here:
+
+private void AcquireFrame() {
+    var od = _outputDuplication.Value;
+    SharpDX.DXGI.Resource frame;
+    OutputDuplicateFrameInformation frameInfo;
+
+    od.AcquireNextFrame(500, out frameInfo, out frame);
+
+    using(frame) {
+        if(frameInfo.LastPresentTime != 0) {
+            using(var frameSurface = frame.QueryInterface<Surface>()) {
+                using(var frameDc = new SharpDX.Direct2D1.DeviceContext(_2D1Device.Value, DeviceContextOptions.EnableMultithreadedOptimizations)) {
+                    using(var frameBitmap = new Bitmap1(frameDc, frameSurface)) {
+
+                        //Convert frameBitmap to byte array here to send over socket
+                        
+                    }
+                }
+            }
+        }
+        od.ReleaseFrame();
+    }
+}

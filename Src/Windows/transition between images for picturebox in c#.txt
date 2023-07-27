@@ -1,0 +1,106 @@
+https://stackoverflow.com/
+
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
+
+public class BlendPanel : Panel
+{
+private Image mImg1;
+private Image mImg2;
+private float mBlend;
+public BlendPanel()
+{
+    SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+}
+public Image Image1
+{
+    get { return mImg1; }
+    set { mImg1 = value; Invalidate(); }
+}
+public Image Image2
+{
+    get { return mImg2; }
+    set { mImg2 = value; Invalidate(); }
+}
+public float Blend
+{
+    get { return mBlend; }
+    set { mBlend = value; Invalidate(); }
+}
+protected override void OnPaint(PaintEventArgs e)
+{
+    if (mImg1 == null || mImg2 == null)
+        e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
+    else
+    {
+        Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+        ColorMatrix cm = new ColorMatrix();
+        ImageAttributes ia = new ImageAttributes();
+        cm.Matrix33 = mBlend;
+        ia.SetColorMatrix(cm);
+        e.Graphics.DrawImage(mImg2, rc, 0, 0, mImg2.Width, mImg2.Height, GraphicsUnit.Pixel, ia);
+        cm.Matrix33 = 1F - mBlend;
+        ia.SetColorMatrix(cm);
+        e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
+    }
+    base.OnPaint(e);
+}
+}
+
+    private float mBlend;
+    private int mDir = 1;
+    public int count = 0;
+    public Bitmap[] pictures;
+
+    public void myPhoto()
+    {
+        pictures = new Bitmap[9];
+        pictures[0] = new Bitmap(@"Library Images\cf3.jpg");
+        pictures[1] = new Bitmap(@"Library Images\cf4.jpg");
+        pictures[2] = new Bitmap(@"Library Images\l1.JPG");
+        pictures[3] = new Bitmap(@"Library Images\l2.JPG");
+        pictures[4] = new Bitmap(@"Library Images\l3.JPG");
+        pictures[5] = new Bitmap(@"Library Images\l4.JPG");
+        pictures[6] = new Bitmap(@"Library Images\l5.JPG");
+        pictures[7] = new Bitmap(@"Library Images\l6.JPG");
+        pictures[8] = new Bitmap(@"Library Images\l7.JPG");
+
+        timer1.Interval = 50; //time of transition
+        timer1.Tick += BlendTick;
+        try
+        {
+            blendPanel1.Image1 = pictures[count];
+            blendPanel1.Image2 = pictures[++count];
+        }
+        catch
+        {
+
+        }
+        timer1.Enabled = true;
+    }
+    private void BlendTick(object sender, EventArgs e)
+    {
+        mBlend += mDir * 0.02F;
+        if (mBlend > 1)
+        {
+            mBlend = 0.0F;
+            if ((count + 1) < pictures.Length)
+            {
+                blendPanel1.Image1 = pictures[count];
+                blendPanel1.Image2 = pictures[++count];
+            }
+            else
+            {
+                blendPanel1.Image1 = pictures[count];
+                blendPanel1.Image2 = pictures[0];
+                count = 0;
+            }
+        }
+        blendPanel1.Blend = mBlend;
+    }
+
+
+
+

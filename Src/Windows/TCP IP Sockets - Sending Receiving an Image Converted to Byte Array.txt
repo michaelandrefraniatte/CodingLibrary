@@ -1,0 +1,395 @@
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/8a72a70e-7c89-4a88-8048-e4bfb198e015/tcpip-sockets-sending-amp-receiving-an-image-converted-to-byte-array?forum=csharpgeneral
+
+this is client side
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Text;
+using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.Timers;
+
+namespace SocketCoder
+{
+    public partial class Form1 : Form
+    {
+        private Socket ClientSocket;						
+        private byte[] buffer = new byte[256];
+        Capturescreen objCaptureScreen = new Capturescreen();
+        TcpClient client;
+        NetworkStream stream;
+        long longFileLength;
+        string strFileName;
+        string strFilePath;
+
+        public void OnAddMessage(string sMessage)
+        {
+            listBox1.Items.Add(sMessage);
+            if (sMessage == "@AGT_CAPTURESCREEN")
+            {
+                senddesktop();
+            }
+            if (sMessage == "@AGT_SCREENFILE")
+            {
+                SendFile();
+            }
+            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+        }
+
+        void Establishing(string ServerIP,int Port)
+        {
+            try
+            {
+                
+                if (client != null && client.Client.Connected)
+                {
+                    client.GetStream().Close();
+                    client.Close();
+                }
+
+                client = new TcpClient();
+                client.Connect(ServerIP, Port);
+
+
+                ClientSocket = client.Client;
+                OnConnect();
+            }
+            catch (Exception e) {
+                MessageBox.Show("Can't connect" + e);
+            }
+        }
+
+        public void OnConnect()
+        {
+            Socket sock = client.Client;
+             try
+            {
+                if (sock.Connected)
+                {
+                    SetupRecieveCallback(sock);
+
+                    Send.Enabled = true;
+                    Conncet.Enabled = false;
+                    DisConncet.Enabled = true;
+                    textBox1.Enabled = true;
+                    textIP.Enabled = false;
+                    text_Port.Enabled = false;
+                   
+                }
+                else
+                {
+                    Disconncet();
+                    MessageBox.Show("Connection Failed");
+                }
+            }
+            catch (Exception){}
+        }
+
+        public void  OnRecievedData(IAsyncResult ar)
+        {
+            Socket sock = (Socket)ar.AsyncState;
+
+            try
+            {
+                int nBytesRec = sock.EndReceive(ar);
+                if (nBytesRec > 0)
+                {
+                    string sRecieved = Encoding.Unicode.GetString(buffer, 0, nBytesRec);
+                    OnAddMessage(sRecieved);
+                    SetupRecieveCallback(sock);
+                }
+                else
+                {
+                    sock.Shutdown(SocketShutdown.Both);
+                    sock.Close();
+                }
+            }
+            catch (Exception){}
+        }
+
+        public void SetupRecieveCallback(Socket sock)
+        {
+            try
+            {
+                AsyncCallback recieveData = new AsyncCallback(OnRecievedData);
+
+                sock.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, recieveData, sock);
+            }
+            catch (Exception){}
+        }
+
+        void Send_MSG(string Message)
+        {
+            if (ClientSocket != null & ClientSocket.Connected)
+            try
+            {
+                Byte[] byteDateLine = Encoding.Unicode.GetBytes(Message);
+                ClientSocket.Send(byteDateLine, byteDateLine.Length, 0);
+            }
+            catch (Exception) { }
+        }
+
+        void Disconncet()
+        {
+            try
+            {
+                if (ClientSocket != null & ClientSocket.Connected)
+                {
+                    ClientSocket.Close();
+                }
+            }
+            catch (Exception) { }
+            Conncet.Enabled = true;
+            Send.Enabled = false;
+            textIP.Enabled = true;
+            text_Port.Enabled = true;
+            textBox1.Enabled = false;
+            DisConncet.Enabled = false;
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            Control.CheckForIllegalCrossThreadCalls = false; 
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter & Send.Enabled)
+            { Send_MSG(textBox1.Text); textBox1.Text = string.Empty; }
+        }
+
+        private void Send_Click(object sender, EventArgs e)
+        {
+            Send_MSG(textBox1.Text);
+            textBox1.Text = string.Empty;
+        }
+
+        private void Conncet_Click(object sender, EventArgs e)
+        {
+            Establishing(textIP.Text,int.Parse(text_Port.Text));
+            
+        }
+        private void DisConncet_Click(object sender, EventArgs e)
+        {
+            Disconncet();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+
+        public void senddesktop()
+        {
+            try
+            {
+                int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+                int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+                Bitmap bmp = new Bitmap(screenWidth, screenHeight);
+                Graphics gfx = Graphics.FromImage(bmp as Image);
+                gfx.CopyFromScreen(0, 0, 0, 0, bmp.Size);
+                bmp.Save(@"c:\work\fame.png", ImageFormat.Png);
+                stream = client.GetStream();
+
+                MemoryStream ms = new MemoryStream();
+                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+                byte[] data = File.ReadAllBytes(@"c:\work\fame.png"); 
+                data = ms.ToArray();
+                stream.Write(data, 0, data.Length);
+                
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error sending files" + e);
+            }
+        }
+
+
+        public void picture(Bitmap bmp)
+        {
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.Image = bmp;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            objCaptureScreen.CaptureScreen();
+                int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+                int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+                Bitmap bmpScreenShot = new Bitmap(screenWidth, screenHeight);
+                Graphics gfx = Graphics.FromImage(bmpScreenShot as Image);
+                gfx.CopyFromScreen(0, 0, 0, 0, bmpScreenShot.Size);
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.Image = bmpScreenShot;
+                
+
+        }
+        public byte[] imageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+            return ms.ToArray();
+        }
+
+       
+        public void SendFile()
+        {
+            byte[] SendingBuffer = null;
+            NetworkStream clientstream =client.GetStream();
+            try
+            {
+
+                Bitmap tImage = objCaptureScreen.CaptureScreen();
+                byte[] bStream = imageToByteArray(tImage);
+                clientstream.Write(bStream, 0, bStream.Length);
+                
+            }
+            catch (Exception ex)
+            {
+                Send_MSG("#ERRORINFO" + " Error SendFile :" + ex.Message);
+            }
+
+        }
+        
+
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            senddesktop();
+        }
+
+        private void sendfortest_Click(object sender, EventArgs e)
+        {
+            senddesktop();
+        }
+    }
+}
+
+Server image form
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Text;
+using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.IO;
+using System.Threading;
+using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.Timers;
+
+namespace ServerGUI
+{
+    public partial class StreammingScreenBySelected : Form
+    {
+        private TcpClient client;
+        MemoryStream ms;
+        NetworkStream clientstrem;
+        public TcpClient connection
+        {
+            get { return client; }
+            set { client = value; }
+        }
+
+        public StreammingScreenBySelected()
+        {
+            InitializeComponent();
+        }
+        public StreammingScreenBySelected(Form1 parent, TcpClient handle)
+        {
+            InitializeComponent();
+            connection = handle;
+
+            send_msg("@AGT_CAPTURESCREEN");
+            ShowImg();
+
+        }
+
+
+        private Image BytesToImg(byte[] bmpBytes,int lenght=0)
+        {
+          
+
+            MemoryStream ImageDataStream = new MemoryStream();
+            ImageDataStream.Write(bmpBytes, 0, bmpBytes.Length);
+            ImageDataStream.Position = 0;
+            bmpBytes = System.Text.UnicodeEncoding.Convert(Encoding.Unicode, Encoding.Default, bmpBytes);
+            Image img = Image.FromStream(ImageDataStream);
+
+           
+            return img;
+
+        }
+
+        private void ShowImg()
+        {
+            clientstrem = connection.GetStream();
+                if (connection.Connected)
+                {
+                    FileStream f = new FileStream(@"C:\work\fameserver.png", FileMode.OpenOrCreate, FileAccess.Write);
+         
+
+                    byte[] data = new byte[1024 * 1000]; int data2 = 0; 
+                    int value = data.Length;
+                   
+                    
+                    data2=clientstrem.Read(data, 0, value);
+                    byte[] data3 = new byte[data2];
+                    f.Write(data, 0, data2);
+                    f.Flush();
+                    f.Close();
+                   
+                    try
+                    {
+                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        pictureBox1.Image = BytesToImg(data, data2);
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("something broke" + e);
+                    }
+                    finally
+                    {
+                        clientstrem.Flush(); 
+                    }
+                }
+               
+            
+        }
+
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            ShowImg();
+        }
+
+        public void send_msg(string massage, int client = 0)
+        {
+            byte[] bt;
+            bt = Encoding.Unicode.GetBytes(massage);
+            connection.Client.Send(bt);
+        }
+    }
+}
+

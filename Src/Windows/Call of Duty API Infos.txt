@@ -1,0 +1,270 @@
+https://stackoverflow.com/questions/64425295/api-call-from-call-of-duty-api-in-r-authentication-problem
+
+# Get token ---------------------------------------------------------------
+
+resp <- GET('https://profile.callofduty.com/cod/login')
+cookies = c(
+  'XSRF-TOKEN' = resp$cookies$value[1]
+  ,'new_SiteId' = resp$cookies$value[2]
+  ,'comid' = resp$cookies$value[3]
+  ,'bm_sz' = resp$cookies$value[4]
+  ,'_abck' = resp$cookies$value[5]
+  # ,'ACT_SSO_COOKIE' = resp$cookies$value[6]
+  # ,'ACT_SSO_COOKIE_EXPIRY' = resp$cookies$value[7]
+  # ,'atkn' = resp$cookies$value[8]
+  # ,'ACT_SSO_REMEMBER_ME' = resp$cookies$value[9]
+  # ,'ACT_SSO_EVENT' = resp$cookies$value[10]
+  # ,'pgacct' = resp$cookies$value[11]
+  # ,'CRM_BLOB' = resp$cookies$value[12]
+  # ,'tfa_enrollment_seen' = resp$cookies$value[13]
+)
+
+headers = c(
+  
+)
+
+params = list(
+  `new_SiteId` = 'cod',
+  `username` = 'USER',
+  `password` = 'PWD',
+  `remember_me` = 'true',
+  `_csrf` = resp$cookies$value[1]
+)
+
+# Authenticate ------------------------------------------------------------
+
+resp_post <- POST('https://profile.callofduty.com/do_login?new_SiteId=cod',
+                  httr::add_headers(.headers=headers),
+                  query = params,
+                  httr::set_cookies(.cookies = cookies))
+
+
+cookies = c(
+  'XSRF-TOKEN' = resp_post$cookies$value[1]
+  ,'new_SiteId' = resp_post$cookies$value[2]
+  ,'comid' = resp_post$cookies$value[3]
+  ,'bm_sz' = resp_post$cookies$value[4]
+  ,'_abck' = resp_post$cookies$value[5]
+  ,'ACT_SSO_COOKIE' = resp_post$cookies$value[6]
+  ,'ACT_SSO_COOKIE_EXPIRY' = resp_post$cookies$value[7]
+  ,'atkn' = resp_post$cookies$value[8]
+  ,'ACT_SSO_REMEMBER_ME' = resp_post$cookies$value[9]
+  ,'ACT_SSO_EVENT' = resp_post$cookies$value[10]
+  ,'pgacct' = resp_post$cookies$value[11]
+  ,'CRM_BLOB' = resp_post$cookies$value[12]
+  ,'tfa_enrollment_seen' = resp_post$cookies$value[13]
+)
+
+headers = c(
+  
+)
+
+params = list(
+  `new_SiteId` = 'cod',
+  `username` = 'USER',
+  `password` = 'PWD',
+  `remember_me` = 'true',
+  `_csrf` = resp_post$cookies$value[1]
+)
+
+# Get data:
+
+  resp_psn <- httr::GET(url = 'https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/psn/gamer/savyultras90/profile/type/wz',
+                        httr::add_headers(.headers=headers),
+                        query = params,
+                        httr::set_cookies(.cookies = cookies))
+
+resp_psn_json <- content(resp_psn)
+
+
+https://stackoverflow.com/questions/61290442/cant-access-modern-warfare-api-with-jquery-post
+
+You need to log in with a CSRF token and then use retrieved data as input for the API call.
+
+Step-by-step:
+
+GET call for CSRF token
+POST call to login using CSRF token and Activison credentials (store cookies)
+GET call for API https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/battle/gamer/LordNoodles%2321599/profile/type/mp with cookies from previous step
+Feel free to check the article https://somethingneeddoing.medium.com/how-to-call-rest-api-with-csrf-login-and-security-tokens-node-js-6685615b324e where it's described in more detail.
+
+
+
+https://stackoverflow.com/questions/39188376/fetch-getting-cookies-from-fetch-response
+
+fetch('/login/local', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+    }).then(res => {
+      return res.json();
+    }).then(json => {
+      if (json.success) {
+        this.setState({ error: '' });
+        this.context.router.push(json.redirect);
+      }
+      else {
+        this.setState({ error: json.error });
+      }
+    });
+
+
+https://stackoverflow.com/questions/34815845/how-to-send-cookies-with-node-fetch
+
+const opts = {
+    headers: {
+        cookie: 'accessToken=1234abc; userId=1234'
+    }
+};
+const result = await fetch(`/some/url`, opts);
+
+
+https://documenter.getpostman.com/view/5519582/SzzgAefq
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://profile.callofduty.com/cod/login", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "XSRF-TOKEN=Set by test scripts; new_SiteId=cod;");
+
+var urlencoded = new URLSearchParams();
+urlencoded.append("username", "Your login email for callofduty.com");
+urlencoded.append("password", "Your login password for callofduty.com");
+urlencoded.append("remember_me", "true");
+urlencoded.append("_csrf", "Set by test scripts");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: urlencoded,
+  redirect: 'follow'
+};
+
+fetch("https://profile.callofduty.com/do_login?new_SiteId=cod", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "ACT_SSO_COOKIE=Set by test scripts; ACT_SSO_COOKIE_EXPIRY=1591153892430; atkn=Set by test scripts;");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://www.callofduty.com/api/papi-client/crm/cod/v2/identities", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "ACT_SSO_COOKIE=Set by test scripts; ACT_SSO_COOKIE_EXPIRY=1591153892430; atkn=Set by test scripts;");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://profile.callofduty.com/cod/userInfo/Set by test scripts", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "ACT_SSO_COOKIE=Set by test scripts; ACT_SSO_COOKIE_EXPIRY=1591153892430; atkn=Set by test scripts;");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://my.callofduty.com/api/papi-client/crm/cod/v2/accounts/platform/Set by test scripts/gamer/Set by test scripts", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "ACT_SSO_COOKIE=Set by test scripts; ACT_SSO_COOKIE_EXPIRY=1591153892430; atkn=Set by test scripts;");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://my.callofduty.com/api/papi-client/codfriends/v1/compendium", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("Cookie", "ACT_SSO_COOKIE=Set by test scripts; ACT_SSO_COOKIE_EXPIRY=1591153892430; atkn=Set by test scripts;");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/Set by test scripts/gamer/Set by test scripts/profile/friends/type/wz", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("X-XSRF-TOKEN", "Set by test scripts");
+myHeaders.append("Cookie", "XSRF-TOKEN=Set by test scripts; new_SiteId=cod; ACT_SSO_COOKIE=Set by test scripts; atkn=Set by test scripts; ");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://profile.callofduty.com/cod/setGamerPreference/battle/data_visible/all", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+var myHeaders = new Headers();
+myHeaders.append("X-XSRF-TOKEN", "Set by test scripts");
+myHeaders.append("Cookie", "XSRF-TOKEN=Set by test scripts; new_SiteId=cod; ACT_SSO_COOKIE=Set by test scripts; atkn=Set by test scripts; ");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://profile.callofduty.com/cod/setGamerPreference/battle/searchable/all", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));

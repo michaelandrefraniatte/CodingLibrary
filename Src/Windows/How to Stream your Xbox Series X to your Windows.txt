@@ -1,0 +1,14 @@
+https://www.youtube.com/watch?v=7Pqxiv4pKK8&t=1s
+https://www.youtube.com/watch?v=I06hWrN9BdI
+https://www.youtube.com/watch?v=3Q92yoFGxcs
+https://www.youtube.com/watch?v=dqd10QAkl5I
+
+1. Open Windows 10 settings, go to Privacy -> Microphone.
+2. Scroll down and in the list of Microsoft Store Apps with access, enable it for "Xbox Game Bar".
+3. Exit Xbox Beta completely (can right click on task bar icon and chose "Quit").
+4. Run Xbox Beta again.  
+Audio settings should now work.
+
+https://github.com/fqlx/XboxKeyboardMouse/issues/205
+https://github.com/fqlx/XboxKeyboardMouse/tree/master/Downloads
+https://github.com/nefarius/ScpToolkit/tree/master/ScpDriverInstaller
