@@ -1,0 +1,9 @@
+https://www.itechguides.com/how-to-reinstall-notepad-in-windows-10/
+
+To get the name of notepad with PowerShell, enter the command below in PowerShell. Then, press the enter key on your keyboard
+
+Get-WindowsCapability -Online | Where-Object {$_.Name -like "*notepad*"}
+
+The command will display the name as “Microsoft.Windows.Notepad~~~~0.0.1.0”
+
+Add-WindowsCapability -Online -Name Microsoft.Windows.Notepad~~~~0.0.1.0
