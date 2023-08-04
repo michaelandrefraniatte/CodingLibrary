@@ -1,0 +1,1 @@
+You can delete a service with cmd dos prompt command run with administrative privilege using the command : sc delete "servicename", and delete a folder with : rmdir /s "foldername", and also delete a file with : del /f "filename"
