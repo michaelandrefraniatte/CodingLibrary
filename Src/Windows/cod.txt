@@ -1,0 +1,4 @@
+- There are viruses in all Call of Duty games of the franchise, just if you enable Windows Defender to highest level, not only in diagnosis mode, the game won't start, and you are forced to disable the security, that let you be to restore your PC from factory, for enable again the diagnosis mode or Windows defender to highest level
+- It's so trash that it eat all your energy of a day just to play one match with cheaters or not even one
+- Devs don't want to enable Adress Space Layout Randomization (ASLR), so they don't care about the community around their games
+- The gameplay is worst and worst, aiming is like moving a pen in a poop, but players are loving it for it, they like to play like this

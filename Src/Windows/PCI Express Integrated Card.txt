@@ -1,0 +1,1 @@
+- Don't disable it in bios because if you want to change your graphic card you will be unable to display the screen for install the new graphic card driver and even the bios
