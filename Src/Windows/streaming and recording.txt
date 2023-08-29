@@ -1,4 +1,4 @@
 - GeForce experience with latest driver for Nvidia graphic card is a must have for streaming and recording
-- If you have a fiber internet conncetion, you can stream wuth all highest settings (1080p, 60 or 30 fps, 18 Mb/s) on Youtube
+- If you have a fiber internet conncetion, you can stream with all highest settings (1080p, 60 or 30 fps, 18 Mb/s) on Youtube
 - If you don't have a good internet connection you can record games and desktop with higher quality and upload on Youtube
 - You just need a webcam with integrated microphone you connect via USB and start your PC, use predefined shortcuts
