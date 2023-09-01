@@ -1,0 +1,20 @@
+https://www.codeproject.com/Questions/279441/Bring-Process-to-the-front
+
+[DllImport("User32.dll")]
+private static extern bool SetForegroundWindow(IntPtr hWnd);
+private IntPtr handle;
+private Process process;
+private void button1_Click(object sender, EventArgs e)
+    {
+    process = Process.Start("cmd");
+    }
+
+private void button2_Click(object sender, EventArgs e)
+    {
+    handle = process.MainWindowHandle;
+    SetForegroundWindow(handle);
+    }
+
+
+
+
