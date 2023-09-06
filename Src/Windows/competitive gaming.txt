@@ -50,3 +50,4 @@
 - When you shoot with RPG launcher and you are at 4 meters of a cheater, the cheater will jump above your rocket, you can be sure it's a cheater
 - Call of Duty games are so land of hackers that some servers can be reached like it's routers behind, and also for all IP of authentications, and also you can't get hostnames from IP, there isn't any DNS registration, like it's ghost IP
 - I searched IP of servers with less cheaters, there isn't any server with less cheaters, the matchmaking forward me cheaters in every matches and against all of them, even if I block ability to be joined by unknowns
+- What I did for secure my PC and the game were running 1 day, flooding were running 2 days because they made their games built with cheats after, and seeing the state of their games, they are far more concentrate to deliver cheats and to hack players
