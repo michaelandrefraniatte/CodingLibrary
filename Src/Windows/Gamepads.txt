@@ -1,4 +1,3 @@
-
 - The game settings under game options for gamepad or mouse are very important, like settings for deadzone, acceleration, sensitivity, ...
 - When a program is connecting bluetooth controller, it can not run, because sometimes connection bugs, so it needs to connect/disconnect manually from perpherals and printers under control panel
 - For better performances, keep enable the service SysMain, and disable all bluetooth services but not the service bluetooth peripheral manager, for reduce input lag of your wireless controllers
@@ -23,3 +22,7 @@
 - You can use August LP310 Remote used normaly for Power Point presentation for Top Down Shooters
 - For certain joycons like from freaks and geeks, you need to let pressed sync button until led blinking start to slow down and also you need to allow connection by clicking on Windows notification to connect it
 - You can't enjoy a 4 K / 200 Hz monitor if you don't have a 8000 DPI / 400 Hz mouse
+- Disable Steam Input under properties of the game from Steam if you have your game or a program taking the control enabling your controller
+- Each time you unplug your controller, the game switch automatically to keyboard and mouse when you starting it, so it need to enable again your controller in game options if you plug your controller
+- Don't be empty mind, learn from ashes, it's easy to understand with practice and make running things if not lazzy, the issue is between chair and keyboard and mouse, in most cases the user is the fault, not questionning himself enough, not listening principles already explained to him, and letting himself without any response
+- Your controller can support several handle, but it's not a reason to believe it's bugged, only accept one handle, the one you choose to play with, don't be an idiot, choose the right manner to play with your controller, choose the right controller with the right control, find your best confort and adapt yourself to use it correctly, use the best with your best
