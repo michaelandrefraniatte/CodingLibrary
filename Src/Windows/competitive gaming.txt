@@ -51,6 +51,7 @@
 - Call of Duty games are so land of hackers that some servers can be reached like it's routers behind, and also for all IP of authentications, and also you can't get hostnames from IP, there isn't any DNS registration, like it's ghost IP
 - I searched IP of servers with less cheaters, there isn't any server with less cheaters, the matchmaking forward me cheaters in every matches and against all of them, even if I block ability to be joined by unknowns
 - What I did for secure my PC and the game were running 1 day, flooding were running 2 days because they made their games built with cheats after, and seeing the state of their games, they are far more concentrate to deliver cheats and to hack players
+- I always find a weapon in each Call of Duty game, I use it all the times, but they nerf it to maximum, not like other weapons, it become unplayable, unable to kill anyone
 - The forums on Steam are trash, full of crybabies insulting each others, few only complain about cheaters, it say a long on the community
 - You can't grind anymore achievements while playing offline with Steam, and even back online the achievements aren't unlocked for lot of games, Steam Deck and other portable consoles are such useless for playing with Steam being in holidays or vacation or transport, and also it's not competitive with the majority of games too hard, it call to suicide while playing in bed or living room at home, the only things you can do with it, and you can't play while charging it, it's not made for long session, and it break very easily and fastly, prefer enjoy what you already have, and what you do
 - The screens of portable consoles are too much tiny, it's for kids, and it sick your eyes
@@ -89,3 +90,4 @@ The helmet is heavy to wear, and moving with is really uncomfortable
 The opticals are low field of view and low resolution, just a screen in front of your eyes with no peripheral vision
 There's no accessories like a gun, a arch, a racing steering wheel, a moto straffing, there's only a splitted gamepad
 The game engines and games are not coded and imagined specially for be used with it, it's just tweak of motion inputs, and special screen outputs, no more
+- When you having a new PC for gaming, it's full of weird and useless programs that not have to be keept
