@@ -7,3 +7,4 @@ Get-WindowsCapability -Online | Where-Object {$_.Name -like "*notepad*"}
 The command will display the name as “Microsoft.Windows.Notepad~~~~0.0.1.0”
 
 Add-WindowsCapability -Online -Name Microsoft.Windows.Notepad~~~~0.0.1.0
+
