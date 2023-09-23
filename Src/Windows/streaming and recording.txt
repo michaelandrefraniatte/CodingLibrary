@@ -7,6 +7,7 @@
 - Enable desktop capture under confidentiality parameter in order to have some custom overlays
 - Set your game in windowed borderless mode for better quality of video and audio enabling desktop capture
 - Set audio quality to 16 bits 44100 Hz under audio settings for your audio cards, lowering audio quality decrease use of bandwidth
+- The audio level for your audio card recorded ingame shall be set to 100, you just have to adjust your level of earing with your screen or helmet
 - It's simplest way and more optimized way than using OBS or Twitch Studio, you can find nice overlays to integrate as standalone programs, and it's more important to be concentrate on the content and the gameplay than fight with OBS or Twitch Studio
 - Prefer to use Geforce Experience for record and stream videos instead of ffmpeg, because with bad settings it destroy a little your PC
 - Capturing with GeForce Experience for uploading on Youtube need to set parameters as following:
