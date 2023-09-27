@@ -1,4 +1,4 @@
-- Interesting question to know answears of people about this issue for curiosity
+Interesting question to know answears of people about this issue for curiosity
 
 
 
@@ -67,3 +67,6 @@
 
 - Most of employers and employed are believing there are not so much talents, and all talents are already employed
 - It's just employed that don't know coding in fact, and so it's too hard for a true talent to scum the same and in their codes, so it's scum
+- Employed are so noobs that they don't want you return their codes for having good coding, because they are so scarry and unable to review, and do different (with the true feelings)
+- Employed are training themselves with design patterns thinking it's cool and usefull because they don't know to make simple
+- When they doing their own frameworks, and methods, it's even more hilarious
