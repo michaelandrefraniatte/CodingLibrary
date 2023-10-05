@@ -141,4 +141,6 @@ The game engines and games are not coded and imagined specially for be used with
 - People cheat or copy codes or create videos without doing much but they are proud and receive congratulations from others like them, it's because everything is spit in their heads
 - People use clickbait massivelly, because their ideas and contents are poors, it attracts a lot of very stupid people to drop lots of likes
 - Console constructors and PC platforms use massivelly planned obsolescence and create it, on game connections, controllers, hardwares, etc, but people still buy without reporting too much
-
+- I use Steam since 2009, I work on HID since 2010, in 2023 Steam totally broke my works to play games I bought to us on their platforms
+- Micro controllers to create HID are very expensive because people prefer warm dead cows with their connected BBQ and pollute atmosphere and environement with their big cars 
+- People are much more concentrate to have a status in front of society, and making them more interesting than others, without a once of smartness, without working hard, but they succeed with that, having pleasures in their life in everything, shit earn much more than real fun, ripp off people earn much more than bringing true resolve, people believe to be smart and gentle but they are born to kill earth like others, and to profit, instead of repair shit of others
