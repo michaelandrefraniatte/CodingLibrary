@@ -1,0 +1,4 @@
+﻿https://www.w3schools.com/jsref/prop_style_backgroundimage.asp
+
+object.style.backgroundImage = "url('URL')|none|initial|inherit";
+

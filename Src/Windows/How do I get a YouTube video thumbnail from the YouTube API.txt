@@ -1,0 +1,47 @@
+﻿https://stackoverflow.com/
+
+Width	Height	URL
+120	90	https://i.ytimg.com/vi//1.jpg
+120	90	https://i.ytimg.com/vi//2.jpg
+120	90	https://i.ytimg.com/vi//3.jpg
+120	90	https://i.ytimg.com/vi//default.jpg
+320	180	https://i.ytimg.com/vi//mq1.jpg
+320	180	https://i.ytimg.com/vi//mq2.jpg
+320	180	https://i.ytimg.com/vi//mq3.jpg
+320	180	https://i.ytimg.com/vi//mqdefault.jpg
+480	360	https://i.ytimg.com/vi//0.jpg
+480	360	https://i.ytimg.com/vi//hq1.jpg
+480	360	https://i.ytimg.com/vi//hq2.jpg
+480	360	https://i.ytimg.com/vi//hq3.jpg
+480	360	https://i.ytimg.com/vi//hqdefault.jpg
+Additionally, the some other thumbnails may or may not exist. Their presence is probably based on whether the video is high-quality.
+
+Width	Height	URL
+640	480	https://i.ytimg.com/vi//sd1.jpg
+640	480	https://i.ytimg.com/vi//sd2.jpg
+640	480	https://i.ytimg.com/vi//sd3.jpg
+640	480	https://i.ytimg.com/vi//sddefault.jpg
+1280	720	https://i.ytimg.com/vi//hq720.jpg
+1920	1080	https://i.ytimg.com/vi//maxresdefault.jpg
+
+Each YouTube video has four generated images. They are predictably formatted as follows:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/0.jpg
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/1.jpg
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/2.jpg
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/3.jpg
+The first one in the list is a full size image and others are thumbnail images. The default thumbnail image (i.e., one of 1.jpg, 2.jpg, 3.jpg) is:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg
+For the high quality version of the thumbnail use a URL similar to this:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/hqdefault.jpg
+There is also a medium quality version of the thumbnail, using a URL similar to the HQ:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/mqdefault.jpg
+For the standard definition version of the thumbnail, use a URL similar to this:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/sddefault.jpg
+For the maximum resolution version of the thumbnail use a URL similar to this:
+
+https://img.youtube.com/vi/<insert-youtube-video-id-here>/maxresdefault.jpg
