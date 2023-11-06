@@ -171,3 +171,9 @@ They are just good at stealing copyrighted contents and earning money with, but 
 - Gameservers are hackers renting servers to console cheaters, they exploited hacks on consoles to create servers in games on consoles a long time ago, don't trust them
 - A portable console can have games running beautifully and smoothly at 450p and 25fps but people want on paper specs of 8k and 1000fps, without they can make the difference if the numbers are not shown anywhere
 - Keep your life safe with you and your familly, keep your life private to highest level like with online communities, social networks, and jobs, otherwise people only throw you cream pies and knives because they are clowns and butchers, they always trying to trap you and destroy you
+- Why do companies make too much money scamming:
+By making nothing and bad, workers are able to deliver stuffs to employers for customers, and they not found what they use from indies even if indies are asking founds
+They making believe to have worked hard and sometimes alone and first on a subject, but they just have stolen indies
+- For some reasons, like hackers and haters are targeting you, using a VPN is better than using Windows firewall, but some settings are required, let the services running like SSDP service, Telephonic service, and Telephony, NetBios service, set to default properties of IPv4 from network card, and all services installed of network card, and set to default Windows and modem firewall
+- You can compare Windows integrated VPN using vpnbook p2p servers (not servers optimized for the web) with WTFast, ExitLag, and mudfish
+- For using it on consoles, you can share connection from a PC using a VPN, wired with a RJ-45 cable
