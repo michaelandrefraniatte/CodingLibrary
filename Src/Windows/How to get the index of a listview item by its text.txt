@@ -1,0 +1,8 @@
+﻿https://stackoverflow.com/
+
+var item = listView1.FindItemWithText("item2");
+
+if (item != null)
+{
+    MessageBox.Show(listView1.Items.IndexOf(item).ToString());
+}
