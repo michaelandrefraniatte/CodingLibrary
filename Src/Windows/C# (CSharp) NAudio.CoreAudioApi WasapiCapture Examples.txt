@@ -1,0 +1,12 @@
+﻿https://csharp.hotexamples.com/examples/NAudio.CoreAudioApi/WasapiCapture/-/php-wasapicapture-class-examples.html
+
+    public RealTimeSoundData() {
+
+      var enumerator = new MMDeviceEnumerator();
+      var captureDevices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToArray();
+      var defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
+      device = captureDevices.FirstOrDefault(c => c.ID == defaultDevice.ID);
+      capture = new WasapiCapture(device);
+      context = SynchronizationContext.Current;
+      capture.DataAvailable += Capture_DataAvailable;
+    }
