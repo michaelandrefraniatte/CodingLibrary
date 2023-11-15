@@ -1,0 +1,33 @@
+﻿https://stackoverflow.com/
+
+const printSentence = (id, sentence, speed = 50) => {
+  let index = 0;
+  let element = document.getElementById(id);
+  
+  let timer = setInterval(function() {
+    const char = sentence[index];
+    
+    if (char === '<') {
+      index = sentence.indexOf('>', index);  // skip to greater-than
+    }
+    
+    element.innerHTML = sentence.slice(0, index);
+    
+    if (++index === sentence.length) {
+      clearInterval(timer);
+    }
+  }, speed);
+} // printSentence
+
+printSentence(
+  'contentDiv',
+  'This is some cool <strong>content</strong>.<p>Paragraph of content</p><ul><li>This<li>is<li>a<li>test</ul><table><tr><th>Header 1<th>Header 2<tr><td>Row 2, Col 1<td>Row 2, Col 2</table>',
+  50
+);
+
+<div id="contentDiv"></div>
+
+body, table {font: 12px verdana;}
+table {border-spacing: 0;}
+td,th {border: 1px solid gray;}
+th {background: #def;}
