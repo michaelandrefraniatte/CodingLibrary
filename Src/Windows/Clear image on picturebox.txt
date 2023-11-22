@@ -1,0 +1,12 @@
+﻿https://stackoverflow.com/
+
+
+if (pictureBox1.Image != null)
+{
+    pictureBox1.Image.Dispose();
+    pictureBox1.Image = null;
+}
+
+pictBox.InitialImage = null;
+
+picBox.Image = null;

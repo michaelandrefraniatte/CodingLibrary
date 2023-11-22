@@ -1,0 +1,5 @@
+﻿https://stackoverflow.com/
+
+
+pictureBox1.ImageLocation = @"C:\Users\Desktop\mypicture.jpg";
+pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
