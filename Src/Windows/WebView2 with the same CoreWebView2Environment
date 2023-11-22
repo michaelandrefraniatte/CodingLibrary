@@ -1,0 +1,32 @@
+﻿https://stackoverflow.com/
+
+
+ have an Excel VSTO add-in that uses WebView2 components into its panels.
+WebView2 Documentation
+
+I am trying to display two WebView2 using the same CoreWebView2Environment object, so I can set it up at launch without having to manage several folders.
+At runtime, both webviews are initialized however only one shows up correctly. The other loads an incomplete version of itself without any error raised in C# or the web console.
+
+I am creating the environment folder on add-in start-up:
+
+public static async void CreateEnvironmentDirectory()
+{
+    string userDataStorage = Path.Combine(Path.GetTempPath(), MY_APP_FOLDER);
+    CoreWebView2EnvironmentOptions options = new("--disk-cache-size=1 ");
+    
+    MyCoreWebView2Environment = await CoreWebView2Environment.CreateAsync(default, userDataStorage, options);
+}
+Then, when the panel is loading:
+
+private async Task InitializeWebviews()
+{
+    await InitializeWebview(MyFirstWebview, myFirstUrl);
+    await InitializeWebview(MySecondWebview, mySecondUrl);
+}
+private async Task InitializeWebview(WebView2 webview, string url)
+{
+    await webview.EnsureCoreWebView2Async(WebView2Manager.MyCoreWebView2Environment);
+    webview.Navigate(url);
+}
+After tweaking around for a bit I discovered I could make it work by throwing a Thread.Sleep(500) in between both initialisations. It works on debug build only though.
+For obvious reasons this is not the kind of solution I'm looking for, and I'm out of clean ideas to have it run properly.
