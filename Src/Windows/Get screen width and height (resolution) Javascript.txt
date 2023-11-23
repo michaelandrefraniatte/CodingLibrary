@@ -1,0 +1,6 @@
+﻿https://www.hacksparrow.com/webdev/javascript/screen-width-height-resolution.html
+
+
+const width = screen.width;
+const height = screen.height;
+console.log(`Your monitor's resolution is '${width}x${height}'`);
