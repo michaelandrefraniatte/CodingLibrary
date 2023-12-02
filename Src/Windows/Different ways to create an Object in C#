@@ -1,0 +1,47 @@
+﻿https://www.geeksforgeeks.org/different-ways-to-create-an-object-in-c-sharp/
+
+
+// C# Program to show the use
+// of the new Operator
+using System;
+ 
+namespace NewOperator {
+ 
+class Rectangle {
+ 
+    public int length, breadth;
+ 
+    // Parameterized Constructor
+    // User defined
+    public Rectangle(int l, int b)
+    {
+        length = l;
+        breadth = b;
+    }
+ 
+    // Method to Calculate Area
+    // of the rectangle
+    public int Area()
+    {
+        return length * breadth;
+    }
+}
+ 
+// Driver Class
+class Program {
+ 
+    // Main Method
+    static void Main(string[] args)
+    {
+        // Creating an object using 'new'
+        // Calling the parameterized constructor
+        // With parameters 10 and 12
+        Rectangle rect1 = new Rectangle(10, 12);
+ 
+        // To display are of the Rectangle
+        int area = rect1.Area();
+        Console.WriteLine("The area of the"+
+                   " Rectangle is " + area);
+    }
+}
+}
