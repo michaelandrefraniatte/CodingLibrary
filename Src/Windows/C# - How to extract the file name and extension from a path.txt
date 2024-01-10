@@ -1,0 +1,9 @@
+﻿https://stackoverflow.com/
+
+
+System.IO has different classes to work with files and directories. Between them, one of the most useful one is Path which has lots of static helper methods for working with files and folders:
+
+Path.GetExtension(yourPath); // returns .exe
+Path.GetFileNameWithoutExtension(yourPath); // returns File
+Path.GetFileName(yourPath); // returns File.exe
+Path.GetDirectoryName(yourPath); 

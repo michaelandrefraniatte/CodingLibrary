@@ -1,0 +1,14 @@
+﻿https://stackoverflow.com/
+
+
+An array is string[], not List<string>, so just do this:
+
+Dictionary<string, string[]> wordDictionary = new Dictionary<string, string[]>();
+
+Now you can add your array as usual.
+
+wordDictionary.Add("IN", IN);
+
+Or:
+
+wordDictionary.Add("IN", new string[] {"Against","Like","Upon","Through","Of","With","Upon","On","Into","From","by","that","In","About","For","Along","Before","Beneath","At","Across","beside","After","Though","Among","Toward","If"});
