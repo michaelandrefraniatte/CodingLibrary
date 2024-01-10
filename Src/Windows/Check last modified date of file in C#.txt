@@ -1,0 +1,6 @@
+﻿https://stackoverflow.com/
+
+
+var lastModified = System.IO.File.GetLastWriteTime("C:\foo.bar");
+
+Console.WriteLine(lastModified.ToString("dd/MM/yy HH:mm:ss"));

@@ -1,0 +1,10 @@
+﻿https://stackoverflow.com/
+
+
+Have a look at File.Copy()
+
+Using File.Copy you can specify the new file name as part of the destination string.
+
+So something like
+
+File.Copy(@"c:\test.txt", @"c:\test\foo.txt");
