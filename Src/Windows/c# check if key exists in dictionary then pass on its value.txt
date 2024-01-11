@@ -1,0 +1,8 @@
+﻿https://stackoverflow.com/
+
+
+string value;
+if (myDict.TryGetValue(key, out value))
+{
+    // Key exists in the dictionary, do something with value.
+}

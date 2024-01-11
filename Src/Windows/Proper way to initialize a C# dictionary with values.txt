@@ -1,0 +1,25 @@
+﻿https://stackoverflow.com/
+
+
+var dict = new Dictionary<string, int>
+{
+    ["one"] = 1,
+    ["two"] = 2,
+    ["three"] = 3
+};
+
+Dictionary<int, string> dict = new Dictionary<int, string>();
+dict.Add(1, "Mohan");
+dict.Add(2, "Kishor");
+dict.Add(3, "Pankaj");
+dict.Add(4, "Jeetu");
+
+We can initialize it as follows.
+
+Dictionary<int, string> dict = new Dictionary<int, string>
+{
+    { 1, "Mohan" },
+    { 2, "Kishor" },
+    { 3, "Pankaj" },
+    { 4, "Jeetu" }
+};
