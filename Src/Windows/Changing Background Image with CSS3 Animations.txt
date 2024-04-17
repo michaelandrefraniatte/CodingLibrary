@@ -1,0 +1,12 @@
+https://stackoverflow.com/
+
+
+#mydiv{ animation: changeBg 1s infinite; width:143px; height:100px; }
+@keyframes changeBg{
+   0%,100%  {background-image: url("https://i.stack.imgur.com/YdrqG.png");}
+   25% {background-image: url("https://i.stack.imgur.com/2wKWi.png");}
+   50% {background-image: url("https://i.stack.imgur.com/HobHO.png");}
+   75% {background-image: url("https://i.stack.imgur.com/3hiHO.png");}
+}
+<div id='mydiv'></div>
+
