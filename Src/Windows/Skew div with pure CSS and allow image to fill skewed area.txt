@@ -1,0 +1,38 @@
+https://stackoverflow.com/
+
+
+body {margin:0;}
+div {
+  overflow:hidden;
+}
+nav {
+  display:flex;
+  height:100vh;
+  margin:0 -10vw
+}
+nav a {
+  flex:1;
+  height:100%;
+  transform:skew(-15deg);
+  overflow:hidden;
+}
+nav a + a {
+  margin-left:3vh;
+}
+nav a img {
+  width:140%;
+  height:100%;
+  display:block;
+  /* optionnal */
+  /*object-fit: cover;
+  object-position:center center;*/
+  transform:skew(15deg);
+  margin:0 -20%; /* in relation with width */
+}
+<div>
+  <nav>
+    <a href=""><img src="http://www.intrawallpaper.com/static/images/desktop-backgrounds-8656-8993-hd-wallpapers_js7gwWA.jpg"></a>
+    <a href=""><img src="https://images.wallpaperscraft.com/image/pool_skyscraper_hotel_124522_1600x1200.jpg"></a>
+    <a href=""><img src="https://wallpaperscraft.com/image/dark_background_colorful_paint_47176_300x188.jpg"></a>
+  </nav>
+</div>
