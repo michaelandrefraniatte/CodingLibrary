@@ -1,0 +1,20 @@
+https://stackoverflow.com/
+
+
+To load a html into WebView2, you can use NavigateToString:
+
+private async void Form1_Load(object sender, EventArgs e)
+{
+    var html = @"
+        <html>
+            <head>
+                <title>Basic Web Page</title>
+            </head>
+            <body>
+                Hello World!
+            </body>
+        </html>";
+
+    await webView21.EnsureCoreWebView2Async();
+    webView21.NavigateToString(html);
+}
