@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+
+string[] buffer = new string[richTextBox1.Lines.Length+1];
+Array.Copy(richTextBox1.Lines, 0, buffer, 0, 5);
+buffer[5] = "MyText";
+Array.Copy(richTextBox1.Lines, 5, buffer, 6, richTextBox1.Lines.Length - 5);
+richTextBox1.Lines = buffer;
+
