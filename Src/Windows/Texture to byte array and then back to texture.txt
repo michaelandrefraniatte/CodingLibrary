@@ -1,0 +1,13 @@
+https://forum.unity.com/threads/texture-to-byte-array-and-then-back-to-texture.910550/
+
+
+void Start()
+{
+byte[] bArray = test.GetRawTextureData();
+string texAsString = Convert.ToBase64String(bArray);
+Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+
+tex.LoadRawTextureData(bArray);
+tex.Apply();
+abc.texture = tex;
+}
