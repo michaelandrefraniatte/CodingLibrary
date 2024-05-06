@@ -1,0 +1,9 @@
+https://stackoverflow.com/
+
+
+// To disable:    
+document.getElementById('id').style.pointerEvents = 'none';
+// To re-enable:
+document.getElementById('id').style.pointerEvents = 'auto'; 
+// Use '' if you want to allow CSS rules to set the value
+

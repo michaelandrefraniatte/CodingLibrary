@@ -1,0 +1,70 @@
+https://stackoverflow.com/
+
+
+<style>
+   #meter1, #meter2 {
+   width: 0%;
+   height: 15px;
+   margin: 2px 0;
+   background: green;
+   }
+</style>
+
+<div style="width: 250px;">
+   <div id="meter1"></div>
+</div>
+<div style="width: 250px;">
+   <div id="meter2"></div>
+</div>
+<script>
+   // Create the audio context - AudioContext is a little container where all our sound will live. 
+   //It provides access to the Web Audio API, which in turn gives us access to some very powerful functions.
+   // Browser support
+   window.AudioContext = window.AudioContext || window.webkitAudioContext;
+   // Initialize audio context
+   var audioContext = new AudioContext();
+
+   var soundUrl = "sample.mp3";
+   var soundBuffer; 
+
+   var audio = new Audio(soundUrl);
+   var processor = audioContext.createScriptProcessor(2048, 1, 1), meter1 = document.getElementById('meter1'), meter2 = document.getElementById('meter2'), source, splitter;
+   audio.crossOrigin = 'anonymous'
+
+   audio.addEventListener('canplaythrough', function(){
+   //create a new MediaElementAudioSourceNode object, given an existing HTML <audio> or <video> element, the audio from which can then be played and manipulated.    
+   source = audioContext.createMediaElementSource(audio)
+   splitter = audioContext.createChannelSplitter(2);
+   source.connect(splitter);
+   source.connect(processor)
+   source.connect(audioContext.destination)
+   processor.connect(audioContext.destination)
+
+   audio.play()
+   console.log(source);
+   }, false);
+
+
+   // loop through PCM data and calculate average
+   // volume for a given 2048 sample buffer
+   processor.onaudioprocess = function(evt){
+   //console.log(evt.inputBuffer);
+   var input = evt.inputBuffer.getChannelData(0)
+     , len = input.length   
+     , total = i = 0
+     , rms
+   while ( i < len ) total += Math.abs( input[i++] )
+   rms = Math.sqrt( total / len )
+   meter1.style.width = ( rms * 100 ) + '%'
+   }
+
+</script>
+
+
+Use createScriptProcessor(2048, 2, 2) to have two input channels and two output channels. Then, within onaudioprocess, the second input channel data will be in evt.inputBuffer.getChannelData(1).
+
+Note that:
+
+after creating audioContext, you may want to store (or to check) inChannels = audioContext.destination.channelCount and outChannels = audioContext.destination.channelCount
+a value of 2048 for processor.bufferSize is good for data visualization, but consider that 16384 would be better for audio quality
+

@@ -1,0 +1,13 @@
+https://stackoverflow.com/
+
+
+{
+  "name": "Test",
+  "description" : "Test Chrome Extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  }
+}
+
