@@ -1,0 +1,4 @@
+https://github.com/DontEatOreo/WhisperAPI
+
+
+WhisperAPI is a fast and reliable API that transcribes video and audio files into text with support for all models and languages. It offers time-stamped results and translation to English.
