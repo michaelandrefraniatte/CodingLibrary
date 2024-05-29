@@ -1,0 +1,155 @@
+https://stackoverflow.com/
+
+
+Shell shell = new ShellClass();
+Folder folder = shell.NameSpace(_File.DirectoryName);
+FolderItem file = folder.ParseName(_File.Name);
+
+// These are the characters that are not allowing me to parse into a DateTime
+char[] charactersToRemove = new char[] {
+    (char)8206,
+    (char)8207
+};
+
+// Getting the "Media Created" label (don't really need this, but what the heck)
+string name = folder.GetDetailsOf(null, 191);
+
+// Getting the "Media Created" value as a string
+string value = folder.GetDetailsOf(file, 191).Trim();
+
+// Removing the suspect characters
+foreach (char c in charactersToRemove)
+    value = value.Replace((c).ToString(), "").Trim();
+
+// If the value string is empty, return DateTime.MinValue, otherwise return the "Media Created" date
+return value == string.Empty ? DateTime.MinValue : DateTime.Parse(value);
+
+
+
+I figured this out by accident. If you pass null into GetDetailsOf then it responds with the column names. For example, execute the following JScript with cscript:
+
+var shellapp = WScript.CreateObject("Shell.Application");
+var folder = shellapp.NameSpace("D:\\");
+for (var j = 0; j < 0xFFFF; j++) {
+    detail = folder.GetDetailsOf(null, j);
+    if (!detail) {
+        break;
+    }
+    WScript.Echo("[" + j + "] = " + detail);
+}
+
+[0] = Name
+[1] = Size
+[2] = Item type
+[3] = Date modified
+[4] = Date created
+[5] = Date accessed
+[6] = Attributes
+[7] = Offline status
+[8] = Availability
+[9] = Perceived type
+[10] = Owner
+[11] = Kind
+[12] = Date taken
+[13] = Contributing artists
+[14] = Album
+[15] = Year
+[16] = Genre
+[17] = Conductors
+[18] = Tags
+[19] = Rating
+[20] = Authors
+[21] = Title
+[22] = Subject
+[23] = Categories
+[24] = Comments
+[25] = Copyright
+[26] = #
+[27] = Length
+[28] = Bit rate
+[29] = Protected
+[30] = Camera model
+[31] = Dimensions
+[32] = Camera maker
+[33] = Company
+[34] = File description
+[35] = Program name
+[36] = Duration
+[37] = Is online
+[38] = Is recurring
+[39] = Location
+[40] = Optional attendee addresses
+[41] = Optional attendees
+[42] = Organizer address
+[43] = Organizer name
+[44] = Reminder time
+[45] = Required attendee addresses
+[46] = Required attendees
+[47] = Resources
+[48] = Meeting status
+[49] = Free/busy status
+[50] = Total size
+[51] = Account name
+
+
+
+ShellObject shell = ShellObject.FromParsingName(path);
+
+var data = shell.Properties.System.Media.DateEncoded;
+
+
+
+var dateEncodedPropertyName = "System.Media.DateEncoded";
+var propertyNames = new List<string>()
+{
+    dateEncodedPropertyName
+};
+
+// Get extended properties
+IDictionary<string, object> extraProperties =
+    await file.Properties.RetrievePropertiesAsync(propertyNames);
+
+// Get the property value
+var propValue = extraProperties[dateEncodedPropertyName];
+if (propValue != null)
+{
+    Debug.WriteLine(propValue);
+}
+
+
+
+When reviewing or opening a file, to get its name, the FileInfo class is equipped with the Name property. Here is an sample code:
+
+FileInfo oFileInfo = new FileInfo(strFilename);
+
+if (oFileInfo != null || oFileInfo.Length == 0)
+{
+   MessageBox.Show("My File's Name: \"" + oFileInfo.Name + "\"");
+   // For calculating the size of files it holds.
+   MessageBox.Show("myFile total Size: " + oFileInfo.Length.ToString());
+}
+You can check like this:
+
+if (!oFileInfo.Exists)
+{
+    throw new FileNotFoundException("The file was not found.", FileName);
+}
+To find out what those date and time values are, you can access the File System Information property using:
+
+DateTime dtCreationTime = oFileInfo.CreationTime;
+MessageBox.Show("Date and Time File Created: " + dtCreationTime.ToString());
+To know the extension of the file, you can access the value of the FileSystemInfo.Extension property:
+
+MessageBox.Show("myFile Extension: " + oFileInfo.Extension);
+
+
+
+You can examine the ID3 tag of the mp3s. The taglib-sharp library is great for doing so. Source code available (here). Example code:
+
+TagLib.File tagFile = TagLib.File.Create(pathtofile);
+string artist = tagFile.Tag.FirstAlbumArtist;
+string album = tagFile.Tag.Album;
+string title = tagFile.Tag.Title;
+
+
+

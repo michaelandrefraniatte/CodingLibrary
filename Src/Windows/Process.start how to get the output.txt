@@ -1,0 +1,116 @@
+https://stackoverflow.com/
+
+
+When you create your Process object set StartInfo appropriately:
+
+var proc = new Process 
+{
+    StartInfo = new ProcessStartInfo
+    {
+        FileName = "program.exe",
+        Arguments = "command line arguments to your executable",
+        UseShellExecute = false,
+        RedirectStandardOutput = true,
+        CreateNoWindow = true
+    }
+};
+then start the process and read from it:
+
+proc.Start();
+while (!proc.StandardOutput.EndOfStream)
+{
+    string line = proc.StandardOutput.ReadLine();
+    // do something with line
+}
+You can use int.Parse() or int.TryParse() to convert the strings to numeric values. You may have to do some string manipulation first if there are invalid numeric characters in the strings you read.
+
+
+
+You can process your output synchronously or asynchronously.
+
+1. Synchronous example
+
+static void runCommand()
+{
+    Process process = new Process();
+    process.StartInfo.FileName = "cmd.exe";
+    process.StartInfo.Arguments = "/c DIR"; // Note the /c command (*)
+    process.StartInfo.UseShellExecute = false;
+    process.StartInfo.RedirectStandardOutput = true;
+    process.StartInfo.RedirectStandardError = true;
+    process.Start();
+    //* Read the output (or the error)
+    string output = process.StandardOutput.ReadToEnd();
+    Console.WriteLine(output);
+    string err = process.StandardError.ReadToEnd();
+    Console.WriteLine(err);
+    process.WaitForExit();
+}
+Note that it's better to process both output and errors: they must be handled separately.
+
+(*) For some commands (here StartInfo.Arguments) you must add the /c directive, otherwise the process freezes in the WaitForExit().
+
+2. Asynchronous example
+
+static void runCommand() 
+{
+    //* Create your Process
+    Process process = new Process();
+    process.StartInfo.FileName = "cmd.exe";
+    process.StartInfo.Arguments = "/c DIR";
+    process.StartInfo.UseShellExecute = false;
+    process.StartInfo.RedirectStandardOutput = true;
+    process.StartInfo.RedirectStandardError = true;
+    //* Set your output and error (asynchronous) handlers
+    process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+    process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+    //* Start process and handlers
+    process.Start();
+    process.BeginOutputReadLine();
+    process.BeginErrorReadLine();
+    process.WaitForExit();
+}
+
+static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine) 
+{
+    //* Do your stuff with the output (write to console/log/StringBuilder)
+    Console.WriteLine(outLine.Data);
+}
+If you don't need to do complicate operations with the output, you can bypass the OutputHandler method, just adding the handlers directly inline:
+
+//* Set your output and error (asynchronous) handlers
+process.OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
+process.ErrorDataReceived += (s, e) => Console.WriteLine(e.Data);
+
+
+
+Alright, for anyone who wants both Errors and Outputs read, but gets deadlocks with any of the solutions, provided in other answers (like me), here is a solution that I built after reading MSDN explanation for StandardOutput property.
+
+Answer is based on T30's code:
+
+static void runCommand()
+{
+    //* Create your Process
+    Process process = new Process();
+    process.StartInfo.FileName = "cmd.exe";
+    process.StartInfo.Arguments = "/c DIR";
+    process.StartInfo.UseShellExecute = false;
+    process.StartInfo.RedirectStandardOutput = true;
+    process.StartInfo.RedirectStandardError = true;
+    //* Set ONLY ONE handler here.
+    process.ErrorDataReceived += new DataReceivedEventHandler(ErrorOutputHandler);
+    //* Start process
+    process.Start();
+    //* Read one element asynchronously
+    process.BeginErrorReadLine();
+    //* Read the other one synchronously
+    string output = process.StandardOutput.ReadToEnd();
+    Console.WriteLine(output);
+    process.WaitForExit();
+}
+
+static void ErrorOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) 
+{
+    //* Do your stuff with the output (write to console/log/StringBuilder)
+    Console.WriteLine(outLine.Data);
+}
