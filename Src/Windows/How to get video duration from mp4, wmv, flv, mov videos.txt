@@ -1,0 +1,77 @@
+https://stackoverflow.com/
+
+
+private static TimeSpan GetVideoDuration(string filePath)
+{
+    using (var shell = ShellObject.FromParsingName(filePath))
+    {
+        IShellProperty prop = shell.Properties.System.Media.Duration;
+        var t = (ulong)prop.ValueAsObject;
+        return TimeSpan.FromTicks((long)t);
+    }
+}
+
+
+
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+
+using (ShellObject shell = ShellObject.FromParsingName(filePath))
+{
+    // alternatively: shell.Properties.GetProperty("System.Media.Duration");
+    IShellProperty prop = shell.Properties.System.Media.Duration; 
+    // Duration will be formatted as 00:44:08
+    string duration = prop.FormatForDisplay(PropertyDescriptionFormatOptions.None);
+}
+
+
+
+Using Windows Media Player Component also, we can get the duration of the video.
+Following code snippet may help you guys :
+
+using WMPLib;
+// ...
+var player = new WindowsMediaPlayer();
+var clip = player.newMedia(filePath);
+Console.WriteLine(TimeSpan.FromSeconds(clip.duration));
+and don't forget to add the reference of wmp.dll which will be present in System32 folder.
+
+
+
+Add reference to NReco.VideoInfo nuget package
+(NReco.VideoInfo.LT in case of .NET Core)
+var ffProbe = new NReco.VideoInfo.FFProbe();
+var videoInfo = ffProbe.GetMediaInfo(pathToVideoFile);
+Console.WriteLine(videoInfo.FormatName);
+Console.WriteLine(videoInfo.Duration);
+
+I found the NReco.VideoInfo library to be the best option and far simpler than some of those above. It's a simple as giving the library a file path and it spits out the metadata:
+
+var ffProbe = new FFProbe();
+var videoInfo = ffProbe.GetMediaInfo(blob.Uri.AbsoluteUri);
+return videoInfo.Duration.TotalMilliseconds;
+
+
+
+StreamReader errorreader;
+string InterviewID = txtToolsInterviewID.Text;
+
+Process ffmpeg = new Process();
+
+ffmpeg.StartInfo.UseShellExecute = false;
+ffmpeg.StartInfo.ErrorDialog = false;
+ffmpeg.StartInfo.RedirectStandardError = true;
+
+ffmpeg.StartInfo.FileName = Server.MapPath("ffmpeg.exe");
+ffmpeg.StartInfo.Arguments = "-i " + Server.MapPath("videos") + "\\226.flv";
+
+
+ffmpeg.Start();
+
+errorreader = ffmpeg.StandardError;
+
+ffmpeg.WaitForExit();
+
+string result = errorreader.ReadToEnd();
+
+string duration = result.Substring(result.IndexOf("Duration: ") + ("Duration: ").Length, ("00:00:00.00").Length);
