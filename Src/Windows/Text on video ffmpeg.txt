@@ -1,0 +1,104 @@
+https://stackoverflow.com/
+
+
+Use the drawtext filter for simple text on video. If you need more complex timing, formatting, or dynamic text see the subtitles filter. This answer focuses on the drawtext filter.
+
+Example
+Text centered on video
+
+Print Stack Overflow in white text onto center of video, with black background box of 50% opacity:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" -codec:a copy output.mp4
+The audio is stream copied in this example (like a copy and paste).
+@0.5 controls background box opacity. 0.5 is 50%. Remove @0.5 if you do not want any transparency.
+See the drawtext filter documentation for a complete list and explanations of options.
+Preview
+You can use ffplay to preview your text without having to wait for a file to encode:
+
+ffplay -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" input.mp4
+Alternatively you can use mpv but the syntax is slightly different:
+
+mpv --vf="lavfi=[drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2]" input.mp4
+Multiple texts
+You can chain multiple drawtext filters:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2,drawtext=fontfile=/path/to/font.ttf:text='Bottom right text':fontcolor=black:fontsize=14:x=w-tw-10:y=h-th-10" -codec:a copy output.mp4
+Position
+x and y determine text position:
+
+Position	x:y	With 10 px padding
+Top left	x=0:y=0	x=10:y=10
+Top center	x=(w-text_w)/2:y=0	x=(w-text_w)/2:y=10
+Top right	x=w-tw:y=0	x=w-tw-10:y=10
+Centered	x=(w-text_w)/2:y=(h-text_h)/2	
+Bottom left	x=0:y=h-th	x=10:y=h-th-10
+Bottom center	x=(w-text_w)/2:y=h-th	x=(w-text_w)/2:y=h-th-10
+Bottom right	x=w-tw:y=h-th	x=w-tw-10:y=h-th-10
+Random	See this answer	
+Repositioning text on demand
+You can reposition the text with the sendcmd and zmq filters:
+
+sendcmd if you have predetermined positions and timing. See Sendcmd in ffmpeg and FFmpeg drawtext filter - is it possible to use variables with live data for x,y coordinates?
+zmq for live, on-the-fly positioning. See ffmpeg cli filter that require user input.
+Moving / animated / looping / scrolling text
+See:
+
+ffmpeg moving text drawtext
+Loop text that wipes left to right using FFMPEG drawtext filter
+Scrolling from RIGHT to LEFT in ffmpeg / drawtext
+Timing
+Use the enable option to control when the text appears.
+
+Show text between 5-10 seconds:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,5,10)'" -codec:a copy output.mp4
+Show text after 3 seconds:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='gte(t,3)'" -codec:a copy output.mp4
+Blinking text. For every 10 seconds show text for 5 seconds:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='lt(mod(t,10),5)'" -codec:a copy output.mp4
+Random position every 30 seconds:
+
+See ffmpeg - Dynamic letters and random position watermark to video?
+
+Changing / updating text
+Add the textfile and reload options for drawtext:
+
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/path/to/font.ttf:textfile=text.txt:reload=1:fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" -codec:a copy output.mp4
+Update text.txt every time you want the text to change.
+Important: You must update the text file atomically or it may fail. You can do this with the mv command on Linux or macOS.
+If you have many text changes, such as making subtitles, it is easier to make a subtitle file (such as an .ass file via Aegisub) and using the subtitles filter.
+Font family instead of font file
+You can declare the font family, such as Times New Roman, instead of having to point to a font file. See How to include font in FFMPEG command without using the fontfile option?
+
+Requirements
+The drawtext filter requires ffmpeg to be compiled with --enable-libfreetype. If you get No such filter: 'drawtext' it is missing --enable-libfreetype. Most of the ffmpeg static builds available support this: see the FFmpeg Download page for links.
+
+Share
+Follow
+edited Jul 12, 2021 at 5:34
+answered Jul 12, 2013 at 21:14
+llogan's user avatar
+llogan
+129k2929 gold badges247247 silver badges257257 bronze badges
+1
+@NoahTernullo there's also strftime options and "pts" variable you can use. In terms of making it ticker along the bottom, you can probably use some function for x variable value changes based on pts or frame number. – 
+rogerdpack
+ CommentedMay 12, 2015 at 19:45
+2
+fyi, for those installing with brew, you can pass that flag --with-libefreetype to the install command. – 
+chovy
+ CommentedAug 1, 2016 at 21:00
+7
+@chovy I think the homebrew option you mentioned should be --with-freetype – 
+Rico Picone
+ CommentedFeb 19, 2017 at 2:25
+2
+add :enable='between(t,00:00:15,00:00:20) to specify the text duration, something like ffmpeg -i part02.mp4 -vf drawtext="text='Stack Overflow': fontcolor=white: fontsize=24: box=1: boxcolor=black@0.5: \ boxborderw=5: x=(w-text_w)/2: y=(h-text_h)/2: enable='between(t,00:00:15,00:00:20)" -codec:a copy output.mp4 – 
+deFreitas
+ CommentedMay 2, 2020 at 16:49 
+1
+@VivekThummar It needs to be in the form of -vf "scale=1920:1080,drawtext=..." Notice the comma (,) connecting the filters. The comma is missing in your command being executed. This is a problem with your implementation of the ffmpeg command in android. – 
+llogan
+ CommentedAug 5, 2020 at 17:32
